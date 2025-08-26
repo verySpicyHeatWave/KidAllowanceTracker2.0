@@ -7,6 +7,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+# MY files
+*.txt
+*.sh
+.notes/*
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -47,10 +52,9 @@ CodeCoverage/
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
+[Cc]overage*/
 
 # NUnit
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-
-notes.txt

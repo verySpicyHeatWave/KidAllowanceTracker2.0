@@ -23,9 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AllowanceApp.Api\AllowanceApp.Api.csproj" />
-    <ProjectReference Include="..\..\AllowanceApp.Data\AllowanceApp.Data.csproj" />
-    <ProjectReference Include="..\..\AllowanceApp.Core\AllowanceApp.Core.csproj" />
+    <ProjectReference Include="..\..\Source\AllowanceApp.Api\AllowanceApp.Api.csproj" />
+    <ProjectReference Include="..\..\Source\AllowanceApp.Data\AllowanceApp.Data.csproj" />
+    <ProjectReference Include="..\..\Source\AllowanceApp.Core\AllowanceApp.Core.csproj" />
   </ItemGroup>
 
 </Project>
