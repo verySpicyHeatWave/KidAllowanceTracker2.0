@@ -10,7 +10,7 @@
 # MY files
 *.txt
 *.sh
-.notes/*
+.notes
 
 # Build results
 [Dd]ebug/

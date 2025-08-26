@@ -11,8 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var folder = Environment.SpecialFolder.LocalApplicationData;
+var path = Environment.GetFolderPath(folder);
+var DbPath = System.IO.Path.Join(path, "accounts.db");
+
 builder.Services.AddDbContext<AccountContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite($"Data Source={DbPath}"));
 
 builder.Services.AddHostedService<WeeklyAllowanceService>();
 
