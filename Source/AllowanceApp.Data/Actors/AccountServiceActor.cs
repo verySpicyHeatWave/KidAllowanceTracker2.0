@@ -13,18 +13,21 @@ namespace AllowanceApp.Data.Actors
 
         public async Task<Account> AddAccountAsync(string name)
         {
-            var account = new Account(name) { Name = name };
+            var account = new Account(name);
             await _context.AddAsync(account);
             await _context.SaveChangesAsync();
             return account;
         }
 
-        public async Task<List<Account>> GetAllAccountsAsync() =>
-            await _context.Accounts
+        public async Task<List<Account>> GetAllAccountsAsync()
+        {
+            var accounts = await _context.Accounts
                 .Include(a => a.Allowances)
                 .Include(t => t.Transactions)
-                .ToListAsync()
-                ?? throw new DataNotFoundException("No accounts found in database.");
+                .ToListAsync();
+            if (accounts.Count == 0) { throw new DataNotFoundException("No accounts found in database."); }
+            return accounts;
+        }
 
         public async Task<Account> GetAccountAsync(int id) =>
             await _context.Accounts

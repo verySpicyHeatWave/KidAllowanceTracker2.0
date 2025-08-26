@@ -22,6 +22,10 @@ namespace AllowanceApp.Data.Contexts
             modelBuilder.Entity<Account>()
                 .HasIndex(e => e.Name)
                 .IsUnique();
+            modelBuilder.Entity<Account>()
+                .Property(e => e.Name)
+                .IsRequired()
+                .UseCollation("NOCASE");
 
             modelBuilder.Entity<AllowancePoint>()
                 .HasKey(a => new {a.AccountID, a.Category});

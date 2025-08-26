@@ -1,4 +1,6 @@
-﻿namespace AllowanceApp.Core.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AllowanceApp.Core.Models
 {
     public class Account
     {
@@ -10,6 +12,7 @@
 
         protected Account() { }
 
+        [SetsRequiredMembers] 
         public Account(string name)
         {
             Name = name;
