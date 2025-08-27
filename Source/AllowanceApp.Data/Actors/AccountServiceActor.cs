@@ -59,7 +59,7 @@ namespace AllowanceApp.Data.Actors
             return allowancePoint;            
         }
 
-        public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, double amount)
+        public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount)
         {
             var allowancePoint = await GetAllowancePointAsync(id, category);
             allowancePoint.Price = amount;
@@ -76,7 +76,7 @@ namespace AllowanceApp.Data.Actors
             return account;
         }
 
-        public async Task<Account> ApplyTransactionAsync(int id, double amount, bool isWithdrawal, string? description)
+        public async Task<Account> ApplyTransactionAsync(int id, int amount, bool isWithdrawal, string? description)
         {
             var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
             if (amount <= 0) { return account; }

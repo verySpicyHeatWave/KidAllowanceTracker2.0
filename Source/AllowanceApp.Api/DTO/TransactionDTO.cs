@@ -2,7 +2,7 @@ using AllowanceApp.Core.Models;
 
 namespace AllowanceApp.Api.DTO
 {
-    public record TransactionDTO(int TransactionID, int AccountID, double Amount, DateOnly Date, string? Description)
+    public record TransactionDTO(int TransactionID, int AccountID, int Amount, DateOnly Date, string? Description)
     {
         public TransactionDTO(Transaction transaction) : this
         (

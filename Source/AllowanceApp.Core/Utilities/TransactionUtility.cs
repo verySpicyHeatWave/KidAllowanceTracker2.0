@@ -4,21 +4,28 @@ namespace AllowanceApp.Core.Utilities
 {
     public static class TransactionUtility
     {
-        public static double CalculateTotalAllowance(Account account) =>
+        public static int CalculateTotalAllowance(Account account) =>
             account.Allowances.Sum(t => t.Total);
 
         public static void PayAllowanceToAccount(Account account)
         {
-            double Total = CalculateTotalAllowance(account);
+            int Total = CalculateTotalAllowance(account);
             ResetPoints(account);
             string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
             ApplyTransaction(account, Total, false, Description);
         }
 
-        public static void ApplyTransaction(Account account, double amount, bool isWithdrawal, string? description)
+        public static void ApplyTransaction(Account account, int amount, bool isWithdrawal, string? description)
         {
-            if (isWithdrawal) { amount *= -1; }
-            account.Balance += amount;
+            if (account.Balance == 0 && isWithdrawal) { return; }
+            var xferAmount = isWithdrawal ? -amount : amount;
+            var oldBalance = account.Balance;
+            account.Balance += xferAmount;
+            if (account.Balance < 0)
+            {
+                account.Balance = 0;
+                amount = oldBalance;
+            }
             Transaction transaction = new()
             {
                 AccountID = account.AccountID,

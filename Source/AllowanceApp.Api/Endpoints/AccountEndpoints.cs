@@ -123,7 +123,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DecrementPoints")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/setprice/{category}", async (int id, string category, double amount, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/setprice/{category}", async (int id, string category, int amount, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
@@ -151,7 +151,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("PayAllowance")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/deposit", async (AccountContext context, int id, double amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/deposit", async (AccountContext context, int id, int amount, string? description, AccountService accountService) =>
             {
                 if (amount <= 0)
                 {
@@ -172,7 +172,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DepositIntoAccount")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (AccountContext context, int id, double amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (AccountContext context, int id, int amount, string? description, AccountService accountService) =>
             {
                 if (amount <= 0)
                 {

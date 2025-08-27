@@ -4,7 +4,7 @@ namespace AllowanceApp.Core.Models
     {
         public int TransactionID { get; set; }
         public int AccountID { get; set; }
-        public double Amount { get; set; }
+        public int Amount { get; set; }
         public DateOnly Date { get; set; }
         public string? Description { get; set; }
     }

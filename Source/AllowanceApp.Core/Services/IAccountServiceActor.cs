@@ -9,9 +9,9 @@ namespace AllowanceApp.Core.Services
         Task<List<Account>> GetAllAccountsAsync();
         Task<AllowancePoint> GetAllowancePointAsync(int id, string category);
         Task<AllowancePoint> IncOrDecPointAsync(int id, string category, bool incrementing);
-        Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, double amount);
+        Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount);
         Task<Account> PayAllowanceAsync(int id);
-        Task<Account> ApplyTransactionAsync(int id, double amount, bool isWithdrawal, string? description);
+        Task<Account> ApplyTransactionAsync(int id, int amount, bool isWithdrawal, string? description);
         Task<string> DeleteAccountAsync(int id);
     }
 }
