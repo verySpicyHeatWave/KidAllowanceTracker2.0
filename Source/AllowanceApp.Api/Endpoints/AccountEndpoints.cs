@@ -11,11 +11,16 @@ namespace AllowanceApp.Api.Endpoints
 {
     public static class AccountEndpoints
     {
+        private const bool WITHDRAW = true;
+        private const bool DEPOSIT = false;
+        private const bool INCREMENT = true;
+        private const bool DECREMENT = false;
+
         public static void SetAccountCreateEndpoints(this WebApplication app)
         {
             app.MapPost("/accounts/create/{name}", async (string name, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<Account>(async () => 
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
                     var account = await accountService.AddAccountAsync(name);
                     return account;
@@ -32,7 +37,7 @@ namespace AllowanceApp.Api.Endpoints
         {
             app.MapGet("/accounts/read/all", async (AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<List<Account>>(async () => 
+                var dbResult = await TryDatabaseInteraction<List<Account>>(async () =>
                 {
                     var accounts = await accountService.GetAllAccountsAsync();
                     return accounts;
@@ -46,7 +51,7 @@ namespace AllowanceApp.Api.Endpoints
 
             app.MapGet("/accounts/read/{id}", async (int id, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<Account>(async () => 
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
                     var account = await accountService.GetAccountAsync(id);
                     return account;
@@ -91,10 +96,10 @@ namespace AllowanceApp.Api.Endpoints
         {
             app.MapPut("/accounts/update/{id}/increment/{category}", async (int id, string category, AccountService accountService) =>
             {
-                
+
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
-                    var point = await accountService.IncOrDecPointAsync(id, category, true);
+                    var point = await accountService.IncOrDecPointAsync(id, category, INCREMENT);
                     return point;
                 });
                 return dbResult.IsSuccess
@@ -108,7 +113,7 @@ namespace AllowanceApp.Api.Endpoints
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
-                    var point = await accountService.IncOrDecPointAsync(id, category, false);
+                    var point = await accountService.IncOrDecPointAsync(id, category, DECREMENT);
                     return point;
                 });
                 return dbResult.IsSuccess
@@ -134,7 +139,7 @@ namespace AllowanceApp.Api.Endpoints
 
             app.MapPut("/accounts/update/{id}/transaction/payout", async (int id, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<Account>(async () => 
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
                     var account = await accountService.PayAllowanceAsync(id);
                     return account;
@@ -148,9 +153,16 @@ namespace AllowanceApp.Api.Endpoints
 
             app.MapPut("/accounts/update/{id}/transaction/deposit", async (AccountContext context, int id, double amount, string? description, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<Account>(async () => 
+                if (amount <= 0)
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, false, description);
+                    return Results.Problem(
+                        detail: $"Deposit amount must be more than zero, not {amount}",
+                        statusCode: StatusCodes.Status400BadRequest
+                    );
+                }
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
+                {
+                    var account = await accountService.ApplyTransactionAsync(id, amount, DEPOSIT, description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -162,9 +174,16 @@ namespace AllowanceApp.Api.Endpoints
 
             app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (AccountContext context, int id, double amount, string? description, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<Account>(async () => 
+                if (amount <= 0)
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, true, description);
+                    return Results.Problem(
+                        detail: $"Withdrawal amount must be more than zero, not {amount}",
+                        statusCode: StatusCodes.Status400BadRequest
+                    );
+                }
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
+                {
+                    var account = await accountService.ApplyTransactionAsync(id, amount, WITHDRAW, description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -179,7 +198,7 @@ namespace AllowanceApp.Api.Endpoints
         {
             app.MapDelete("/accounts/delete/{id}", async (AccountContext context, int id, AccountService accountService) =>
             {
-                var dbResult = await TryDatabaseInteraction<string>(async () => 
+                var dbResult = await TryDatabaseInteraction<string>(async () =>
                 {
                     var name = await accountService.DeleteAccountAsync(id);
                     return name;
