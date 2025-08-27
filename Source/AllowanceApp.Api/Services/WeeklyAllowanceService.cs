@@ -1,3 +1,4 @@
+using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
 
 namespace AllowanceApp.Api.Services
@@ -29,7 +30,7 @@ namespace AllowanceApp.Api.Services
             var accounts = await accountService.GetAllAccountsAsync();
             foreach (var account in accounts)
             {
-                await accountService.IncOrDecPointAsync(account.AccountID, "BaseAllowance", true);
+                await accountService.SinglePointAdjustAsync(account.AccountID, "BaseAllowance", PointOperation.Increment);
             }
         }
     }

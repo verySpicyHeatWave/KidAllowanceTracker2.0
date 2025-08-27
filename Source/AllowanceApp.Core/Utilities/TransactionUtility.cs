@@ -6,18 +6,17 @@ namespace AllowanceApp.Core.Utilities
     {
         public static void PayAllowanceToAccount(this Account account)
         {
-            const bool DEPOSIT = false;
             int Total = account.CalculateTotalAllowance();
             account.ResetPoints();
             string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
-            ApplyTransaction(account, Total, DEPOSIT, Description);
+            ApplyTransaction(account, Total, TransactionType.Deposit, Description);
         }
 
-        public static void ApplyTransaction(this Account account, int amount, bool isWithdrawal, string? description)
+        public static void ApplyTransaction(this Account account, int amount, TransactionType action, string? description)
         {
             if (amount <= 0) { return; }
-            if (account.Balance == 0 && isWithdrawal) { return; }
-            var xferAmount = isWithdrawal ? -amount : amount;
+            if (account.Balance == 0 && action == TransactionType.Withdraw) { return; }
+            var xferAmount = amount * (int)action;
             var oldBalance = account.Balance;
             account.Balance += xferAmount;
             if (account.Balance < 0)

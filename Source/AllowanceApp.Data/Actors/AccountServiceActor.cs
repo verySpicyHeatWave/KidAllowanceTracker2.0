@@ -50,10 +50,10 @@ namespace AllowanceApp.Data.Actors
             return allowancePoint;
         }
 
-        public async Task<AllowancePoint> IncOrDecPointAsync(int id, string category, bool incrementing)
+        public async Task<AllowancePoint> SinglePointAdjustAsync(int id, string category, PointOperation operation)
         {
             var allowancePoint = await GetAllowancePointAsync(id, category);
-            allowancePoint.IncOrDecPoint(incrementing);
+            allowancePoint.IncOrDecPoint(operation);
             await _context.SaveChangesAsync();
             return allowancePoint;            
         }
@@ -74,10 +74,10 @@ namespace AllowanceApp.Data.Actors
             return account;
         }
 
-        public async Task<Account> ApplyTransactionAsync(int id, int amount, bool isWithdrawal, string? description)
+        public async Task<Account> ApplyTransactionAsync(int id, int amount, TransactionType action, string? description)
         {
             var account = await GetAccountAsync(id);
-            account.ApplyTransaction(amount, isWithdrawal, description);
+            account.ApplyTransaction(amount, action, description);
             await _context.SaveChangesAsync();
             return account;
         }

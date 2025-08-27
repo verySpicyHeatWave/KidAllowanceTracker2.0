@@ -99,7 +99,7 @@ namespace AllowanceApp.Api.Endpoints
 
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
-                    var point = await accountService.IncOrDecPointAsync(id, category, INCREMENT);
+                    var point = await accountService.SinglePointAdjustAsync(id, category, PointOperation.Increment);
                     return point;
                 });
                 return dbResult.IsSuccess
@@ -113,7 +113,7 @@ namespace AllowanceApp.Api.Endpoints
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
-                    var point = await accountService.IncOrDecPointAsync(id, category, DECREMENT);
+                    var point = await accountService.SinglePointAdjustAsync(id, category, PointOperation.Decrement);
                     return point;
                 });
                 return dbResult.IsSuccess
@@ -162,7 +162,7 @@ namespace AllowanceApp.Api.Endpoints
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, DEPOSIT, description);
+                    var account = await accountService.ApplyTransactionAsync(id, amount, TransactionType.Deposit, description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -183,7 +183,7 @@ namespace AllowanceApp.Api.Endpoints
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, WITHDRAW, description);
+                    var account = await accountService.ApplyTransactionAsync(id, amount, TransactionType.Withdraw, description);
                     return account;
                 });
                 return dbResult.IsSuccess

@@ -1,5 +1,11 @@
 namespace AllowanceApp.Core.Models
 {
+    public enum TransactionType
+    {
+        Withdraw = -1,
+        Deposit = 1
+    }
+
     public class Transaction
     {
         public int TransactionID { get; set; }

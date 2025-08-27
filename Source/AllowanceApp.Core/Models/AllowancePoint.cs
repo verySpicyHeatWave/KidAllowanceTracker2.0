@@ -1,5 +1,10 @@
 namespace AllowanceApp.Core.Models
 {
+    public enum PointOperation
+    {
+        Decrement = -1,
+        Increment = 1
+    }
     public class AllowancePoint(string Category, int Price)
     {
         public int AccountID { get; set; } = 0;

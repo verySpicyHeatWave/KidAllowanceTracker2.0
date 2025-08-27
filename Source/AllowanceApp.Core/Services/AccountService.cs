@@ -18,8 +18,8 @@ namespace AllowanceApp.Core.Services
         public async Task<AllowancePoint> GetAllowancePointAsync(int id, string category) =>
             await _actor.GetAllowancePointAsync(id, category);
 
-        public async Task<AllowancePoint> IncOrDecPointAsync(int id, string category, bool incrementing) =>
-            await _actor.IncOrDecPointAsync(id, category, incrementing);
+        public async Task<AllowancePoint> SinglePointAdjustAsync(int id, string category, PointOperation operation) =>
+            await _actor.SinglePointAdjustAsync(id, category, operation);
 
         public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount) =>
             await _actor.UpdateAllowancePriceAsync(id, category, amount);
@@ -27,8 +27,8 @@ namespace AllowanceApp.Core.Services
         public async Task<Account> PayAllowanceAsync(int id) =>
             await _actor.PayAllowanceAsync(id);
 
-        public async Task<Account> ApplyTransactionAsync(int id, int amount, bool isWithdrawal, string? description) =>
-            await _actor.ApplyTransactionAsync(id, amount, isWithdrawal, description);
+        public async Task<Account> ApplyTransactionAsync(int id, int amount, TransactionType action, string? description) =>
+            await _actor.ApplyTransactionAsync(id, amount, action, description);
 
         public async Task<string> DeleteAccountAsync(int id) =>
             await _actor.DeleteAccountAsync(id);
