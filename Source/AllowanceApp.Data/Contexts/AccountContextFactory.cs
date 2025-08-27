@@ -3,6 +3,12 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace AllowanceApp.Data.Contexts
 {
+    // I need this so that EFCore can use my context with options at DESIGN TIME.
+    // I define and inject the context at runtime with the options that I want.
+    // However, at design time, EF has no way to apply a config to my context.
+    // This factory interface is found and used by EF to be able to use my context.
+
+    // This is fuckery most supreme.
     public class AccountContextFactory : IDesignTimeDbContextFactory<AccountContext>
     {
         public AccountContext CreateDbContext(string[] args)
