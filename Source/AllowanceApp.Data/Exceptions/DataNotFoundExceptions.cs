@@ -1,10 +1,7 @@
 namespace AllowanceApp.Data.Exceptions
 {
     [Serializable]
-    public class DataNotFoundException : Exception
+    public class DataNotFoundException(string message) : Exception(message)
     {
-        public DataNotFoundException() { }
-        public DataNotFoundException(string message) : base(message) { }
-        public DataNotFoundException(string message, Exception inner) : base(message, inner) { }
     }
 }
