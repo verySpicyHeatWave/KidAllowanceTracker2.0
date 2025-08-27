@@ -6,7 +6,7 @@ namespace AllowanceApp.Core.Utilities
     {
         public static void PayAllowanceToAccount(this Account account)
         {
-            int Total = account.CalculateTotalAllowance();
+            int Total = account.AllowanceBalance;
             account.ResetPoints();
             string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
             ApplyTransaction(account, Total, TransactionType.Deposit, Description);
@@ -14,16 +14,12 @@ namespace AllowanceApp.Core.Utilities
 
         public static void ApplyTransaction(this Account account, int amount, TransactionType action, string? description)
         {
-            if (amount <= 0) { return; }
-            if (account.Balance == 0 && action == TransactionType.Withdraw) { return; }
+            if (InvalidWithdrawal(account, action, amount)) { return; }
             var xferAmount = amount * (int)action;
             var oldBalance = account.Balance;
             account.Balance += xferAmount;
-            if (account.Balance < 0)
-            {
-                account.Balance = 0;
-                amount = oldBalance;
-            }
+            amount = PreventOverdraft(account, amount, oldBalance);
+
             Transaction transaction = new()
             {
                 AccountID = account.AccountID,
@@ -33,5 +29,15 @@ namespace AllowanceApp.Core.Utilities
             };
             account.Transactions.Add(transaction);
         }
+
+        private static int PreventOverdraft(Account account, int amount, int oldbalance)
+        {
+            var resp = account.Balance < 0 ? oldbalance : amount;
+            if (resp == oldbalance) { account.Balance = 0; }
+            return resp;
+        }
+
+        private static bool InvalidWithdrawal(Account account, TransactionType action, int amount) =>
+            (account.Balance == 0 && action == TransactionType.Withdraw) || (amount <= 0);
     }
 }

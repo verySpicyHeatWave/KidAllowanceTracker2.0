@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using AllowanceApp.Core.Utilities;
 
 namespace AllowanceApp.Core.Models
 {
@@ -7,6 +8,8 @@ namespace AllowanceApp.Core.Models
         public int AccountID { get; set; }
         public required string Name { get; set; }
         public int Balance { get; set; } = 0;
+        public int PointsBalance => Allowances.Sum(t => t.Points);
+        public int AllowanceBalance => Math.Max(0, Allowances.Sum(t => t.Total));
         public List<AllowancePoint> Allowances { get; set; } = [];
         public List<Transaction> Transactions { get; set; } = [];
 

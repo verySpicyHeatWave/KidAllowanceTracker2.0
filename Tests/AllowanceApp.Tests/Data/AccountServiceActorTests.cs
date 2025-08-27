@@ -1,68 +1,24 @@
-using System.Data.Common;
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
+using AllowanceApp.Core.Utilities;
 using AllowanceApp.Data.Actors;
 using AllowanceApp.Data.Contexts;
 using AllowanceApp.Data.Exceptions;
+using AllowanceApp.Tests.Common;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace AllowanceApp.Tests.Data
 {
     public class AccountServiceActorTests
     {
-
-        public static AccountContext GetTestContext()
-        {
-            var options = new DbContextOptionsBuilder<AccountContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            return new AccountContext(options);
-        }
-
-        public static List<string> GetDefaultBehaviorStrings()
-        {
-            return
-            [   "BaseAllowance",
-                "GoodBehavior",
-                "Homework",
-                "Chores",
-                "BadBehavior",
-                "GradeA",
-                "GradeB",
-                "GradeC",
-                "GradeD",
-                "GradeF"
-            ];
-        }
-
-        protected static async Task<Dictionary<int, string>> StuffDatabaseWithRandomAccounts(IAccountServiceActor actor, int maxCount = 10)
-        {
-            Dictionary<int, string> test_accounts = [];
-            for (int i = 1; i <= maxCount; i++)
-            {
-                test_accounts.Add(i, Guid.NewGuid().ToString());
-                await actor.AddAccountAsync(test_accounts[i]);
-            }
-            return test_accounts;
-        }
-
-        // BCOBB: This is for a different test file, for the AccountService tests
-        // public static Mock<IAccountServiceActor> GetMockActor()
-        // {
-        //     var mockActor = new Mock<IAccountServiceActor>();
-        //     var expected = new Account("Brian") { AccountID = 1, Name = "Brian" };
-        //     mockActor.Setup(a => a.AddAccountAsync("Brian")).ReturnsAsync(expected);
-
-        //     return mockActor;
-        // }
-
+        #region "AddAccountAsync"
         [Fact]
         public async Task AddAccountAsync_NewAccountsIncrementByOne()
         {
-            using var context = GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var test_accounts = await StuffDatabaseWithRandomAccounts(actor, 3);
+            var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor, 3);
 
             var accounts = await actor.GetAllAccountsAsync();
             foreach (var account in accounts)
@@ -73,12 +29,25 @@ namespace AllowanceApp.Tests.Data
         }
 
         [Fact]
+        public async Task AddAccountAsync_RefuseRepeatNames()
+        {
+            using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            string name = Guid.NewGuid().ToString();
+            await actor.AddAccountAsync(name);
+            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await actor.AddAccountAsync(name));         
+        }
+        #endregion
+
+
+        #region "GetAllAccountsAsync"
+        [Fact]
         public async Task GetAllAccountsAsync_ReturnsAccounts()
         {
-            using var context = GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
 
-            string testName = "TestAccount";
+            string testName = Guid.NewGuid().ToString();
             await actor.AddAccountAsync(testName);
             var accounts = await actor.GetAllAccountsAsync();
 
@@ -89,23 +58,26 @@ namespace AllowanceApp.Tests.Data
         [Fact]
         public async Task GetAllAccountsAsync_ThrowsIfDatabaseIsEmpty()
         {
-            using var context = GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             var ex = await Assert.ThrowsAsync<DataNotFoundException>(actor.GetAllAccountsAsync);
 
-            var strcomp = string.Compare(ex.Message, "No accounts found in database.", StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(0, strcomp);
+            Assert.True(string.Equals(ex.Message, "No accounts found in database.", StringComparison.OrdinalIgnoreCase));
         }
+        #endregion
 
+
+        #region "GetAccountAsync"
 
         [Fact]
         public async Task GetAccountAsync_ReturnsAccountWithID()
         {
-            using var context = GetTestContext();
+            var rng = Methods.GetRandomGenerator();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var test_accounts = await StuffDatabaseWithRandomAccounts(actor);
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var id = new Random(epochSeed).Next(test_accounts.Count);
+            var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor);
+
+            var id = rng.Next(1, test_accounts.Count);
             var account = await actor.GetAccountAsync(id);
 
             var strcomp = string.Compare(test_accounts[id], account.Name, StringComparison.OrdinalIgnoreCase);
@@ -113,50 +85,45 @@ namespace AllowanceApp.Tests.Data
             Assert.Equal(id, account.AccountID);
         }
 
-
-        [Fact]
-        public async Task GetAccountAsync_ThrowsIfEmptyDB()
+        [Theory]
+        [InlineData(Methods.EMPTY_DB)]
+        [InlineData(Methods.POPULATED_DB)]
+        public async Task GetAccountAsync_Throws(int AccountsInDB)
         {
-            using var context = GetTestContext();
-            var actor = new AccountServiceActor(context);
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var id = new Random(epochSeed).Next(100);
-            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () => await actor.GetAccountAsync(id));
-
-            var strcomp = string.Compare(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(0, strcomp);
-        }
-
-
-        [Fact]
-        public async Task GetAccountAsync_ThrowsIfAccountNotFound()
-        {
-            using var context = GetTestContext();
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
 
-            _ = await StuffDatabaseWithRandomAccounts(actor);
+            int id = 1;
+            if (AccountsInDB > 0)
+            {
+                var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor, AccountsInDB);
+                id = rng.Next(AccountsInDB + 1, 100);
+            }
 
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var id = new Random(epochSeed).Next(4, 100);
-            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () => await actor.GetAccountAsync(id));
+            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () =>
+                await actor.GetAccountAsync(id));
 
-            var strcomp = string.Compare(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(0, strcomp);
+            Assert.True(string.Equals(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase));
         }
+        #endregion
 
 
+        #region "GetAllowancePointAsync"
         [Fact]
         public async Task GetAllowancePointAsync_ReturnsPointWithCorrectID()
         {
-            using var context = GetTestContext();
-            var actor = new AccountServiceActor(context);
-            var test_accounts = await StuffDatabaseWithRandomAccounts(actor);
-            var defaultPointStrings = GetDefaultBehaviorStrings();
+            var rng = Methods.GetRandomGenerator();
 
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var index = new Random(epochSeed).Next(defaultPointStrings.Count);
-            var id = new Random(epochSeed).Next(test_accounts.Count);
             
+                        using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor);
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
+
+            var index = rng.Next(defaultPointStrings.Count);
+            var id = rng.Next(1, test_accounts.Count);
+
             var point = await actor.GetAllowancePointAsync(id, defaultPointStrings[index]);
 
             var strcomp = string.Compare(defaultPointStrings[index], point.Category, StringComparison.OrdinalIgnoreCase);
@@ -164,49 +131,38 @@ namespace AllowanceApp.Tests.Data
             Assert.Equal(id, point.AccountID);
         }
 
-
-        [Fact]
-        public async Task GetAllowancePointAsync_ThrowsIfEmptyDB()
+        [Theory]
+        [InlineData(Methods.EMPTY_DB)]
+        [InlineData(Methods.POPULATED_DB)]
+        public async Task GetAllowancePointAsync_ThrowsOnAccountGet(int AccountsInDB)
         {
-            using var context = GetTestContext();
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var defaultPointStrings = GetDefaultBehaviorStrings();
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
 
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var index = new Random(epochSeed).Next(defaultPointStrings.Count);
-            var id = new Random(epochSeed).Next(100);
-            
-            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () => await actor.GetAllowancePointAsync(id, defaultPointStrings[index]));
+            var index = rng.Next(defaultPointStrings.Count);
 
-            var strcomp = string.Compare(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(0, strcomp);
-        }
+            int id = 1;
+            if (AccountsInDB > 0)
+            {
+                var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor, AccountsInDB);
+                id = rng.Next(AccountsInDB + 1, 100);
+            }
 
+            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () =>
+                await actor.GetAllowancePointAsync(id, defaultPointStrings[index]));
 
-        [Fact]
-        public async Task GetAllowancePointAsync_ThrowsIfAccountNotFound()
-        {
-            using var context = GetTestContext();
-            var actor = new AccountServiceActor(context);
-            var test_accounts = await StuffDatabaseWithRandomAccounts(actor, 3);
-            var defaultPointStrings = GetDefaultBehaviorStrings();
-
-            int epochSeed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            var index = new Random(epochSeed).Next(defaultPointStrings.Count);
-            var id = new Random(epochSeed).Next(4, 100);
-            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () => await actor.GetAllowancePointAsync(id, defaultPointStrings[index]));
-
-            var strcomp = string.Compare(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase);
-            Assert.Equal(0, strcomp);
+            Assert.True(string.Equals(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase));
         }
 
 
         [Fact]
         public async Task GetAllowancePointAsync_ThrowsIfPointNameNotFound()
         {
-            using var context = GetTestContext();
+                        using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var defaultPointStrings = GetDefaultBehaviorStrings();
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
 
             await actor.AddAccountAsync(Guid.NewGuid().ToString());
 
@@ -217,5 +173,140 @@ namespace AllowanceApp.Tests.Data
             var strcomp = ex.Message.Contains($"Could not find allowance type {badCategory}", StringComparison.OrdinalIgnoreCase);
             Assert.True(strcomp);
         }
+        #endregion
+
+
+        #region "SinglePointAdjustAsync"
+        [Theory]
+        [InlineData(PointOperation.Increment)]
+        [InlineData(PointOperation.Decrement)]
+        public async Task SinglePointAdjustAsync_IncOrDecByOne(PointOperation operation)
+        {
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            var acct = await actor.AddAccountAsync(Guid.NewGuid().ToString());
+
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
+            var index = rng.Next(defaultPointStrings.Count);
+            int id = 1;
+
+            var random_add = rng.Next(2, 10);
+            for (int i = 0; i != random_add; i++)
+            {
+                await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], PointOperation.Increment);
+            }
+
+            var oldValue = (await actor.GetAllowancePointAsync(id, defaultPointStrings[index])).Points;
+            var newPoint = await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], operation);
+
+            Assert.Equal(oldValue + (int)operation, newPoint.Points);
+        }
+        #endregion
+
+
+        #region "UpdateAllowancePriceAsync"
+        [Fact]
+        public async Task UpdateAllowancePriceAsync_UpdatesToWhatever()
+        {
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
+
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
+            var index = rng.Next(defaultPointStrings.Count);
+            int id = 1;
+
+            var random_add = rng.Next(0, 500);
+
+            for (int i = 0; i != 5; i++)
+            {
+                if (i % 2 == 1) { random_add *= -1; }
+                var newPoint = await actor.UpdateAllowancePriceAsync(id, defaultPointStrings[index], random_add);
+                Assert.Equal(random_add, newPoint.Price);
+                random_add = rng.Next(0, 500);
+            }
+        }
+        #endregion
+
+
+        #region "PayAllowanceAsync"
+        [Fact]
+        public async Task PayAllowanceAsync_PaysOutCorrectly()
+        {
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
+
+            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
+            var index = rng.Next(defaultPointStrings.Count);
+            int id = 1;
+
+            for (int i = 0; i != 10; i++)
+            {
+                await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], PointOperation.Increment);
+                index = rng.Next(defaultPointStrings.Count);
+            }
+            Account unpaidAcct = await actor.GetAccountAsync(id);
+            Assert.Empty(unpaidAcct.Transactions);
+            var total = unpaidAcct.AllowanceBalance;
+            await actor.PayAllowanceAsync(id);
+            var paidAcct = await actor.GetAccountAsync(id);
+            Assert.Single(paidAcct.Transactions);
+            Assert.Equal(total, paidAcct.Transactions[0].Amount);
+        }
+        #endregion
+
+
+        #region "ApplyTransactionAsync"
+        [Theory]
+        [InlineData(TransactionType.Deposit)]
+        [InlineData(TransactionType.Withdraw)]
+        public async Task ApplyTransactionAsync_OperatesCorrectlyAsync(TransactionType action)
+        {
+            var rng = Methods.GetRandomGenerator();
+                        using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
+
+            int id = 1;
+            int value = rng.Next(1000, 10000);
+            int oldBalance = value;
+            string description = Guid.NewGuid().ToString();
+
+            await actor.ApplyTransactionAsync(id, value, TransactionType.Deposit, description);
+
+            value = rng.Next(100, 500);
+            description = Guid.NewGuid().ToString();
+
+            await actor.ApplyTransactionAsync(id, value, action, description);
+            Account acct = await actor.GetAccountAsync(id);
+            Assert.Equal(oldBalance + ((int)action * value), acct.Balance);
+        }
+        #endregion
+
+
+        #region "DeleteAccountAsync"
+
+        [Fact]
+        public async Task DeleteAccountAsync_OperatesCorrectly()
+        {
+            var rng = Methods.GetRandomGenerator();
+            using var context = Methods.GetTestContext();
+            var actor = new AccountServiceActor(context);
+            var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor, 20);
+
+            int id = rng.Next(1, 20);
+
+            Account acct = await actor.GetAccountAsync(id);
+            await actor.DeleteAccountAsync(id);
+            var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () => await actor.GetAccountAsync(id));
+
+            Assert.True(string.Equals(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase));
+        }
+        
+        #endregion
     }
 }

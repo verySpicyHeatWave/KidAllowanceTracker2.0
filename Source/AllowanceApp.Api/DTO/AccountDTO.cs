@@ -11,7 +11,7 @@ namespace AllowanceApp.Api.DTO
             account.Name,
             account.AccountID,
             account.Balance,
-            account.CalculateTotalAllowance(),
+            account.AllowanceBalance,
             DTOUtility.AllowanceListToDTOs(account.Allowances),
             DTOUtility.TransactionListToDTOs(account.Transactions)
         ) { }

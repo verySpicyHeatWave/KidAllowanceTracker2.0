@@ -4,12 +4,26 @@ RESULTS_PATH=Tests/AllowanceApp.Tests/TestResults
 COV_PATH=Tests/AllowanceApp.Tests/Coverage
 DB_FILE=~/.local/share/accounts.db
 
-.PHONY: test coverage run_api run_blazor run clean wiped spotless dbclean
+.PHONY: build test coverage run_api run_blazor run clean wiped spotless dbclean
 
-test:
-	@dotnet test --settings $(RUN_SETTINGS) --collect:"XPlat Code Coverage"
+build:
+	@dotnet build
+
+test: build
+	@$(MAKE) quicktest
 
 coverage: test
+	@echo "Finding latest coverage file..."
+	@COV_FILE=$$(ls -t $(RESULTS_PATH)/**/$(REPORT_FILE) | head -n1); \
+	echo "Generating coverage report for file $$COV_FILE"; \
+	reportgenerator -reports:"$$COV_FILE" \
+    	-targetdir:"$(COV_PATH)" \
+    	-reporttypes:Html
+
+quicktest:
+	@dotnet test --settings $(RUN_SETTINGS) --no-build --collect:"XPlat Code Coverage"
+
+quickcov: quicktest
 	@echo "Finding latest coverage file..."
 	@COV_FILE=$$(ls -t $(RESULTS_PATH)/**/$(REPORT_FILE) | head -n1); \
 	echo "Generating coverage report for file $$COV_FILE"; \
