@@ -4,19 +4,18 @@ namespace AllowanceApp.Core.Utilities
 {
     public static class TransactionUtility
     {
-        public static int CalculateTotalAllowance(Account account) =>
-            account.Allowances.Sum(t => t.Total);
-
-        public static void PayAllowanceToAccount(Account account)
+        public static void PayAllowanceToAccount(this Account account)
         {
-            int Total = CalculateTotalAllowance(account);
-            ResetPoints(account);
+            const bool DEPOSIT = false;
+            int Total = account.CalculateTotalAllowance();
+            account.ResetPoints();
             string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
-            ApplyTransaction(account, Total, false, Description);
+            ApplyTransaction(account, Total, DEPOSIT, Description);
         }
 
-        public static void ApplyTransaction(Account account, int amount, bool isWithdrawal, string? description)
+        public static void ApplyTransaction(this Account account, int amount, bool isWithdrawal, string? description)
         {
+            if (amount <= 0) { return; }
             if (account.Balance == 0 && isWithdrawal) { return; }
             var xferAmount = isWithdrawal ? -amount : amount;
             var oldBalance = account.Balance;
@@ -34,11 +33,6 @@ namespace AllowanceApp.Core.Utilities
                 Description = description
             };
             account.Transactions.Add(transaction);
-        }
-
-        private static void ResetPoints(Account account)
-        {
-            account.Allowances.ForEach(g => g.Points = 0);
         }
     }
 }

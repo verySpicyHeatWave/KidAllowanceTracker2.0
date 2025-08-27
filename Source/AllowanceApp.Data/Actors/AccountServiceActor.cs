@@ -53,8 +53,7 @@ namespace AllowanceApp.Data.Actors
         public async Task<AllowancePoint> IncOrDecPointAsync(int id, string category, bool incrementing)
         {
             var allowancePoint = await GetAllowancePointAsync(id, category);
-            allowancePoint.Points += incrementing ? 1 : -1;
-            if (allowancePoint.Points < 0) { allowancePoint.Points = 0; }
+            allowancePoint.IncOrDecPoint(incrementing);
             await _context.SaveChangesAsync();
             return allowancePoint;            
         }
@@ -69,25 +68,23 @@ namespace AllowanceApp.Data.Actors
         
         public async Task<Account> PayAllowanceAsync(int id)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
-            if (TransactionUtility.CalculateTotalAllowance(account) == 0) { return account; }
-            TransactionUtility.PayAllowanceToAccount(account);
+            var account = await GetAccountAsync(id);
+            account.PayAllowanceToAccount();
             await _context.SaveChangesAsync();
             return account;
         }
 
         public async Task<Account> ApplyTransactionAsync(int id, int amount, bool isWithdrawal, string? description)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
-            if (amount <= 0) { return account; }
-            TransactionUtility.ApplyTransaction(account, amount, isWithdrawal, description);
+            var account = await GetAccountAsync(id);
+            account.ApplyTransaction(amount, isWithdrawal, description);
             await _context.SaveChangesAsync();
             return account;
         }
 
         public async Task<string> DeleteAccountAsync(int id)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
+            var account = await GetAccountAsync(id);
             _context.Remove(account);
             await _context.SaveChangesAsync();
             return account.Name;
