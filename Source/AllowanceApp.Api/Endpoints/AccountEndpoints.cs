@@ -13,7 +13,7 @@ namespace AllowanceApp.Api.Endpoints
     {
         public static void SetAccountCreateEndpoints(this WebApplication app)
         {
-            app.MapPost("/accounts/create/{name}", async (string name, AccountService accountService) =>
+            app.MapPost("/accounts/create", async (string name, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
@@ -58,7 +58,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("GetOneAccount")
             .WithOpenApi();
 
-            app.MapGet("/accounts/read/{id}/point/{category}", async (int id, string category, AccountService accountService) =>
+            app.MapGet("/accounts/read/{id}/points/{category}", async (int id, string category, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
@@ -89,7 +89,7 @@ namespace AllowanceApp.Api.Endpoints
 
         public static void SetAccountUpdateEndpoints(this WebApplication app)
         {
-            app.MapPut("/accounts/update/{id}/increment/{category}", async (int id, string category, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/points/{category}/increment", async (int id, string category, AccountService accountService) =>
             {
 
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
@@ -104,7 +104,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("IncrementPoints")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/decrement/{category}", async (int id, string category, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/points/{category}/decrement", async (int id, string category, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
@@ -118,7 +118,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DecrementPoints")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/setprice/{category}", async (int id, string category, int amount, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/points/{category}/setprice", async (int id, string category, int amount, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
@@ -146,7 +146,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("PayAllowance")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/deposit", async (AccountContext context, int id, int amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/deposit", async (int id, int amount, string? description, AccountService accountService) =>
             {
                 if (amount <= 0)
                 {
@@ -167,7 +167,7 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DepositIntoAccount")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (AccountContext context, int id, int amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (int id, int amount, string? description, AccountService accountService) =>
             {
                 if (amount <= 0)
                 {
@@ -191,7 +191,7 @@ namespace AllowanceApp.Api.Endpoints
 
         public static void SetAccountDeleteEndpoints(this WebApplication app)
         {
-            app.MapDelete("/accounts/delete/{id}", async (AccountContext context, int id, AccountService accountService) =>
+            app.MapDelete("/accounts/delete/{id}", async (int id, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<string>(async () =>
                 {
