@@ -40,3 +40,6 @@ app.SetAccountUpdateEndpoints();
 app.SetAccountDeleteEndpoints();
 
 app.Run();
+
+public partial class Program { }
+
