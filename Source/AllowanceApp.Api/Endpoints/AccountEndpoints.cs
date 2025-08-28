@@ -11,11 +11,6 @@ namespace AllowanceApp.Api.Endpoints
 {
     public static class AccountEndpoints
     {
-        private const bool WITHDRAW = true;
-        private const bool DEPOSIT = false;
-        private const bool INCREMENT = true;
-        private const bool DECREMENT = false;
-
         public static void SetAccountCreateEndpoints(this WebApplication app)
         {
             app.MapPost("/accounts/create/{name}", async (string name, AccountService accountService) =>
