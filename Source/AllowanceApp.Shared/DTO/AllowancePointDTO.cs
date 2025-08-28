@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using AllowanceApp.Core.Models;
 
-namespace AllowanceApp.Api.DTO
+namespace AllowanceApp.Shared.DTO
 {
     public record AllowancePointDTO
     {

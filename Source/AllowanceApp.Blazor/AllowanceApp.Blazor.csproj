@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AllowanceApp.Api\AllowanceApp.Api.csproj" />
+    <ProjectReference Include="..\AllowanceApp.Shared\AllowanceApp.Shared.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

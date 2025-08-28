@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\Source\AllowanceApp.Api\AllowanceApp.Api.csproj" />
     <ProjectReference Include="..\..\Source\AllowanceApp.Data\AllowanceApp.Data.csproj" />
     <ProjectReference Include="..\..\Source\AllowanceApp.Core\AllowanceApp.Core.csproj" />
+    <ProjectReference Include="..\..\Source\AllowanceApp.Shared\AllowanceApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

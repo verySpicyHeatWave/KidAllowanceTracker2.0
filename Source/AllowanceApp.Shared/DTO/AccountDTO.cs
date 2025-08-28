@@ -1,9 +1,8 @@
 using AllowanceApp.Core.Models;
-using AllowanceApp.Api.Utilities;
-using AllowanceApp.Core.Utilities;
+using AllowanceApp.Shared.Utilities;
 using System.Text.Json.Serialization;
 
-namespace AllowanceApp.Api.DTO
+namespace AllowanceApp.Shared.DTO
 {
     public record AccountDTO
     {

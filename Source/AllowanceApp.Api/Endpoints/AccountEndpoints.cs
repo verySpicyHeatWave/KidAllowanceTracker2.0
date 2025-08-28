@@ -1,10 +1,9 @@
-using AllowanceApp.Api.DTO;
 using AllowanceApp.Api.Records;
-using AllowanceApp.Api.Utilities;
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
-using AllowanceApp.Data.Contexts;
 using AllowanceApp.Data.Exceptions;
+using AllowanceApp.Shared.DTO;
+using AllowanceApp.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AllowanceApp.Api.Endpoints
@@ -13,11 +12,11 @@ namespace AllowanceApp.Api.Endpoints
     {
         public static void SetAccountCreateEndpoints(this WebApplication app)
         {
-            app.MapPost("/accounts/create", async (string name, AccountService accountService) =>
+            app.MapPost("/accounts/create", async (CreateAccountRequest request, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.AddAccountAsync(name);
+                    var account = await accountService.AddAccountAsync(request.Name);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -118,11 +117,11 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DecrementPoints")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/points/{category}/setprice", async (int id, string category, int amount, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/points/{category}/setprice", async (int id, string category, TransactionRequest request, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
                 {
-                    var point = await accountService.UpdateAllowancePriceAsync(id, category, amount);
+                    var point = await accountService.UpdateAllowancePriceAsync(id, category, request.Amount);
                     return point;
                 });
                 return dbResult.IsSuccess
@@ -146,18 +145,18 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("PayAllowance")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/deposit", async (int id, int amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/deposit", async (int id, TransactionRequest request, AccountService accountService) =>
             {
-                if (amount <= 0)
+                if (request.Amount <= 0)
                 {
                     return Results.Problem(
-                        detail: $"Deposit amount must be more than zero, not {amount}",
+                        detail: $"Deposit amount must be more than zero, not {request.Amount}",
                         statusCode: StatusCodes.Status400BadRequest
                     );
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, TransactionType.Deposit, description);
+                    var account = await accountService.ApplyTransactionAsync(id, request.Amount, TransactionType.Deposit, request.Description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -167,18 +166,18 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DepositIntoAccount")
             .WithOpenApi();
 
-            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (int id, int amount, string? description, AccountService accountService) =>
+            app.MapPut("/accounts/update/{id}/transaction/withdrawal", async (int id, TransactionRequest request, AccountService accountService) =>
             {
-                if (amount <= 0)
+                if (request.Amount <= 0)
                 {
                     return Results.Problem(
-                        detail: $"Withdrawal amount must be more than zero, not {amount}",
+                        detail: $"Withdrawal amount must be more than zero, not {request.Amount}",
                         statusCode: StatusCodes.Status400BadRequest
                     );
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, amount, TransactionType.Withdraw, description);
+                    var account = await accountService.ApplyTransactionAsync(id, request.Amount, TransactionType.Withdraw, request.Description);
                     return account;
                 });
                 return dbResult.IsSuccess

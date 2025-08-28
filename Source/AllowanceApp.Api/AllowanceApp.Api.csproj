@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AllowanceApp.Data\AllowanceApp.Data.csproj" />
     <ProjectReference Include="..\AllowanceApp.Core\AllowanceApp.Core.csproj" />
+    <ProjectReference Include="..\AllowanceApp.Shared\AllowanceApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>
