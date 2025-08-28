@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -9,6 +10,7 @@ namespace AllowanceApp.Data.Contexts
     // This factory interface is found and used by EF to be able to use my context.
 
     // This is fuckery most supreme.
+    [ExcludeFromCodeCoverage]
     public class AccountContextFactory : IDesignTimeDbContextFactory<AccountContext>
     {
         public AccountContext CreateDbContext(string[] args)
