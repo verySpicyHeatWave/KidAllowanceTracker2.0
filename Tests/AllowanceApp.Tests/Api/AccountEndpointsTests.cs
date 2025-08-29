@@ -4,6 +4,7 @@ using AllowanceApp.Core.Models;
 using AllowanceApp.Shared.DTO;
 using AllowanceApp.Tests.Common;
 using AllowanceApp.Tests.ApiFixtures;
+
 namespace AllowanceApp.Tests.Api
 {
     public class AccountEndpointsTests(MockContextWebAppFactory factory) : IClassFixture<MockContextWebAppFactory>, IAsyncLifetime

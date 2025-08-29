@@ -1,3 +1,4 @@
+using AllowanceApp.Api.Services;
 using AllowanceApp.Data.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,10 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AllowanceApp.Tests.ApiFixtures
 {
-    public class MockContextWebAppFactory : WebApplicationFactory<Program>
+    public class BasePointServiceWebAppFactory : WebApplicationFactory<Program>
     {
         private readonly SqliteConnection _connection;
-        public MockContextWebAppFactory()
+        public BasePointServiceWebAppFactory()
         {
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -21,11 +22,17 @@ namespace AllowanceApp.Tests.ApiFixtures
 
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
+                var real_context = services.SingleOrDefault(
                     d => d.ServiceType == typeof(DbContextOptions<AccountContext>));
-                if (descriptor is not null)
+                if (real_context is not null)
                 {
-                    services.Remove(descriptor);
+                    services.Remove(real_context);
+                }
+                var real_service = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(WeeklyAllowanceService));
+                if (real_service is not null)
+                {
+                    services.Remove(real_service);
                 }
 
                 services.AddDbContext<AccountContext>(options =>
@@ -49,20 +56,20 @@ namespace AllowanceApp.Tests.ApiFixtures
             }
         }
 
-        public void ResetDatabase()
-        {
-            using var scope = Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AccountContext>();
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-        }
+        // public void ResetDatabase()
+        // {
+        //     using var scope = Services.CreateScope();
+        //     var db = scope.ServiceProvider.GetRequiredService<AccountContext>();
+        //     db.Database.EnsureDeleted();
+        //     db.Database.EnsureCreated();
+        // }
 
-        public void SeedDatabase(Action<AccountContext> seedAction)
-        {
-            using var scope = Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AccountContext>();
-            seedAction(db);
-            db.SaveChanges();
-        }
+        // public void SeedDatabase(Action<AccountContext> seedAction)
+        // {
+        //     using var scope = Services.CreateScope();
+        //     var db = scope.ServiceProvider.GetRequiredService<AccountContext>();
+        //     seedAction(db);
+        //     db.SaveChanges();
+        // }
     }
 }

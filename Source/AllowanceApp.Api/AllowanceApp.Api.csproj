@@ -22,4 +22,9 @@
     <ProjectReference Include="..\AllowanceApp.Shared\AllowanceApp.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="AllowanceApp.Tests" />
+  </ItemGroup>
+
+
 </Project>
