@@ -1,4 +1,4 @@
-namespace AllowanceApp.Api.Records
+namespace AllowanceApp.Api.Results
 {
     public record DatabaseResults<T>(T? Response, string? Message, int StatusCode)
     {

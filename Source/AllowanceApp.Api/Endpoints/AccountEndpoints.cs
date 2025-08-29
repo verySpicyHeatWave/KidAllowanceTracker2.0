@@ -1,4 +1,4 @@
-using AllowanceApp.Api.Records;
+using AllowanceApp.Api.Results;
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
 using AllowanceApp.Data.Exceptions;
@@ -20,8 +20,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AccountDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("AddAccount")
             .WithOpenApi();
@@ -37,8 +37,8 @@ namespace AllowanceApp.Api.Endpoints
                     return accounts;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(DTOUtility.AccountListToDTOs(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(DTOUtility.AccountListToDTOs(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("GetAllAccounts")
             .WithOpenApi();
@@ -51,8 +51,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AccountDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("GetOneAccount")
             .WithOpenApi();
@@ -65,8 +65,8 @@ namespace AllowanceApp.Api.Endpoints
                     return point;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AllowancePointDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("GetAllowancePoint")
             .WithOpenApi();
@@ -79,8 +79,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account.Transactions;
                 });
                 return dbResult.IsSuccess && dbResult.Response!.Count != 0
-                    ? Results.Ok(DTOUtility.TransactionListToDTOs(dbResult.Response))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(DTOUtility.TransactionListToDTOs(dbResult.Response))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("GetAccountTransactions")
             .WithOpenApi();
@@ -97,8 +97,8 @@ namespace AllowanceApp.Api.Endpoints
                     return point;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AllowancePointDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("IncrementPoint")
             .WithOpenApi();
@@ -111,8 +111,8 @@ namespace AllowanceApp.Api.Endpoints
                     return point;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AllowancePointDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("DecrementPoint")
             .WithOpenApi();
@@ -125,8 +125,8 @@ namespace AllowanceApp.Api.Endpoints
                     return point;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AllowancePointDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("SetAllowancePrice")
             .WithOpenApi();
@@ -139,8 +139,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AccountDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("PayAllowance")
             .WithOpenApi();
@@ -149,7 +149,7 @@ namespace AllowanceApp.Api.Endpoints
             {
                 if (request.Amount <= 0)
                 {
-                    return Results.Problem(
+                    return Microsoft.AspNetCore.Http.Results.Problem(
                         detail: $"Deposit amount must be more than zero, not {request.Amount}",
                         statusCode: StatusCodes.Status400BadRequest
                     );
@@ -160,8 +160,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AccountDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("DepositIntoAccount")
             .WithOpenApi();
@@ -170,7 +170,7 @@ namespace AllowanceApp.Api.Endpoints
             {
                 if (request.Amount <= 0)
                 {
-                    return Results.Problem(
+                    return Microsoft.AspNetCore.Http.Results.Problem(
                         detail: $"Withdrawal amount must be more than zero, not {request.Amount}",
                         statusCode: StatusCodes.Status400BadRequest
                     );
@@ -181,8 +181,8 @@ namespace AllowanceApp.Api.Endpoints
                     return account;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok(new AccountDTO(dbResult.Response!))
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("WithdrawFromAccount")
             .WithOpenApi();
@@ -198,8 +198,8 @@ namespace AllowanceApp.Api.Endpoints
                     return name;
                 });
                 return dbResult.IsSuccess
-                    ? Results.Ok($"Account with name {dbResult.Response!} successfully deleted.")
-                    : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+                    ? Microsoft.AspNetCore.Http.Results.Ok($"Account with name {dbResult.Response!} successfully deleted.")
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("DeleteAccount")
             .WithOpenApi();

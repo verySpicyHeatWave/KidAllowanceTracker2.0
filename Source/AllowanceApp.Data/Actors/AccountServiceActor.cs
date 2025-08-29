@@ -1,6 +1,5 @@
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
-using AllowanceApp.Core.Utilities;
 using AllowanceApp.Data.Contexts;
 using AllowanceApp.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;

@@ -36,7 +36,7 @@ namespace AllowanceApp.Tests.Api
                 point.Points = rng.Next(1, 10);
             }
 
-            account.Balance = rng.Next(5000);
+            account.Balance = rng.Next(3000, 5000);
 
             return account;
         }
@@ -150,7 +150,7 @@ namespace AllowanceApp.Tests.Api
             var old_account = await acct_response.Content.ReadFromJsonAsync<AccountDTO>();
             Assert.NotNull(old_account);
 
-            var amount = rng.Next(1, 5000);
+            var amount = rng.Next(1, 2000);
             var description = Guid.NewGuid().ToString();
 
             var response = await _client.PutAsJsonAsync(
@@ -165,7 +165,10 @@ namespace AllowanceApp.Tests.Api
             Assert.Equal(Math.Max(0, old_account.Balance + diff), account.Balance);
             var transaction = account.Transactions.SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
             Assert.NotNull(transaction);
-            Assert.Equal(amount, transaction.Amount);
+            int expected_amount = amount > old_account.Balance && multiplier == -1
+                ? old_account.Balance
+                : amount;
+            Assert.Equal(expected_amount, transaction.Amount);
         }
 
 

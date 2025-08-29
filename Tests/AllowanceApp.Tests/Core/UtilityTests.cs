@@ -1,5 +1,4 @@
 using AllowanceApp.Core.Models;
-using AllowanceApp.Core.Utilities;
 using AllowanceApp.Tests.Common;
 
 namespace AllowanceApp.Tests.Core

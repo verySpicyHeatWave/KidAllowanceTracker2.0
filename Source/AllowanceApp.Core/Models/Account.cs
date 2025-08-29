@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using AllowanceApp.Core.Utilities;
 
 namespace AllowanceApp.Core.Models
 {
@@ -22,6 +21,45 @@ namespace AllowanceApp.Core.Models
             PopulateDefaultAllowancePoints();
         }
 
+        public void ResetPoints() => Allowances.ForEach(g => g.Points = 0);
+
+
+        public void PayAllowanceToAccount()
+        {
+            int Total = AllowanceBalance;
+            ResetPoints();
+            string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
+            ApplyTransaction(Total, TransactionType.Deposit, Description);
+        }
+
+        public void ApplyTransaction(int amount, TransactionType action, string? description)
+        {
+            if (InvalidWithdrawal(action, amount)) { return; }
+            var xferAmount = amount * (int)action;
+            var oldBalance = Balance;
+            Balance += xferAmount;
+            amount = PreventOverdraft(amount, oldBalance);
+
+            Transaction transaction = new()
+            {
+                AccountID = AccountID,
+                Date = DateOnly.FromDateTime(DateTime.Today),
+                Amount = amount,
+                Description = description
+            };
+            Transactions.Add(transaction);
+        }
+
+        private int PreventOverdraft(int amount, int oldbalance)
+        {
+            var resp = Balance < 0 ? oldbalance : amount;
+            if (resp == oldbalance) { Balance = 0; }
+            return resp;
+        }
+
+        private bool InvalidWithdrawal(TransactionType action, int amount) =>
+            (Balance == 0 && action == TransactionType.Withdraw) || (amount <= 0);
+
         private void PopulateDefaultAllowancePoints()
         {
             Allowances =
@@ -37,7 +75,6 @@ namespace AllowanceApp.Core.Models
                 new AllowancePoint("GradeD", 0),
                 new AllowancePoint("GradeF", -50)
             ];
-
         }
     }
 }

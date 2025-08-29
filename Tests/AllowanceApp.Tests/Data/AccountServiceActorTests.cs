@@ -1,12 +1,8 @@
 using AllowanceApp.Core.Models;
-using AllowanceApp.Core.Services;
-using AllowanceApp.Core.Utilities;
 using AllowanceApp.Data.Actors;
-using AllowanceApp.Data.Contexts;
 using AllowanceApp.Data.Exceptions;
 using AllowanceApp.Tests.Common;
 using Microsoft.EntityFrameworkCore;
-using Xunit.Sdk;
 
 namespace AllowanceApp.Tests.Data
 {

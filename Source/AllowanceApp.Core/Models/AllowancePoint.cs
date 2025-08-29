@@ -12,5 +12,14 @@ namespace AllowanceApp.Core.Models
         public int Price { get; set; } = Price;
         public int Points { get; set; } = 0;
         public int Total => Price * Points;
+
+        public void IncOrDecPoint(PointOperation incOrDec)
+        {
+            Points += (int)incOrDec;
+            if (Points < 0) { Points = 0; }
+        }
     }
+
+    
+    
 }
