@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+.account-card {
+  @apply bg-white rounded-2xl shadow-md p-6 flex flex-col w-100 text-center transition-transform hover:scale-[1.02];
+}
+
+.account-name {
+  @apply text-xl font-bold text-gray-800 mb-4;
+}
+
+.points {
+  @apply flex gap-3 mb-4;
+}
+
+.point-btn {
+  @apply bg-gray-100 rounded-xl px-4 py-2 text-lg font-medium shadow-sm transition hover:bg-gray-200 hover:shadow-md;
+}
+
+.balance {
+  @apply text-gray-700 text-lg;
+}
