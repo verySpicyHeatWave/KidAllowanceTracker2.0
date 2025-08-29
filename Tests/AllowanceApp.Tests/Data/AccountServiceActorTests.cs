@@ -91,7 +91,7 @@ namespace AllowanceApp.Tests.Data
         public async Task GetAccountAsync_Throws(int AccountsInDB)
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
 
             int id = 1;
@@ -116,17 +116,16 @@ namespace AllowanceApp.Tests.Data
             var rng = Methods.GetRandomGenerator();
 
             
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor);
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
+            var category = Methods.GetRandomBehaviorString(rng);
 
-            var index = rng.Next(defaultPointStrings.Count);
             var id = rng.Next(1, test_accounts.Count);
 
-            var point = await actor.GetAllowancePointAsync(id, defaultPointStrings[index]);
+            var point = await actor.GetAllowancePointAsync(id, category);
 
-            var strcomp = string.Compare(defaultPointStrings[index], point.Category, StringComparison.OrdinalIgnoreCase);
+            var strcomp = string.Compare(category, point.Category, StringComparison.OrdinalIgnoreCase);
             Assert.Equal(0, strcomp);
             Assert.Equal(id, point.AccountID);
         }
@@ -137,11 +136,9 @@ namespace AllowanceApp.Tests.Data
         public async Task GetAllowancePointAsync_ThrowsOnAccountGet(int AccountsInDB)
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
-
-            var index = rng.Next(defaultPointStrings.Count);
+            var category = Methods.GetRandomBehaviorString(rng);
 
             int id = 1;
             if (AccountsInDB > 0)
@@ -151,7 +148,7 @@ namespace AllowanceApp.Tests.Data
             }
 
             var ex = await Assert.ThrowsAsync<DataNotFoundException>(async () =>
-                await actor.GetAllowancePointAsync(id, defaultPointStrings[index]));
+                await actor.GetAllowancePointAsync(id, category));
 
             Assert.True(string.Equals(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase));
         }
@@ -160,9 +157,8 @@ namespace AllowanceApp.Tests.Data
         [Fact]
         public async Task GetAllowancePointAsync_ThrowsIfPointNameNotFound()
         {
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
 
             await actor.AddAccountAsync(Guid.NewGuid().ToString());
 
@@ -183,22 +179,21 @@ namespace AllowanceApp.Tests.Data
         public async Task SinglePointAdjustAsync_IncOrDecByOne(PointOperation operation)
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             var acct = await actor.AddAccountAsync(Guid.NewGuid().ToString());
 
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
-            var index = rng.Next(defaultPointStrings.Count);
+            var category = Methods.GetRandomBehaviorString(rng);
             int id = 1;
 
             var random_add = rng.Next(2, 10);
             for (int i = 0; i != random_add; i++)
             {
-                await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], PointOperation.Increment);
+                await actor.SinglePointAdjustAsync(id, category, PointOperation.Increment);
             }
 
-            var oldValue = (await actor.GetAllowancePointAsync(id, defaultPointStrings[index])).Points;
-            var newPoint = await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], operation);
+            var oldValue = (await actor.GetAllowancePointAsync(id, category)).Points;
+            var newPoint = await actor.SinglePointAdjustAsync(id, category, operation);
 
             Assert.Equal(oldValue + (int)operation, newPoint.Points);
         }
@@ -210,12 +205,11 @@ namespace AllowanceApp.Tests.Data
         public async Task UpdateAllowancePriceAsync_UpdatesToWhatever()
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
 
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
-            var index = rng.Next(defaultPointStrings.Count);
+            var category = Methods.GetRandomBehaviorString(rng);
             int id = 1;
 
             var random_add = rng.Next(0, 500);
@@ -223,7 +217,7 @@ namespace AllowanceApp.Tests.Data
             for (int i = 0; i != 5; i++)
             {
                 if (i % 2 == 1) { random_add *= -1; }
-                var newPoint = await actor.UpdateAllowancePriceAsync(id, defaultPointStrings[index], random_add);
+                var newPoint = await actor.UpdateAllowancePriceAsync(id, category, random_add);
                 Assert.Equal(random_add, newPoint.Price);
                 random_add = rng.Next(0, 500);
             }
@@ -236,18 +230,18 @@ namespace AllowanceApp.Tests.Data
         public async Task PayAllowanceAsync_PaysOutCorrectly()
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
 
-            var defaultPointStrings = Methods.GetDefaultBehaviorStrings();
-            var index = rng.Next(defaultPointStrings.Count);
+            var category = Methods.GetDefaultBehaviorStrings();
+            var index = rng.Next(category.Count);
             int id = 1;
 
             for (int i = 0; i != 10; i++)
             {
-                await actor.SinglePointAdjustAsync(id, defaultPointStrings[index], PointOperation.Increment);
-                index = rng.Next(defaultPointStrings.Count);
+                await actor.SinglePointAdjustAsync(id, category[index], PointOperation.Increment);
+                index = rng.Next(category.Count);
             }
             Account unpaidAcct = await actor.GetAccountAsync(id);
             Assert.Empty(unpaidAcct.Transactions);
@@ -267,7 +261,7 @@ namespace AllowanceApp.Tests.Data
         public async Task ApplyTransactionAsync_OperatesCorrectlyAsync(TransactionType action)
         {
             var rng = Methods.GetRandomGenerator();
-                        using var context = Methods.GetTestContext();
+            using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             _ = await actor.AddAccountAsync(Guid.NewGuid().ToString());
 

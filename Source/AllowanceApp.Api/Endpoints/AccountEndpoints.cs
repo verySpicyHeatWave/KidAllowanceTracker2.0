@@ -68,7 +68,7 @@ namespace AllowanceApp.Api.Endpoints
                     ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
                     : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
-            .WithName("GetAccountPoints")
+            .WithName("GetAllowancePoint")
             .WithOpenApi();
 
             app.MapGet("/accounts/read/{id}/transactions", async (int id, AccountService accountService) =>
@@ -100,7 +100,7 @@ namespace AllowanceApp.Api.Endpoints
                     ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
                     : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
-            .WithName("IncrementPoints")
+            .WithName("IncrementPoint")
             .WithOpenApi();
 
             app.MapPut("/accounts/update/{id}/points/{category}/decrement", async (int id, string category, AccountService accountService) =>
@@ -114,7 +114,7 @@ namespace AllowanceApp.Api.Endpoints
                     ? Results.Ok(new AllowancePointDTO(dbResult.Response!))
                     : Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
-            .WithName("DecrementPoints")
+            .WithName("DecrementPoint")
             .WithOpenApi();
 
             app.MapPut("/accounts/update/{id}/points/{category}/setprice", async (int id, string category, TransactionRequest request, AccountService accountService) =>

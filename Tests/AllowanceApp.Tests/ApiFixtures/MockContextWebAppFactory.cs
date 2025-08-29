@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AllowanceApp.Tests.Common
+namespace AllowanceApp.Tests.ApiFixtures
 {
     public class MockContextWebAppFactory : WebApplicationFactory<Program>
     {
@@ -17,6 +18,8 @@ namespace AllowanceApp.Tests.Common
         }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Test");
+
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
@@ -29,6 +32,9 @@ namespace AllowanceApp.Tests.Common
                 services.AddDbContext<AccountContext>(options =>
                 {
                     options.UseSqlite(_connection);
+                    // options.EnableSensitiveDataLogging(false);
+                    // options.EnableDetailedErrors(false);
+                    // options.LogTo(_ => { });
                 });
 
                 using var scope = services.BuildServiceProvider().CreateScope();

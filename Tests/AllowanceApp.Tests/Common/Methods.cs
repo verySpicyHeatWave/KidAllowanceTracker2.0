@@ -70,6 +70,14 @@ namespace AllowanceApp.Tests.Common
             ];
         }
 
+        public static string GetRandomBehaviorString(Random? rng = null)
+        {
+            rng ??= GetRandomGenerator();
+            var categories = GetDefaultBehaviorStrings();
+            var index = rng.Next(categories.Count);
+            return categories[index];
+        }
+
         public static AccountService GetAccountServiceWithMock()
         {
 
@@ -92,19 +100,19 @@ namespace AllowanceApp.Tests.Common
 
             mockActor
                 .Setup(a => a.GetAccountAsync(It.Is<int>(id => id > 0)))
-                .ReturnsAsync((int id) => new Account(Guid.NewGuid().ToString()) {AccountID = id});
+                .ReturnsAsync((int id) => new Account(Guid.NewGuid().ToString()) { AccountID = id });
 
             mockActor
                 .Setup(a => a.GetAllowancePointAsync(It.Is<int>(id => id > 0), It.IsAny<string>()))
-                .ReturnsAsync((int id, string category) => new AllowancePoint(category, 1) {AccountID = id});
+                .ReturnsAsync((int id, string category) => new AllowancePoint(category, 1) { AccountID = id });
 
             mockActor
                 .Setup(a => a.SinglePointAdjustAsync(It.Is<int>(id => id > 0), It.IsAny<string>(), It.IsAny<PointOperation>()))
-                .ReturnsAsync((int id, string category, PointOperation operation) => new AllowancePoint(category, 1) {AccountID = id, Points = 1});
+                .ReturnsAsync((int id, string category, PointOperation operation) => new AllowancePoint(category, 1) { AccountID = id, Points = 1 });
 
             mockActor
                 .Setup(a => a.UpdateAllowancePriceAsync(It.Is<int>(id => id > 0), It.IsAny<string>(), It.IsAny<int>()))
-                .ReturnsAsync((int id, string category, int amount) => new AllowancePoint(category, amount) {AccountID = id});
+                .ReturnsAsync((int id, string category, int amount) => new AllowancePoint(category, amount) { AccountID = id });
 
             mockActor
                 .Setup(a => a.PayAllowanceAsync(It.Is<int>(id => id > 0)))
@@ -119,7 +127,7 @@ namespace AllowanceApp.Tests.Common
 
             mockActor
                 .Setup(a => a.ApplyTransactionAsync(It.Is<int>(id => id > 0), It.Is<int>(d => d > 0), It.IsAny<TransactionType>(), It.IsAny<string>()))
-                .ReturnsAsync((int id, int amount, TransactionType action, string description) => 
+                .ReturnsAsync((int id, int amount, TransactionType action, string description) =>
                 {
                     var rng = GetRandomGenerator();
                     Account expected = new(Guid.NewGuid().ToString()) { AccountID = id };
