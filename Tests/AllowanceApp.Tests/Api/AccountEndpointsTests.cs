@@ -13,44 +13,15 @@ namespace AllowanceApp.Tests.Api
         private readonly MockContextWebAppFactory _factory = factory;
         private readonly HttpClient _client = factory.CreateClient();
 
-        private static Account LivelyAccount(string Name)
-        {
-            var rng = Methods.GetRandomGenerator();
-            var transactions = rng.Next(2, 10);
-            int amount;
-
-            var account = new Account(Name);
-
-            for (int i = 0; i != transactions; i++)
-            {
-                amount = rng.Next(-5000, 5000);
-                account.Transactions.Add(new Transaction()
-                {
-                    Description = Guid.NewGuid().ToString(),
-                    Date = DateOnly.FromDateTime(DateTime.Today),
-                    Amount = amount
-                });
-            }
-
-            foreach (var point in account.Allowances)
-            {
-                point.Points = rng.Next(1, 10);
-            }
-
-            account.Balance = rng.Next(3000, 5000);
-
-            return account;
-        }
-
         private void DefaultDBSeed()
         {
             _factory.SeedDatabase(db =>
             {
-                db.Accounts.Add(LivelyAccount("Adam"));
-                db.Accounts.Add(LivelyAccount("Beth"));
-                db.Accounts.Add(LivelyAccount("Carl"));
-                db.Accounts.Add(LivelyAccount("Dave"));
-                db.Accounts.Add(LivelyAccount("Erin"));
+                db.Accounts.Add(Methods.GetLivelyAccount("Adam"));
+                db.Accounts.Add(Methods.GetLivelyAccount("Beth"));
+                db.Accounts.Add(Methods.GetLivelyAccount("Carl"));
+                db.Accounts.Add(Methods.GetLivelyAccount("Dave"));
+                db.Accounts.Add(Methods.GetLivelyAccount("Erin"));
             });
         }
 

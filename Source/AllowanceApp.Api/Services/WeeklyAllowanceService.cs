@@ -27,14 +27,14 @@ namespace AllowanceApp.Api.Services
             return next <= now ? next.AddDays(7) : next;
         }
 
-        private async Task IncrementBaseAllowances()
+        internal async Task IncrementBaseAllowances()
         {
             using var scope = _services.CreateScope();
-            var accountService = scope.ServiceProvider.GetRequiredService<AccountService>();
-            var accounts = await accountService.GetAllAccountsAsync();
+            var accountActor = scope.ServiceProvider.GetRequiredService<IAccountServiceActor>();
+            var accounts = await accountActor.GetAllAccountsAsync();
             foreach (var account in accounts)
             {
-                await accountService.SinglePointAdjustAsync(account.AccountID, "BaseAllowance", PointOperation.Increment);
+                await accountActor.SinglePointAdjustAsync(account.AccountID, "BaseAllowance", PointOperation.Increment);
             }
         }
     }

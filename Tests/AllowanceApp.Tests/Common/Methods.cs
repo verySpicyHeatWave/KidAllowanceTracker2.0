@@ -11,6 +11,35 @@ namespace AllowanceApp.Tests.Common
         public const int EMPTY_DB = 0;
         public const int POPULATED_DB = 10;
 
+        public static Account GetLivelyAccount(string Name)
+        {
+            var rng = Methods.GetRandomGenerator();
+            var transactions = rng.Next(2, 10);
+            int amount;
+
+            var account = new Account(Name);
+
+            for (int i = 0; i != transactions; i++)
+            {
+                amount = rng.Next(-5000, 5000);
+                account.Transactions.Add(new Transaction()
+                {
+                    Description = Guid.NewGuid().ToString(),
+                    Date = DateOnly.FromDateTime(DateTime.Today),
+                    Amount = amount
+                });
+            }
+
+            foreach (var point in account.Allowances)
+            {
+                point.Points = rng.Next(1, 10);
+            }
+
+            account.Balance = rng.Next(3000, 5000);
+
+            return account;
+        }
+
         public static async Task<Dictionary<int, string>> StuffDatabaseWithRandomAccounts(IAccountServiceActor actor, int maxCount = POPULATED_DB)
         {
             Dictionary<int, string> test_accounts = [];
