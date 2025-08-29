@@ -45,7 +45,6 @@ namespace AllowanceApp.Tests.Common
         {
             var options = new DbContextOptionsBuilder<AccountContext>()
                 .UseSqlite("Data Source=:memory:")
-                // .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             AccountContext context = new(options);

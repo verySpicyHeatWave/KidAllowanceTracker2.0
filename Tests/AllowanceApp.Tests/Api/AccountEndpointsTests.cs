@@ -1,15 +1,35 @@
 using System.Net;
 using System.Net.Http.Json;
+using AllowanceApp.Core.Models;
 using AllowanceApp.Shared.DTO;
+using AllowanceApp.Tests.Common;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 // BCOBB: These tests are using the real database, which I don't want.
 
 namespace AllowanceApp.Tests.Api
 {
-    public class AccountEndpointsTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+    public class AccountEndpointsTests(MockContextWebAppFactory factory) : IClassFixture<MockContextWebAppFactory>, IAsyncLifetime
     {
+        private readonly MockContextWebAppFactory _factory = factory;
         private readonly HttpClient _client = factory.CreateClient();
+
+        public async Task InitializeAsync()
+        {
+            _factory.ResetDatabase();
+            _factory.SeedDatabase(db =>
+            {
+                db.Accounts.Add(new Account("Adam"));
+                db.Accounts.Add(new Account("Beth"));
+                db.Accounts.Add(new Account("Carl"));
+                db.Accounts.Add(new Account("Dave"));
+                db.Accounts.Add(new Account("Erin"));
+            });
+            await Task.CompletedTask;
+        }
+
+        public async Task DisposeAsync() => 
+            await Task.CompletedTask;
 
         [Fact]
         public async Task AddAccount_ReturnsOk_WhenAccountIsCreated()
