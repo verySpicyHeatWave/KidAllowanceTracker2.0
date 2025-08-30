@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{8A2090
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Shared", "Source\AllowanceApp.Shared\AllowanceApp.Shared.csproj", "{44232FE5-943F-4850-A590-41709658E460}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Blazor", "Source\AllowanceApp.Blazor\AllowanceApp.Blazor.csproj", "{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,8 +46,13 @@ Global
 		{44232FE5-943F-4850-A590-41709658E460}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44232FE5-943F-4850-A590-41709658E460}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44232FE5-943F-4850-A590-41709658E460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{44232FE5-943F-4850-A590-41709658E460} = {8A209019-F970-4425-B5A8-C6DE5322ECE4}
+		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94} = {8A209019-F970-4425-B5A8-C6DE5322ECE4}
 	EndGlobalSection
 EndGlobal
