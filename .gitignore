@@ -12,6 +12,9 @@
 *.sh
 .notes
 
+# BCOBB: This one is temporary
+.github
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

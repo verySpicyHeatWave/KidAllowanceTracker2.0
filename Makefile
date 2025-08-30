@@ -3,8 +3,10 @@ REPORT_FILE=coverage.cobertura.xml
 RESULTS_PATH=Tests/AllowanceApp.Tests/TestResults
 COV_PATH=Tests/AllowanceApp.Tests/Coverage
 DB_FILE=~/.local/share/accounts.db
+MY_CSS=./Source/AllowanceApp.Blazor/wwwroot/app.css
+OUT_CSS=./Source/AllowanceApp.Blazor/wwwroot/dist.css
 
-.PHONY: build test coverage run_api run_blazor run clean wiped spotless dbclean
+.PHONY: build test coverage run_api run_blazor run clean wiped spotless dbclean refresh-css
 
 build:
 	@dotnet build
@@ -60,3 +62,6 @@ run_blazor:
 	@dotnet run --project Source/AllowanceApp.Blazor
 
 run: run_api
+
+refresh-css:
+	@npx @tailwindcss/cli -i $(MY_CSS) -o $(OUT_CSS)
