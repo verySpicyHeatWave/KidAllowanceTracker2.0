@@ -117,6 +117,20 @@ namespace AllowanceApp.Api.Endpoints
             .WithName("DecrementPoint")
             .WithOpenApi();
 
+            app.MapPut("/accounts/update/{id}/points/{category}/setpoints", async (int id, string category, PointUpdateRequest request, AccountService accountService) =>
+            {
+                var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>
+                {
+                    var point = await accountService.SetPointAsync(id, category, request.Points);
+                    return point;
+                });
+                return dbResult.IsSuccess
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AllowancePointDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+            })
+            .WithName("SetPointValue")
+            .WithOpenApi();
+
             app.MapPut("/accounts/update/{id}/points/{category}/setprice", async (int id, string category, TransactionRequest request, AccountService accountService) =>
             {
                 var dbResult = await TryDatabaseInteraction<AllowancePoint>(async () =>

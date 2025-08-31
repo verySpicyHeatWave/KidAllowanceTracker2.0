@@ -21,6 +21,9 @@ namespace AllowanceApp.Core.Services
         public async Task<AllowancePoint> SinglePointAdjustAsync(int id, string category, PointOperation operation) =>
             await _actor.SinglePointAdjustAsync(id, category, operation);
 
+        public async Task<AllowancePoint> SetPointAsync(int id, string category, int value) =>
+            await _actor.SetPointAsync(id, category, value);
+
         public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount) =>
             await _actor.UpdateAllowancePriceAsync(id, category, amount);
 
