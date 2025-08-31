@@ -1,7 +1,29 @@
 ﻿@page "/"
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
 
 <PageTitle>Home</PageTitle>
+@if (accounts is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="grid grid-cols-3">
+        @foreach (var account in accounts)
+        {
+            <AccountCard AccountRecord="@account"></AccountCard>
+        }
+    </div>
+}
 
-<h1 class="p-0 font-bold text-blue-600">Hello, world!</h1>
 
-Welcome to your new app.
+@code {
+    private List<AccountDTO>? accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await AccountApi.GetAllAccountsAsync();
+    }
+}

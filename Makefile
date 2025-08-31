@@ -58,8 +58,8 @@ run_api:
 	@dotnet run --project Source/AllowanceApp.Api
 
 run_blazor:
-	@echo "Starting the API..."
-	@dotnet run --project Source/AllowanceApp.Blazor
+	@echo "Starting the front end..."
+	@dotnet watch --project Source/AllowanceApp.Blazor
 
 run: run_api
 

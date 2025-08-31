@@ -1,6 +1,10 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">AllowanceApp.Blazor</a>
+        <a class="navbar-brand" href="">Kid Allowance Tracker 2.0</a>
     </div>
 </div>
 
@@ -13,8 +17,24 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
+        @if (accounts is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {        
+            @foreach (var account in accounts)
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="@($"/account-details/{account.ID}")">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @account.Name
+                    </NavLink>
+                </div>
+            }
+        }
 
-        <div class="nav-item px-3">
+
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="counter">
                 <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
             </NavLink>
@@ -29,7 +49,15 @@
             <NavLink class="nav-link" href="account">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Account
             </NavLink>
-        </div>
+        </div> *@
     </nav>
 </div>
 
+@code {
+    private List<AccountDTO>? accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await AccountApi.GetAllAccountsAsync();
+    }
+}

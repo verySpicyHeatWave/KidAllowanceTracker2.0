@@ -8,8 +8,8 @@ namespace AllowanceApp.Shared.DTO
         public int AccountID { get; init; }
         public string Category { get; init; } = string.Empty;
         public int Price { get; init; }
-        public double Points { get; init; }
-        public double Total { get; init; }
+        public int Points { get; init; }
+        public int Total { get; init; }
 
         [JsonConstructor]
         public AllowancePointDTO() {}

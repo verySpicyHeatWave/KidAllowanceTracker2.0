@@ -1,0 +1,166 @@
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+<div class="card">
+    <!-- Account header -->
+    <div class="text-center">
+        <h2 class="card-title">@AccountRecord.Name</h2>
+        <p class="card-subtitle">Allowance: <span class="balance">$@AllowanceDisplay</span></p>
+    </div>
+    <!-- Point buttons -->
+    <div class="grid grid-cols-4 gap-4">
+        <div>
+            <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(ChoresPoints))">
+                <img src="/images/chores.png" alt="Chores icon" class="justify-center">
+            </button>
+            <p class="point-balance">Chores: @ChoresPoints</p>
+        </div>
+        <div>
+            <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(HomeworkPoints))">
+                <img src="/images/homework.png" alt="Homework icon">
+            </button>
+            <p class="point-balance">Homework: @HomeworkPoints</p>
+        </div>
+        <div>
+            <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(GoodBehaviorPoints))">
+                <img src="/images/goodbehavior.png" alt="Good behavior icon">
+            </button>
+            <p class="point-balance">Good: @GoodBehaviorPoints</p>
+        </div>
+        <div>
+            <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(BadBehaviorPoints))">
+                <img src="/images/badbehavior.png" alt="Bad behavior icon">
+            </button>
+            <p class="point-balance">Bad: @BadBehaviorPoints</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-5">
+        <button class="btn-allowance col-span-full" @onclick="OpenModal" >
+            Add Your Report Card
+        </button>
+        <p class="point-balance">@DisplayGrade('A')</p>
+        <p class="point-balance">@DisplayGrade('B')</p>
+        <p class="point-balance">@DisplayGrade('C')</p>
+        <p class="point-balance">@DisplayGrade('D')</p>
+        <p class="point-balance">@DisplayGrade('F')</p>
+    </div>
+
+    <button class="btn-allowance text-2xl" @onclick="PayoutAllowance">
+        Pay Out Allowance
+    </button>
+</div>
+
+<Modal @ref="MyModal"
+    Title="Enter Your Grades"
+    OnConfirm="HandleConfirm"
+    OnCancel="HandleCancel">
+    <div>
+        <GradeInput Grade="A" @bind-Value="WorkingGrades['A']" />
+        <GradeInput Grade="B" @bind-Value="WorkingGrades['B']" />
+        <GradeInput Grade="C" @bind-Value="WorkingGrades['C']" />
+        <GradeInput Grade="D" @bind-Value="WorkingGrades['D']" />
+        <GradeInput Grade="F" @bind-Value="WorkingGrades['F']" />
+    </div>
+</Modal>
+
+@code {
+    [Parameter] public required AccountDTO AccountRecord {get; set;}
+    private Random rng = new((int)DateTime.Now.ToOADate());
+    private Modal? MyModal;
+    public int Allowance => AccountRecord.Allowances.Sum(a => a.Total);
+    public string AllowanceDisplay => (Allowance/100.0).ToString("#0.00");
+    private int ChoresPoints => GetPoints("Chores");
+    private int HomeworkPoints => GetPoints("Homework");
+    private int GoodBehaviorPoints => GetPoints("GoodBehavior");
+    private int BadBehaviorPoints => GetPoints("BadBehavior");
+    public Dictionary<char, int> Grades => new()
+        {
+            ['A'] = GetPoints("GradeA"),
+            ['B'] = GetPoints("GradeB"),
+            ['C'] = GetPoints("GradeC"),
+            ['D'] = GetPoints("GradeD"),
+            ['F'] = GetPoints("GradeF")
+        };
+
+    public Dictionary<char, int> WorkingGrades {get; set;}= new();
+
+private int GetPoints(string category) =>
+    AccountRecord.Allowances.SingleOrDefault(a => a.Category == category)?.Points ?? -1;
+
+    private string DisplayGrade(char letter)
+    {
+        if (!"ABCDF".Contains(letter)) {return "";}
+
+        int total = Grades.Sum(v => v.Value);
+        if (total > 0)
+        {
+            return $"{letter}: {Grades[letter]}";
+        }
+        else if (letter == 'C')
+        {
+            return "No Grades";
+        }
+        else
+        {
+            return "";
+        }
+    }
+    private async Task IncrementPoint(string valueName)
+    {
+        string category = string.Empty;
+        switch (valueName)
+        {
+            case nameof(ChoresPoints):
+                category = "Chores";
+                break;
+            case nameof(GoodBehaviorPoints):
+                category = "GoodBehavior";
+                break;
+            case nameof(BadBehaviorPoints):
+                category = "BadBehavior";
+                break;
+            case nameof(HomeworkPoints):
+                category = "Homework";
+                break;
+        }
+
+        var index = AccountRecord.Allowances.FindIndex(a => a.Category == category);
+        var newPoint = await AccountApi.IncrementPoint(AccountRecord.ID, category);
+        if (index != -1 && newPoint is not null)
+        {
+            AccountRecord.Allowances[index] = newPoint;
+        }
+    }
+
+    private async Task PayoutAllowance()
+    {
+        var resp = await AccountApi.PayoutAllowance(AccountRecord.ID);
+        if(resp is not null) {AccountRecord = resp;}
+    }    
+    
+    private void OpenModal()
+    {
+        WorkingGrades = new Dictionary<char, int>(Grades);
+        MyModal?.Show();
+    }
+
+    private async Task HandleConfirm()
+    {
+        foreach(var pair in WorkingGrades)
+        {
+            string category = $"Grade{pair.Key}";
+            var index = AccountRecord.Allowances.FindIndex(a => a.Category == category);
+            if (index == -1) {continue;}
+            var updated = await AccountApi.SetGrade(AccountRecord.ID, category, pair.Value);
+            if (updated is null) {continue;}
+            AccountRecord.Allowances[index] = updated;            
+        }
+    }
+
+    private void HandleCancel()
+    {
+
+    }
+}
+

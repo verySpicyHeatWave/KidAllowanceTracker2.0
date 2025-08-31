@@ -1,0 +1,31 @@
+@page "/account-details/{id:int}"
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+@if (account is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <PageTitle>@account.Name</PageTitle>
+    <div class="grid grid-cols-2">
+        <AccountCard AccountRecord="@account"></AccountCard>
+    </div>
+}
+
+
+@code {
+    private AccountDTO? account;
+    [Parameter] public int id {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        account = await AccountApi.GetAccountAsync(id);
+    }
+        protected override async Task OnParametersSetAsync()
+    {
+        account = await AccountApi.GetAccountAsync(id);
+    }
+}
