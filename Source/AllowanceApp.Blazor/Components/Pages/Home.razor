@@ -13,7 +13,7 @@ else
     <div class="grid grid-cols-3">
         @foreach (var account in accounts)
         {
-            <AccountCard AccountRecord="@account"></AccountCard>
+            <AccountCard AccountRecord="@account" OnAccountChanged="RefreshAccount"></AccountCard>
         }
     </div>
 }
@@ -25,5 +25,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         accounts = await AccountApi.GetAllAccountsAsync();
+    }
+    private void RefreshAccount()
+    {
+        StateHasChanged();
     }
 }

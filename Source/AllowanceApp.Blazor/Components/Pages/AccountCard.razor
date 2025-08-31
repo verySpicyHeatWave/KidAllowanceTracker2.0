@@ -6,31 +6,31 @@
     <!-- Account header -->
     <div class="text-center">
         <h2 class="card-title">@AccountRecord.Name</h2>
-        <p class="card-subtitle">Allowance: <span class="balance">$@AllowanceDisplay</span></p>
+        <p class="card-subtitle">Allowance: <span class="balance-allowance">$@AllowanceDisplay</span></p>
     </div>
     <!-- Point buttons -->
-    <div class="grid grid-cols-4 gap-4">
+    <div class="flex gap-4">
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(ChoresPoints))">
-                <img src="/images/chores.png" alt="Chores icon" class="justify-center">
+                <img src="/images/chores.png" alt="Chores icon" class="justify-center mx-auto">
             </button>
             <p class="point-balance">Chores: @ChoresPoints</p>
         </div>
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(HomeworkPoints))">
-                <img src="/images/homework.png" alt="Homework icon">
+                <img src="/images/homework.png" alt="Homework icon" class="justify-center mx-auto">
             </button>
             <p class="point-balance">Homework: @HomeworkPoints</p>
         </div>
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(GoodBehaviorPoints))">
-                <img src="/images/goodbehavior.png" alt="Good behavior icon">
+                <img src="/images/goodbehavior.png" alt="Good behavior icon" class="justify-center mx-auto">
             </button>
             <p class="point-balance">Good: @GoodBehaviorPoints</p>
         </div>
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(BadBehaviorPoints))">
-                <img src="/images/badbehavior.png" alt="Bad behavior icon">
+                <img src="/images/badbehavior.png" alt="Bad behavior icon" class="justify-center mx-auto">
             </button>
             <p class="point-balance">Bad: @BadBehaviorPoints</p>
         </div>
@@ -46,8 +46,8 @@
         <p class="point-balance">@DisplayGrade('F')</p>
     </div>
 
-    <button class="btn-allowance text-2xl" @onclick="PayoutAllowance">
-        Pay Out Allowance
+    <button class="btn-payout" @onclick="PayoutAllowance">
+        <span class="payout-text">Pay Out Allowance</span>
     </button>
 </div>
 
@@ -64,11 +64,15 @@
     </div>
 </Modal>
 
+
+
+
 @code {
     [Parameter] public required AccountDTO AccountRecord {get; set;}
+    [Parameter] public EventCallback OnAccountChanged { get; set; }
     private Random rng = new((int)DateTime.Now.ToOADate());
     private Modal? MyModal;
-    public int Allowance => AccountRecord.Allowances.Sum(a => a.Total);
+    public int Allowance => Math.Max(0,AccountRecord.Allowances.Sum(a => a.Total));
     public string AllowanceDisplay => (Allowance/100.0).ToString("#0.00");
     private int ChoresPoints => GetPoints("Chores");
     private int HomeworkPoints => GetPoints("Homework");
@@ -136,8 +140,20 @@ private int GetPoints(string category) =>
     private async Task PayoutAllowance()
     {
         var resp = await AccountApi.PayoutAllowance(AccountRecord.ID);
-        if(resp is not null) {AccountRecord = resp;}
-    }    
+        if(resp is not null) 
+        {
+            CopyAccountRecordInnards(AccountRecord, resp);
+        }
+        await OnAccountChanged.InvokeAsync();
+    }
+
+    private void CopyAccountRecordInnards(AccountDTO real_account, AccountDTO new_data)
+    {
+        real_account.Allowances = new_data.Allowances;
+        real_account.Balance = new_data.Balance;
+        real_account.Transactions = new_data.Transactions;
+        real_account.AllowanceTotal = new_data.AllowanceTotal;
+    }
     
     private void OpenModal()
     {

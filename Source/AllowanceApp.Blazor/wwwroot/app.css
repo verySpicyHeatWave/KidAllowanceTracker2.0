@@ -99,9 +99,17 @@ h1:focus {
     pt-2;
 }
 
-.balance {
+.balance-allowance {
   @apply
     text-xl
+    font-semibold
+    text-green-600
+    dark:text-green-400;
+}
+
+.balance-bank {
+  @apply
+    text-2xl
     font-semibold
     text-green-600
     dark:text-green-400;
@@ -126,6 +134,35 @@ h1:focus {
     dark:focus:ring-cyan-800
     font-medium
     text-center;
+}
+
+.btn-payout {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-bold
+    shadow
+    text-purple-900
+    bg-gradient-to-br
+    from-purple-300
+    to-blue-400
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    text-center;
+}
+
+.payout-text {
+  @apply
+    bg-clip-text
+    text-transparent
+    bg-gradient-to-br
+    from-purple-500
+    to-purple-900
 }
 
 .btn-secondary {

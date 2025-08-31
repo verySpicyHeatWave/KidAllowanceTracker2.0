@@ -8,10 +8,10 @@ namespace AllowanceApp.Shared.DTO
     {
         public string Name { get; init; } = string.Empty;
         public int ID { get; init; }
-        public int Balance { get; init; }
-        public int AllowanceTotal { get; init; }
-        public List<AllowancePointDTO> Allowances { get; init; } = [];
-        public List<TransactionDTO> Transactions { get; init; } = [];
+        public int Balance { get; set; }
+        public int AllowanceTotal { get; set; }
+        public List<AllowancePointDTO> Allowances { get; set; } = [];
+        public List<TransactionDTO> Transactions { get; set; } = [];
 
         [JsonConstructor]
         public AccountDTO() { }

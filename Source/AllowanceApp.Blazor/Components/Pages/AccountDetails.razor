@@ -10,8 +10,9 @@
 else
 {
     <PageTitle>@account.Name</PageTitle>
-    <div class="grid grid-cols-2">
-        <AccountCard AccountRecord="@account"></AccountCard>
+    <div class="flex justify-content gap-4">
+        <AccountCard AccountRecord="@account" OnAccountChanged="@RefreshAccount"></AccountCard>
+        <BalanceCard AccountRecord="@account"></BalanceCard>
     </div>
 }
 
@@ -27,5 +28,9 @@ else
         protected override async Task OnParametersSetAsync()
     {
         account = await AccountApi.GetAccountAsync(id);
+    }
+    private void RefreshAccount()
+    {
+        StateHasChanged();
     }
 }

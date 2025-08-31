@@ -1,0 +1,30 @@
+@page "/transactions"
+
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+<div class="card">
+    <div class="text-center">
+        <h2 class="card-title">Bank Account</h2>
+        <p class="card-subtitle">Balance: <span class="balance-allowance">$@BalanceDisplay</span></p>
+        <div>
+            <button class="btn-allowance">
+                <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto">
+            </button>
+            <p class="point-balance">Deposit</p>
+        </div>
+        <div>
+            <button class="btn-allowance">
+                <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto">
+            </button>
+            <p class="point-balance">Withdraw</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required AccountDTO AccountRecord {get; set;}
+    public string BalanceDisplay => (AccountRecord.Balance/100.0).ToString("#0.00");
+
+}
