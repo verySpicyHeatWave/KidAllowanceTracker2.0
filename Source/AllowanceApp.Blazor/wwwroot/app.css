@@ -51,3 +51,133 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.card {
+  @apply
+    max-w-md
+    mx-auto
+    p-5
+    bg-white
+    dark:bg-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
+.card-sm {
+  @apply
+    max-w-xs
+    mx-auto
+    p-5
+    bg-white
+    dark:bg-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6; 
+}
+
+.card-title {
+  @apply
+    text-2xl
+    font-bold
+    text-gray-800
+    dark:text-gray-100;
+}
+
+.card-subtitle {
+  @apply
+    text-gray-500
+    dark:text-gray-400;
+}
+
+.point-balance {
+  @apply
+    text-gray-500
+    dark:text-gray-400
+    text-center
+    text-sm
+    pt-2;
+}
+
+.balance {
+  @apply
+    text-xl
+    font-semibold
+    text-green-600
+    dark:text-green-400;
+}
+
+.btn-allowance {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    bg-gradient-to-br
+    from-purple-300
+    to-blue-400
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
+.btn-secondary {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    dark:text-gray-100
+    bg-gray-200
+    dark:bg-gray-700
+    hover:bg-gray-300
+    dark:hover:bg-gray-600
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
+.numbox {
+  @apply
+    w-full
+    px-4
+    py-2
+    rounded-xl
+    shadow
+    border
+    border-gray-300
+    dark:border-gray-600
+    text-gray-800
+    dark:text-gray-100
+    bg-white
+    dark:bg-gray-800
+    focus:outline-none
+    focus:ring-2
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800;
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+

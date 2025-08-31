@@ -1,0 +1,46 @@
+@inherits LayoutComponentBase
+
+@if (IsVisible)
+{
+    <div class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+        <div class="card-sm relative animate-fadeIn">
+
+            <!-- Modal content -->
+            <h2 class="card-title">@Title</h2>
+            <div class="mb-6">
+                @ChildContent
+            </div>
+
+            <!-- Footer buttons -->
+            <div class="flex justify-end space-x-3">
+                <button @onclick="Confirm" class="btn-allowance">
+                    Confirm
+                </button>
+                <button @onclick="Hide" class="btn-secondary">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string Title { get; set; } = "Modal Title";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    public void Show() => IsVisible = true;
+    public void Hide()
+    {
+        IsVisible = false;
+        OnCancel.InvokeAsync();
+    }
+
+    private void Confirm()
+    {
+        IsVisible = false;
+        OnConfirm.InvokeAsync();
+    }
+}
