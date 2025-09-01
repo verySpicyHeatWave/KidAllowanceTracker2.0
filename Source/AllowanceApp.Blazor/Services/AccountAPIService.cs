@@ -13,8 +13,13 @@ public class AccountApiService(HttpClient http)
     {
         if (_cachedAccounts is null || forceRefresh)
         {
-            _cachedAccounts = await _http.GetFromJsonAsync<List<AccountDTO>>("accounts/read/all")
-                              ?? [];
+            var response = await _http.GetAsync("accounts/read/all");
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new List<AccountDTO>();
+            }
+            response.EnsureSuccessStatusCode();
+            _cachedAccounts = await response.Content.ReadFromJsonAsync<List<AccountDTO>> () ?? new List<AccountDTO>();
         }
         return _cachedAccounts;
     }
@@ -24,9 +29,9 @@ public class AccountApiService(HttpClient http)
         if (_cachedAccounts is null || forceRefresh)
         {
             _cachedAccounts = await _http.GetFromJsonAsync<List<AccountDTO>>("accounts/read/all")
-                              ?? [];
+                              ?? new List<AccountDTO>();
         }
-        return _cachedAccounts.SingleOrDefault(a => a.ID == id) ?? null;
+        return _cachedAccounts.SingleOrDefault(a => a.ID == id);
     }
 
     public async Task<AccountDTO?> PayoutAllowance(int id)

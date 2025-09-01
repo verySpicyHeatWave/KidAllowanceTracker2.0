@@ -44,7 +44,7 @@ namespace AllowanceApp.Core.Models
             {
                 AccountID = AccountID,
                 Date = DateOnly.FromDateTime(DateTime.Today),
-                Amount = amount,
+                Amount = amount * (int)action,
                 Description = description
             };
             Transactions.Add(transaction);

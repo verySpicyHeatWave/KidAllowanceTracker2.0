@@ -4,27 +4,81 @@
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
 
-<div class="card">
-    <div class="text-center">
-        <h2 class="card-title">Bank Account</h2>
-        <p class="card-subtitle">Balance: <span class="balance-allowance">$@BalanceDisplay</span></p>
-        <div>
-            <button class="btn-allowance">
-                <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto">
-            </button>
-            <p class="point-balance">Deposit</p>
-        </div>
-        <div>
-            <button class="btn-allowance">
-                <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto">
-            </button>
-            <p class="point-balance">Withdraw</p>
-        </div>
+<div class="card-lg w-full">
+    <!-- Card header -->
+    <div class="text-center mb-4">
+        <h2 class="card-title">Recent Transactions</h2>
+        <p class="card-subtitle">
+            Last 10 account activities
+        </p>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+            <thead class="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Transaction ID</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Date</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Description</th>
+                    <th class="px-4 py-2 text-right text-lg font-medium text-gray-700 dark:text-gray-300">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                @if (Transactions is not null && Transactions.Count > 0)
+                {
+                    @foreach (var tx in Transactions)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.TransactionID</td>
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Date.ToShortDateString()</td>
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Description</td>
+                            <td class="px-4 py-2 text-md text-right font-medium @(tx.Amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
+                                $@((tx.Amount/100.0).ToString("#0.00"))
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                            No transactions available
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
 @code {
     [Parameter] public required AccountDTO AccountRecord {get; set;}
-    public string BalanceDisplay => (AccountRecord.Balance/100.0).ToString("#0.00");
+    public List<TransactionDTO> Transactions => AccountRecord.Transactions.OrderByDescending(t => t.TransactionID).ToList();
+
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).ToArray();
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
 
 }

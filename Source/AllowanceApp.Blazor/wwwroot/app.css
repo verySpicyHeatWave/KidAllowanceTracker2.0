@@ -52,6 +52,17 @@ h1:focus {
     border-color: #929292;
 }
 
+.card-lg {
+  @apply
+    mx-auto
+    p-5
+    bg-white
+    dark:bg-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
 .card {
   @apply
     max-w-md

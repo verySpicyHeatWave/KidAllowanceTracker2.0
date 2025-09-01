@@ -10,12 +10,20 @@
 }
 else
 {
-    <div class="grid grid-cols-3">
-        @foreach (var account in accounts)
-        {
-            <AccountCard AccountRecord="@account" OnAccountChanged="RefreshAccount"></AccountCard>
-        }
-    </div>
+
+    @if (accounts.Count == 0)
+    {
+        <p><em>No accounts found.</em></p>
+    }
+    else
+    {
+        <div class="grid grid-cols-3">
+            @foreach (var account in accounts)
+            {
+                <AccountCard AccountRecord="@account" OnAccountChanged="RefreshAccount"></AccountCard>
+            }
+        </div>
+    }
 }
 
 

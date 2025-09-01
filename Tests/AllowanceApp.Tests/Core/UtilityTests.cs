@@ -31,7 +31,7 @@ namespace AllowanceApp.Tests.Core
             Assert.NotNull(transaction);
 
             // Transaction amount should equal the amount requested
-            Assert.Equal(amount, transaction.Amount);
+            Assert.Equal(amount * (int)action, transaction.Amount);
 
             //The balance should 1000 +/- whatever the requested amount was
             Assert.Equal(newBalance, acct.Balance);
@@ -59,7 +59,7 @@ namespace AllowanceApp.Tests.Core
             Assert.NotNull(transaction);
 
             // The transaction amount should equal the balance, NOT the amount requested
-            Assert.Equal(oldBalance, transaction.Amount);
+            Assert.Equal(-oldBalance, transaction.Amount);
 
             //The balance should be empty
             Assert.Equal(0, acct.Balance);

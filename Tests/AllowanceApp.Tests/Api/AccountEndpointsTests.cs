@@ -140,7 +140,7 @@ namespace AllowanceApp.Tests.Api
             int expected_amount = amount > old_account.Balance && multiplier == -1
                 ? old_account.Balance
                 : amount;
-            Assert.Equal(expected_amount, transaction.Amount);
+            Assert.Equal(expected_amount * multiplier, transaction.Amount);
         }
 
 

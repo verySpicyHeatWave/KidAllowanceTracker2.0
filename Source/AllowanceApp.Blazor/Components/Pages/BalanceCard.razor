@@ -1,5 +1,6 @@
 @page "/balance"
 
+@using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
@@ -10,21 +11,60 @@
         <p class="card-subtitle">Balance: <span class="balance-allowance">$@BalanceDisplay</span></p>
         <div>
             <button class="btn-allowance">
-                <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto">
+                <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto" @onclick="@(() => OpenModal("deposit"))">
             </button>
             <p class="point-balance">Deposit</p>
         </div>
         <div>
             <button class="btn-allowance">
-                <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto">
+                <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto" @onclick="@(() => OpenModal("withdraw"))">
             </button>
             <p class="point-balance">Withdraw</p>
         </div>
     </div>
 </div>
 
+
+<Modal @ref="MyModal"
+    Title="@RequestTitle"
+    OnConfirm="HandleConfirm"
+    OnCancel="HandleCancel">
+    <div>
+        <span>This is a modal!</span>
+    </div>
+</Modal>
+
 @code {
     [Parameter] public required AccountDTO AccountRecord {get; set;}
     public string BalanceDisplay => (AccountRecord.Balance/100.0).ToString("#0.00");
+    private Modal? MyModal;
+    private string RequestTitle = string.Empty;
+
+
+
+    
+    private void OpenModal(string action)
+    {
+        @* WorkingGrades = new Dictionary<char, int>(Grades); *@
+        if (action == "deposit")
+        {
+            RequestTitle = $"Request a Deposit";            
+        }
+        else
+        {
+            RequestTitle = $"Request a Withdrawal";
+        }
+        MyModal?.Show();
+    }
+
+    private void HandleConfirm()
+    {
+        Console.WriteLine("Okay!");
+    }
+    
+    private void HandleCancel()
+    {
+        Console.WriteLine("No!");
+    }
 
 }

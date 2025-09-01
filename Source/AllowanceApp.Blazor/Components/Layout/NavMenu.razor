@@ -17,12 +17,8 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        @if (accounts is null)
+        @if (accounts is not null && accounts.Count > 0)
         {
-            <p><em>Loading...</em></p>
-        }
-        else
-        {        
             @foreach (var account in accounts)
             {
                 <div class="nav-item px-3">
@@ -54,7 +50,7 @@
 </div>
 
 @code {
-    private List<AccountDTO>? accounts;
+    private List<AccountDTO> accounts;
 
     protected override async Task OnInitializedAsync()
     {

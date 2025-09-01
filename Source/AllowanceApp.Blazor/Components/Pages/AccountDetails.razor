@@ -1,4 +1,5 @@
 @page "/account-details/{id:int}"
+@using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
@@ -10,9 +11,12 @@
 else
 {
     <PageTitle>@account.Name</PageTitle>
-    <div class="flex justify-content gap-4">
-        <AccountCard AccountRecord="@account" OnAccountChanged="@RefreshAccount"></AccountCard>
-        <BalanceCard AccountRecord="@account"></BalanceCard>
+    <div class="grid grid-cols-2 gap-4 w-full max-w-6xl mx-auto">
+        <div class="w-full max-add-sm"><AccountCard AccountRecord="@account" OnAccountChanged="@RefreshAccount"></AccountCard></div>
+        <div class="w-50 max-add-sm"><BalanceCard AccountRecord="@account"></BalanceCard></div>
+        <div class="col-span-full">
+            <TransactionCard AccountRecord="@account"></TransactionCard>
+        </div>
     </div>
 }
 

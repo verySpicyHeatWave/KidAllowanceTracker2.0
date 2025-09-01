@@ -16,6 +16,7 @@ namespace AllowanceApp.Tests.Api
         public static void CalculateNextSunday_WorksForEveryDay()
         {
             var expected_val = (DayOfWeek.Sunday - DateTime.Now.DayOfWeek + 7) % 7;
+            if (expected_val == 0) {expected_val = 7;} // Because it's Sunday and so NEXT Sunday is seven days from now
             var NextDay = WeeklyAllowanceService.CalculateNextSunday(DateTime.Now);
             Assert.Equal(expected_val, (NextDay - DateTime.Today).Days);
         }

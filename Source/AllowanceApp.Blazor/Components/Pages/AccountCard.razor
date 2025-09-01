@@ -1,14 +1,14 @@
+@using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
 
 <div class="card">
-    <!-- Account header -->
     <div class="text-center">
         <h2 class="card-title">@AccountRecord.Name</h2>
         <p class="card-subtitle">Allowance: <span class="balance-allowance">$@AllowanceDisplay</span></p>
     </div>
-    <!-- Point buttons -->
+    
     <div class="flex gap-4">
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(ChoresPoints))">
@@ -173,7 +173,7 @@ private int GetPoints(string category) =>
             AccountRecord.Allowances[index] = updated;            
         }
     }
-
+    
     private void HandleCancel()
     {
 

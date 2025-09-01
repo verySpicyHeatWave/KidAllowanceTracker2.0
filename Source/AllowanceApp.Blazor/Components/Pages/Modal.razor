@@ -4,14 +4,13 @@
 {
     <div class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
         <div class="card-sm relative animate-fadeIn">
-
-            <!-- Modal content -->
             <h2 class="card-title">@Title</h2>
+
+            <!-- Modal content gets stuffed into this div-->
             <div class="mb-6">
                 @ChildContent
             </div>
 
-            <!-- Footer buttons -->
             <div class="flex justify-end space-x-3">
                 <button @onclick="Confirm" class="btn-allowance">
                     Confirm
