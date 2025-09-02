@@ -9,7 +9,7 @@
         <p class="card-subtitle">Allowance: <span class="balance-allowance">$@AllowanceDisplay</span></p>
     </div>
     
-    <div class="flex gap-4">
+    <div class="grid grid-cols-4 gap-4">
         <div>
             <button class="btn-allowance" @onclick="() => IncrementPoint(nameof(ChoresPoints))">
                 <img src="/images/chores.png" alt="Chores icon" class="justify-center mx-auto">
@@ -54,7 +54,8 @@
 <Modal @ref="MyModal"
     Title="Enter Your Grades"
     OnConfirm="HandleConfirm"
-    OnCancel="HandleCancel">
+    OnCancel="HandleCancel"
+    SizeLarge=false>
     <div>
         <GradeInput Grade="A" @bind-Value="WorkingGrades['A']" />
         <GradeInput Grade="B" @bind-Value="WorkingGrades['B']" />
@@ -135,6 +136,7 @@ private int GetPoints(string category) =>
         {
             AccountRecord.Allowances[index] = newPoint;
         }
+        await OnAccountChanged.InvokeAsync();
     }
 
     private async Task PayoutAllowance()
@@ -170,8 +172,9 @@ private int GetPoints(string category) =>
             if (index == -1) {continue;}
             var updated = await AccountApi.SetGrade(AccountRecord.ID, category, pair.Value);
             if (updated is null) {continue;}
-            AccountRecord.Allowances[index] = updated;            
+            AccountRecord.Allowances[index] = updated;
         }
+        await OnAccountChanged.InvokeAsync();
     }
     
     private void HandleCancel()

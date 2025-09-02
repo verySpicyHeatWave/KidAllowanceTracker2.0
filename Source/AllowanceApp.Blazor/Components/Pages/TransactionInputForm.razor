@@ -1,0 +1,51 @@
+@using AllowanceApp.Shared.DTO
+
+<div>
+    <div class="grid grid-cols-3 gap-4">
+        <p class="point-balance">Amount: </p>
+        <input 
+            type="text"
+            class="numbox col-span-1"
+            @oninput="ValidateNumberInput" /> <p></p>
+
+        <p class="point-balance">Description: </p>
+        <input 
+            type="text"
+            class="numbox col-span-2"
+            @oninput="ValidateTextInput" />
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public TransactionRequest Value { get; set; } = new();
+    [Parameter] public EventCallback<TransactionRequest> ValueChanged { get; set; }
+    [Parameter] public EventCallback<TransactionRequest> CountChanged{get; set;}
+    private string InputMedium {get; set;} = string.Empty;
+
+
+    private async Task ValidateNumberInput(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(), out var val))
+        {
+            Value.Amount = (int)(val*100);
+            await ValueChanged.InvokeAsync(Value);
+            await CountChanged.InvokeAsync(Value);
+        }
+    }
+
+    private async Task ValidateTextInput(ChangeEventArgs e)
+    {
+        Console.WriteLine("Validating...");
+        if (e.Value is null || e.Value.ToString()!.Length < 1)
+        {
+            Value.Description = null;
+        }
+        else
+        {
+            Value.Description = e.Value.ToString();
+        }
+        await ValueChanged.InvokeAsync(Value);
+        await CountChanged.InvokeAsync(Value);
+    }
+}

@@ -54,7 +54,6 @@ h1:focus {
 
 .card-lg {
   @apply
-    mx-auto
     p-5
     bg-white
     dark:bg-gray-800
@@ -66,7 +65,6 @@ h1:focus {
 .card {
   @apply
     max-w-md
-    mx-auto
     p-5
     bg-white
     dark:bg-gray-800
@@ -78,7 +76,6 @@ h1:focus {
 .card-sm {
   @apply
     max-w-xs
-    mx-auto
     p-5
     bg-white
     dark:bg-gray-800

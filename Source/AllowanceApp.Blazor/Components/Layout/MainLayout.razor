@@ -1,8 +1,15 @@
-﻿@inherits LayoutComponentBase
+﻿@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inherits LayoutComponentBase
+@inject AccountApiService AccountApi
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        @if (Accounts is not null)
+        {
+            <NavMenu Accounts="Accounts"/>
+        }
+        
     </div>
 
     <main>
@@ -21,3 +28,14 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+
+
+@code {
+    public List<AccountDTO> Accounts {get; set;} = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Accounts = await AccountApi.GetAllAccountsAsync();
+    }
+}

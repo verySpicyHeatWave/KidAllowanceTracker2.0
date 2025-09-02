@@ -3,6 +3,13 @@ using AllowanceApp.Core.Models;
 
 namespace AllowanceApp.Shared.DTO
 {
+    public enum ApprovalStatus
+    {
+        Pending,
+        Approved,
+        Declined
+    }
+    
     public record TransactionDTO
     {
         public int TransactionID { get; init; }
@@ -12,8 +19,8 @@ namespace AllowanceApp.Shared.DTO
         public string? Description { get; init; } = null;
 
         [JsonConstructor]
-        public TransactionDTO() {}
-        
+        public TransactionDTO() { }
+
         public TransactionDTO(Transaction transaction) =>
         (TransactionID, AccountID, Amount, Date, Description) =
         (

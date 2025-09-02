@@ -16,7 +16,7 @@ public class AccountApiService(HttpClient http)
             var response = await _http.GetAsync("accounts/read/all");
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
-                return new List<AccountDTO>();
+                return [];
             }
             response.EnsureSuccessStatusCode();
             _cachedAccounts = await response.Content.ReadFromJsonAsync<List<AccountDTO>> () ?? new List<AccountDTO>();
@@ -29,7 +29,7 @@ public class AccountApiService(HttpClient http)
         if (_cachedAccounts is null || forceRefresh)
         {
             _cachedAccounts = await _http.GetFromJsonAsync<List<AccountDTO>>("accounts/read/all")
-                              ?? new List<AccountDTO>();
+                              ?? [];
         }
         return _cachedAccounts.SingleOrDefault(a => a.ID == id);
     }
@@ -59,6 +59,13 @@ public class AccountApiService(HttpClient http)
         var response = await _http.PutAsJsonAsync($"accounts/update/{id}/points/{category}/setpoints", new PointUpdateRequest(value));
         if (HttpStatusCode.OK != response.StatusCode) { return null; }
         return await response.Content.ReadFromJsonAsync<AllowancePointDTO>();
+    }
+
+    public async Task<AccountDTO?> RequestTransaction(int id, string action, TransactionRequest transaction)
+    {
+        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/{action}", transaction);
+        if (HttpStatusCode.OK != response.StatusCode) { return null; }
+        return await response.Content.ReadFromJsonAsync<AccountDTO>();
     }
 
     public void ClearCache() => _cachedAccounts = null;

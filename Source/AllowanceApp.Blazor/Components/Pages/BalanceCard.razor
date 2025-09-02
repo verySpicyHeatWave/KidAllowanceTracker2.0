@@ -5,40 +5,48 @@
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
 
-<div class="card">
+<div class="card-sm">
     <div class="text-center">
         <h2 class="card-title">Bank Account</h2>
         <p class="card-subtitle">Balance: <span class="balance-allowance">$@BalanceDisplay</span></p>
-        <div>
-            <button class="btn-allowance">
-                <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto" @onclick="@(() => OpenModal("deposit"))">
-            </button>
-            <p class="point-balance">Deposit</p>
-        </div>
-        <div>
-            <button class="btn-allowance">
-                <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto" @onclick="@(() => OpenModal("withdraw"))">
-            </button>
-            <p class="point-balance">Withdraw</p>
+        
+        <div class="grid grid-cols-3 gap-4">
+            <p></p>
+            <div>
+                <button class="btn-allowance" @onclick="@(() => OpenModal("deposit"))">
+                    <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto">
+                </button>
+                <p class="point-balance">Deposit</p>
+            </div>
+            <p></p>
+            
+            <p></p>
+            <div>
+                <button class="btn-allowance" @onclick="@(() => OpenModal("withdrawal"))">
+                    <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto">
+                </button>
+                <p class="point-balance">Withdraw</p>
+            </div>
+            <p></p>
         </div>
     </div>
 </div>
 
-
-<Modal @ref="MyModal"
-    Title="@RequestTitle"
-    OnConfirm="HandleConfirm"
-    OnCancel="HandleCancel">
-    <div>
-        <span>This is a modal!</span>
-    </div>
+<Modal @ref="MyModal" Title="@RequestTitle" OnConfirm="HandleConfirm" OnCancel="HandleCancel" SizeLarge=true>
+    <TransactionInputForm @bind-Value="Request" />    
 </Modal>
+
+
+
 
 @code {
     [Parameter] public required AccountDTO AccountRecord {get; set;}
+    [Parameter] public EventCallback OnAccountChanged { get; set; }
     public string BalanceDisplay => (AccountRecord.Balance/100.0).ToString("#0.00");
     private Modal? MyModal;
     private string RequestTitle = string.Empty;
+    private string QueryString = string.Empty;
+    private TransactionRequest Request = new();
 
 
 
@@ -54,17 +62,26 @@
         {
             RequestTitle = $"Request a Withdrawal";
         }
+        QueryString = action;
         MyModal?.Show();
     }
 
-    private void HandleConfirm()
+    private async Task HandleConfirm()
     {
-        Console.WriteLine("Okay!");
+        Console.WriteLine(Request);
+        var resp = await AccountApi.RequestTransaction(AccountRecord.ID, QueryString, Request);
+        if (resp is not null)
+        {
+            AccountRecord.Balance = resp.Balance;
+            AccountRecord.Transactions = resp.Transactions;
+            await OnAccountChanged.InvokeAsync();
+        }
     }
     
     private void HandleCancel()
     {
-        Console.WriteLine("No!");
+        Console.WriteLine("Nevermind!");
     }
+
 
 }
