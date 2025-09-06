@@ -1,0 +1,58 @@
+@page "/parent"
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Cards
+@inject AccountApiService AccountApi
+@rendermode InteractiveServer
+
+<PageTitle>Settings</PageTitle>
+
+<h1>Application Settings</h1>
+
+@if (!LoggedIn)
+{
+    <Modal @ref="MyModal"
+        Title="Enter Your Grades"
+        OnConfirm="HandleConfirm"
+        OnCancel="HandleCancel"
+        SizeLarge=false>
+        <div>
+            <ParentLogin/>
+        </div>
+    </Modal>
+} 
+else if (accounts.Count == 0)
+{
+    {
+        <p><em>No accounts found.</em></p>
+    }
+}
+else
+{
+    <AccountManagementCard Accounts="accounts"></AccountManagementCard>
+}
+
+
+
+@code {
+    private bool LoggedIn = true;
+    private Modal? MyModal;
+    private List<AccountViewModel> accounts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await AccountApi.GetAllAccountsAsync();
+    }
+
+
+    private async Task HandleConfirm()
+    {
+
+    }
+    
+    private void HandleCancel()
+    {
+        return;
+    }
+}

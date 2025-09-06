@@ -1,0 +1,86 @@
+@using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Widgets
+@inject AccountApiService AccountApi
+
+<div class="card">
+    <div class="text-center">
+        <h2 class="card-title">Account Management</h2>
+    </div>
+
+    
+    <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col space-y-1">
+            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="kid-selector">Select Child</label>
+            <select class="selector" id="kid-selector "@bind="currentID">
+                @foreach (var kid in Accounts)
+                {
+                    <option value=@kid.ID>@kid.Name</option>
+                }
+            </select>
+        </div>
+        <div class="flex flex-col space-y-1">
+            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="category-selector">Select Point Type</label>
+            <select class="selector" id="category-selector "@bind="currentPointCategory">
+                @foreach (var point in Accounts.First(a => a.ID == currentID).Allowances.PointList)
+                {
+                    <option value=@point.Category>@point.Category</option>
+                }
+            </select>
+        </div>    
+    </div>
+
+    
+    <div class="grid grid-cols-4 gap-4">
+        <div class="flex flex-col space-y-1">
+            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="price">Price</label>
+            <input 
+                type="text"
+                id="price"
+                class="numbox col-span-1"/>
+        </div>
+
+        <div class="flex flex-col space-y-1">
+            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="points">Points</label>
+            <input 
+                type="text"
+                id="points"
+                class="numbox col-span-1"/>          
+        </div>
+        <button class="btn-payout col-span-2">
+            <span class="payout-text">Submit Point Update</span>
+        </button>
+    </div>
+
+
+    <div>
+
+        
+    </div>
+
+</div>
+
+@code {
+    [Parameter] public required List<AccountViewModel> Accounts {get; set;}
+    [Parameter] public EventCallback OnAccountChanged { get; set; }
+    private int currentID {get; set;}
+    private string currentPointCategory {get; set;} = string.Empty;
+    private Modal? MyModal;
+
+    protected override void OnInitialized()
+    {
+        currentID = Accounts
+            .First()
+            .ID;
+
+        currentPointCategory = Accounts
+            .First(a => a.ID == currentID)
+            .Allowances
+            .PointList
+            .First()
+            .Category;
+    }
+}
+

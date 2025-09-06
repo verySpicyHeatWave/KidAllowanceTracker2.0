@@ -7,17 +7,14 @@
 
 <div class="card-lg w-full">
     <!-- Card header -->
-    <div class="flex items-center justify-between mb-4">
-        <div class="text-center flex-1">
-        <h2 class="card-title">Recent Transactions</h2>
-        <p class="card-subtitle">
-            Last @PageSize account activities (All)
-        </p>
-
+    <div class="relative mb-4">
+        <div class="text-center items-center">
+            <h2 class="card-title">Recent Transactions</h2>
+            <p class="card-subtitle">@CardSubtitleText</p>
         </div>
 
         <!-- Filters -->
-        <div class="flex space-x-2">
+        <div class="absolute top-0 right-0 flex space-x-2 gap-4">
             <!-- Number of transactions -->
             <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
                     @bind="PageSize">
@@ -28,13 +25,13 @@
             </select>
 
             <!-- Status filter -->
-            @* <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
+            <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
                     @bind="SelectedStatus">
                 <option value="All">All</option>
                 <option value="Approved">Approved</option>
                 <option value="Declined">Declined</option>
                 <option value="Pending">Pending</option>
-            </select> *@
+            </select>
         </div>
 
     </div>
@@ -83,8 +80,11 @@
 @code {
     [Parameter] public required TransactionsViewModel Transactions {get; set;}
     private int PageSize { get; set; } = 10;
+    private string SelectedStatus { get; set; } = "All";
+    private string CardSubtitleText => MakeCardSubtitle();
     public List<SingleTransactionModel> TransactionObjects => 
         Transactions.TransactionList
+            .Where(t => SelectedStatus == "All" || t.Status.ToString() == SelectedStatus)
             .OrderByDescending(t => t.TransactionID)
             .Take(PageSize == 0 ? int.MaxValue : PageSize)
             .ToList();
@@ -95,4 +95,16 @@
         {ApprovalStatus.Declined, "text-red-600 dark:text-red-400"},
         {ApprovalStatus.Pending, "text-gray-400 dark:text-gray-600 italic"},
     };
+
+    private string MakeCardSubtitle()
+    {
+        string value = PageSize == 0
+            ? "All account activities"
+            : $"Last {PageSize} account activities";
+
+        value += SelectedStatus == "All"
+            ? ""
+            : $" ({SelectedStatus})";
+        return value;
+    }
 }

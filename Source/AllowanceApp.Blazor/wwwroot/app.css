@@ -215,6 +215,17 @@ h1:focus {
     dark:focus:ring-cyan-800;
 }
 
+.selector {
+  @apply
+    px-2
+    py-1
+    rounded
+    border
+    text-sm
+    dark:bg-gray-800
+    dark:text-gray-200
+}
+
 @layer utilities {
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
