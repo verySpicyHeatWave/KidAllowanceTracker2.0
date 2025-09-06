@@ -1,16 +1,42 @@
 @page "/transactions"
 
+@using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @inject AccountApiService AccountApi
 
 <div class="card-lg w-full">
     <!-- Card header -->
-    <div class="text-center mb-4">
+    <div class="flex items-center justify-between mb-4">
+        <div class="text-center flex-1">
         <h2 class="card-title">Recent Transactions</h2>
         <p class="card-subtitle">
-            Last 10 account activities
+            Last @PageSize account activities (All)
         </p>
+
+        </div>
+
+        <!-- Filters -->
+        <div class="flex space-x-2">
+            <!-- Number of transactions -->
+            <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
+                    @bind="PageSize">
+                <option value="5">Last 5</option>
+                <option value="10">Last 10</option>
+                <option value="25">Last 25</option>
+                <option value="0">All</option>
+            </select>
+
+            <!-- Status filter -->
+            @* <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
+                    @bind="SelectedStatus">
+                <option value="All">All</option>
+                <option value="Approved">Approved</option>
+                <option value="Declined">Declined</option>
+                <option value="Pending">Pending</option>
+            </select> *@
+        </div>
+
     </div>
 
     <!-- Table -->
@@ -26,14 +52,14 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                @if (Transactions is not null && Transactions.Count > 0)
+                @if (Transactions is not null && Transactions.TransactionList.Count > 0)
                 {
-                    @foreach (var tx in Transactions)
+                    @foreach (var tx in TransactionObjects)
                     {
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.TransactionID</td>
                             <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Date.ToShortDateString()</td>
-                            <td class="px-4 py-2 text-md @(ApprovalTextColorCSS.GetValueOrDefault(ApprovalStatus.Approved))">@ApprovalStatus.Approved</td>
+                            <td class="px-4 py-2 text-md @(ApprovalTextColorCSS.GetValueOrDefault(tx.Status))">@tx.Status</td>
                             <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Description</td>
                             <td class="px-4 py-2 text-md font-medium @(tx.Amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
                                 $@((tx.Amount/100.0).ToString("#0.00"))
@@ -55,38 +81,18 @@
 </div>
 
 @code {
-    [Parameter] public required AccountDTO AccountRecord {get; set;}
-    public List<TransactionDTO> Transactions => AccountRecord.Transactions.OrderByDescending(t => t.TransactionID).Take(10).ToList();
+    [Parameter] public required TransactionsViewModel Transactions {get; set;}
+    private int PageSize { get; set; } = 10;
+    public List<SingleTransactionModel> TransactionObjects => 
+        Transactions.TransactionList
+            .OrderByDescending(t => t.TransactionID)
+            .Take(PageSize == 0 ? int.MaxValue : PageSize)
+            .ToList();
     
-    private Dictionary<ApprovalStatus, string> ApprovalTextColorCSS = new() {
-            {ApprovalStatus.Approved, "text-green-600 dark:text-green-400"},
-            {ApprovalStatus.Declined, "text-red-600 dark:text-red-400"},
-            {ApprovalStatus.Pending, "text-gray-400 dark:text-gray-600 italic"},
-        };
-
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
+    private Dictionary<ApprovalStatus, string> ApprovalTextColorCSS = new() 
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
-
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-
+        {ApprovalStatus.Approved, "text-green-600 dark:text-green-400"},
+        {ApprovalStatus.Declined, "text-red-600 dark:text-red-400"},
+        {ApprovalStatus.Pending, "text-gray-400 dark:text-gray-600 italic"},
+    };
 }

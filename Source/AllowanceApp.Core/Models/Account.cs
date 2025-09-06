@@ -45,7 +45,8 @@ namespace AllowanceApp.Core.Models
                 AccountID = AccountID,
                 Date = DateOnly.FromDateTime(DateTime.Today),
                 Amount = amount * (int)action,
-                Description = description
+                Description = description,
+                Status = ApprovalStatus.Pending
             };
             Transactions.Add(transaction);
         }

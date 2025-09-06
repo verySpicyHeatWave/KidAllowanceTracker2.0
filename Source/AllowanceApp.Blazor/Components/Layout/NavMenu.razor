@@ -1,5 +1,5 @@
-﻿@using AllowanceApp.Blazor.Services
-@using AllowanceApp.Shared.DTO
+﻿@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
 @using Microsoft.AspNetCore.Components.Routing;
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -33,12 +33,12 @@
 
         <div>
             <div class="nav-item px-3 mt-4">
-                <NavLink class="nav-link" href="/Counter">
+                <NavLink class="nav-link" href="/Weather">
                     <span class="bi bi-stars" aria-hidden="true"></span> How to earn points
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="/Weather">
+                <NavLink class="nav-link" href="/settings">
                     <span class="bi bi-gear-fill" aria-hidden="true"></span> Settings
                 </NavLink>
             </div>
@@ -52,5 +52,5 @@
 </div>
 
 @code {
-    [Parameter] public List<AccountDTO> Accounts {get; set;} = [];
+    [Parameter] public List<NavBarModel> Accounts {get; set;} = [];
 }

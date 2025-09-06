@@ -1,15 +1,16 @@
 @page "/balance"
 
 @using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Components.Widgets
+@using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
-@using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
 
 <div class="card-sm">
     <div class="text-center">
         <h2 class="card-title">Bank Account</h2>
-        <p class="card-subtitle">Balance: <span class="balance-allowance">$@BalanceDisplay</span></p>
+        <p class="card-subtitle">Balance: <span class="balance-allowance">$@Account.BalanceDisplay</span></p>
         
         <div class="grid grid-cols-3 gap-4">
             <p></p>
@@ -41,9 +42,8 @@
 
 
 @code {
-    [Parameter] public required AccountDTO AccountRecord {get; set;}
+    [Parameter] public required AccountViewModel Account {get; set;}
     [Parameter] public EventCallback OnAccountChanged { get; set; }
-    public string BalanceDisplay => (AccountRecord.Balance/100.0).ToString("#0.00");
     private Modal? MyModal;
     private string RequestTitle = string.Empty;
     private string QueryString = string.Empty;
@@ -70,11 +70,11 @@
     private async Task HandleConfirm()
     {
         Console.WriteLine(Request);
-        var resp = await AccountApi.RequestTransaction(AccountRecord.ID, QueryString, Request);
+        var resp = await AccountApi.RequestTransaction(Account.ID, QueryString, Request);
         if (resp is not null)
         {
-            AccountRecord.Balance = resp.Balance;
-            AccountRecord.Transactions = resp.Transactions;
+            Account.Balance = resp.Balance;
+            Account.Transactions = resp.Transactions;
             await OnAccountChanged.InvokeAsync();
         }
     }

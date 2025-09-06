@@ -2,19 +2,13 @@ using System.Text.Json.Serialization;
 using AllowanceApp.Core.Models;
 
 namespace AllowanceApp.Shared.DTO
-{
-    public enum ApprovalStatus
-    {
-        Pending,
-        Approved,
-        Declined
-    }
-    
+{    
     public record TransactionDTO
     {
         public int TransactionID { get; init; }
         public int AccountID { get; init; }
         public int Amount { get; init; }
+        public int Status { get; init; } = 0;
         public DateOnly Date { get; init; } = DateOnly.FromDateTime(DateTime.Today);
         public string? Description { get; init; } = null;
 
@@ -22,11 +16,12 @@ namespace AllowanceApp.Shared.DTO
         public TransactionDTO() { }
 
         public TransactionDTO(Transaction transaction) =>
-        (TransactionID, AccountID, Amount, Date, Description) =
+        (TransactionID, AccountID, Amount, Status, Date, Description) =
         (
             transaction.TransactionID,
             transaction.AccountID,
             transaction.Amount,
+            (int)transaction.Status,
             transaction.Date,
             transaction.Description
         );

@@ -1,4 +1,5 @@
 @using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @using AllowanceApp.Blazor.Components.Widgets
@@ -6,8 +7,8 @@
 
 <div class="card">
     <div class="text-center">
-        <h2 class="card-title">@AccountRecord.Name</h2>
-        <p class="card-subtitle">Allowance: <span class="balance-allowance">$@AllowanceDisplay</span></p>
+        <h2 class="card-title">@Account.Name</h2>
+        <p class="card-subtitle">Allowance: <span class="balance-allowance">$@Account.AllowanceDisplay</span></p>
     </div>
     
     <div class="grid grid-cols-4 gap-4">
@@ -70,12 +71,10 @@
 
 
 @code {
-    [Parameter] public required AccountDTO AccountRecord {get; set;}
+    [Parameter] public required AccountViewModel Account {get; set;}
     [Parameter] public EventCallback OnAccountChanged { get; set; }
     private Random rng = new((int)DateTime.Now.ToOADate());
     private Modal? MyModal;
-    public int Allowance => Math.Max(0,AccountRecord.Allowances.Sum(a => a.Total));
-    public string AllowanceDisplay => (Allowance/100.0).ToString("#0.00");
     private int ChoresPoints => GetPoints("Chores");
     private int HomeworkPoints => GetPoints("Homework");
     private int GoodBehaviorPoints => GetPoints("GoodBehavior");
@@ -92,7 +91,7 @@
     public Dictionary<char, int> WorkingGrades {get; set;}= new();
 
 private int GetPoints(string category) =>
-    AccountRecord.Allowances.SingleOrDefault(a => a.Category == category)?.Points ?? -1;
+    Account.Allowances.PointList.SingleOrDefault(a => a.Category == category)?.Points ?? -1;
 
     private string DisplayGrade(char letter)
     {
@@ -133,32 +132,24 @@ private int GetPoints(string category) =>
                 break;
         }
 
-        var index = AccountRecord.Allowances.FindIndex(a => a.Category == category);
-        var newPoint = await AccountApi.IncrementPoint(AccountRecord.ID, category);
-        if (index != -1 && newPoint is not null)
-        {
-            AccountRecord.Allowances[index] = newPoint;
-        }
+        var newPoint = await AccountApi.IncrementPoint(Account.ID, category);
+        await RefreshAccount();
         await OnAccountChanged.InvokeAsync();
     }
 
 
     private async Task PayoutAllowance()
     {
-        var resp = await AccountApi.PayoutAllowance(AccountRecord.ID);
-        if(resp is not null) 
-        {
-            CopyAccountRecordInnards(AccountRecord, resp);
-        }
+        await AccountApi.PayoutAllowance(Account.ID);
+        await RefreshAccount();
         await OnAccountChanged.InvokeAsync();
     }
 
-    private void CopyAccountRecordInnards(AccountDTO real_account, AccountDTO new_data)
+    private void CopyAccountInnards(AccountViewModel real_account, AccountViewModel new_data)
     {
         real_account.Allowances = new_data.Allowances;
         real_account.Balance = new_data.Balance;
         real_account.Transactions = new_data.Transactions;
-        real_account.AllowanceTotal = new_data.AllowanceTotal;
     }
     
     private void OpenModal()
@@ -172,18 +163,21 @@ private int GetPoints(string category) =>
         foreach(var pair in WorkingGrades)
         {
             string category = $"Grade{pair.Key}";
-            var index = AccountRecord.Allowances.FindIndex(a => a.Category == category);
-            if (index == -1) {continue;}
-            var updated = await AccountApi.SetGrade(AccountRecord.ID, category, pair.Value);
-            if (updated is null) {continue;}
-            AccountRecord.Allowances[index] = updated;
+            Account.Allowances.PointList.FindIndex(a => a.Category == category);
         }
+        await RefreshAccount();
         await OnAccountChanged.InvokeAsync();
     }
     
     private void HandleCancel()
     {
         return;
+    }
+
+    private async Task RefreshAccount()
+    {
+        var acct = await AccountApi.GetAccountAsync(Account.ID);
+        if (acct is not null) {CopyAccountInnards(Account, acct);}
     }
 }
 

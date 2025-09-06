@@ -1,13 +1,14 @@
-﻿@using AllowanceApp.Blazor.Services
+﻿@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @inherits LayoutComponentBase
 @inject AccountApiService AccountApi
 
 <div class="page">
     <div class="sidebar">
-        @if (Accounts is not null)
+        @if (AccountViews is not null)
         {
-            <NavMenu Accounts="Accounts"/>
+            <NavMenu Accounts="NavBarModels"/>
         }
         
     </div>
@@ -32,10 +33,15 @@
 
 
 @code {
-    public List<AccountDTO> Accounts {get; set;} = [];
+    public List<AccountViewModel> AccountViews {get; set;} = [];
+    public List<NavBarModel> NavBarModels {get; set;} = [];
 
     protected override async Task OnInitializedAsync()
     {
-        Accounts = await AccountApi.GetAllAccountsAsync();
+        AccountViews = await AccountApi.GetAllAccountsAsync();
+        foreach (var view in AccountViews)
+        {
+            NavBarModels.Add(new NavBarModel(view));
+        }
     }
 }

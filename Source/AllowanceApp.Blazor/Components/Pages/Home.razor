@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @using AllowanceApp.Blazor.Components.Cards
@@ -21,7 +22,7 @@ else
         <div class="grid grid-cols-3">
             @foreach (var account in accounts)
             {
-                <AccountCard AccountRecord="@account" OnAccountChanged="RefreshAccount"></AccountCard>
+                <AccountCard Account="@account" OnAccountChanged="RefreshAccount"></AccountCard>
             }
         </div>
     }
@@ -29,7 +30,7 @@ else
 
 
 @code {
-    private List<AccountDTO>? accounts;
+    private List<AccountViewModel> accounts = [];
 
     protected override async Task OnInitializedAsync()
     {
