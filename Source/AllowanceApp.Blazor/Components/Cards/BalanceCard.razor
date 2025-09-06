@@ -3,6 +3,7 @@
 @using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
 
 <div class="card-sm">
@@ -33,7 +34,7 @@
 </div>
 
 <Modal @ref="MyModal" Title="@RequestTitle" OnConfirm="HandleConfirm" OnCancel="HandleCancel" SizeLarge=true>
-    <TransactionInputForm @bind-Value="Request" />    
+    <TransactionInput @bind-Value="Request" />    
 </Modal>
 
 

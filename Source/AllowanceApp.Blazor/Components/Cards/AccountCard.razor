@@ -1,6 +1,7 @@
 @using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
 
 <div class="card">
@@ -111,6 +112,8 @@ private int GetPoints(string category) =>
             return "";
         }
     }
+
+
     private async Task IncrementPoint(string valueName)
     {
         string category = string.Empty;
@@ -138,6 +141,7 @@ private int GetPoints(string category) =>
         }
         await OnAccountChanged.InvokeAsync();
     }
+
 
     private async Task PayoutAllowance()
     {
@@ -179,7 +183,7 @@ private int GetPoints(string category) =>
     
     private void HandleCancel()
     {
-
+        return;
     }
 }
 
