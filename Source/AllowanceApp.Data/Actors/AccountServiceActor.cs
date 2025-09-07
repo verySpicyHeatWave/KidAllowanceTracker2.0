@@ -81,10 +81,26 @@ namespace AllowanceApp.Data.Actors
             return account;
         }
 
-        public async Task<Account> ApplyTransactionAsync(int id, int amount, TransactionType action, string? description)
+        public async Task<Account> RequestTransactionAsync(int id, int amount, TransactionType action, string? description)
         {
             var account = await GetAccountAsync(id);
-            account.ApplyTransaction(amount, action, description);
+            account.RequestTransaction(amount, action, description);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
+        public async Task<Account> ApproveTransactionAsync(int id, int transaction_id)
+        {
+            var account = await GetAccountAsync(id);
+            account.ApproveTransaction(transaction_id);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
+        public async Task<Account> DeclineTransactionAsync(int id, int transaction_id)
+        {
+            var account = await GetAccountAsync(id);
+            account.DeclineTransaction(transaction_id);
             await _context.SaveChangesAsync();
             return account;
         }

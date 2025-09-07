@@ -36,7 +36,6 @@
 
     private async Task ValidateTextInput(ChangeEventArgs e)
     {
-        Console.WriteLine("Validating...");
         if (e.Value is null || e.Value.ToString()!.Length < 1)
         {
             Value.Description = null;

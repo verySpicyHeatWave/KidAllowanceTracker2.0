@@ -1,20 +1,21 @@
 @using AllowanceApp.Blazor.Components.Pages
 @using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
+@using AllowanceApp.Blazor.Styling
 @using AllowanceApp.Shared.DTO
 @using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
 
-<div class="card">
+<div class="card-lg">
     <div class="text-center">
         <h2 class="card-title">Account Management</h2>
     </div>
 
     
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-6 gap-4">
         <div class="flex flex-col space-y-1">
             <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="kid-selector">Select Child</label>
-            <select class="selector" id="kid-selector "@bind="currentID">
+            <select class="selector" id="kid-selector" @bind="currentID" @bind:after="SelectorsChanged">
                 @foreach (var kid in Accounts)
                 {
                     <option value=@kid.ID>@kid.Name</option>
@@ -23,23 +24,26 @@
         </div>
         <div class="flex flex-col space-y-1">
             <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="category-selector">Select Point Type</label>
-            <select class="selector" id="category-selector "@bind="currentPointCategory">
+            <select class="selector" id="category-selector "@bind="currentPointCategory" @bind:after="SelectorsChanged">
                 @foreach (var point in Accounts.First(a => a.ID == currentID).Allowances.PointList)
                 {
                     <option value=@point.Category>@point.Category</option>
                 }
             </select>
-        </div>    
+        </div>
+        <div class="col-span-2"></div>
+        <p class="card-subtitle">Balance: <span class="balance-allowance">$@CurrentAccount.BalanceDisplay</span></p>
     </div>
 
     
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-6 gap-4">
         <div class="flex flex-col space-y-1">
-            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="price">Price</label>
+            <label class="text-gray-500 dark:text-gray-400 text-left text-sm" for="price">Price (cents)</label>
             <input 
                 type="text"
                 id="price"
-                class="numbox col-span-1"/>
+                class="numbox col-span-1"
+                @bind="Price"/>
         </div>
 
         <div class="flex flex-col space-y-1">
@@ -47,17 +51,64 @@
             <input 
                 type="text"
                 id="points"
-                class="numbox col-span-1"/>          
+                class="numbox col-span-1"
+                @bind="Points"/>
         </div>
-        <button class="btn-payout col-span-2">
+        <button class="btn-payout col-span-1" id="pt-btn" @onclick="SubmitPointChanges">
             <span class="payout-text">Submit Point Update</span>
         </button>
     </div>
 
 
-    <div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+            <thead class="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Approve/Deny</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Date</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Description</th>
+                    <th class="px-4 py-2 text-right text-lg font-medium text-gray-700 dark:text-gray-300">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                @if (PendingTransactions is not null && PendingTransactions.Count > 0)
+                {
+                    @foreach (var tx in PendingTransactions)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">
+                                <div class="grid grid-cols-2 gap-4">
+                                <button class="btn-payout" @onclick="() => ApproveTransaction(tx.TransactionID)">
+                                    <span class="payout-text">Approve</span>
+                                </button>
+                                
+                                <button class="btn-payout" @onclick="() => DeclineTransaction(tx.TransactionID)">
+                                    <span class="payout-text">Deny</span>
+                                </button>
 
-        
+                                </div>
+                            
+                            
+                            </td>
+
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Date.ToShortDateString()</td>
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Description</td>
+                            <td class="px-4 py-2 text-md font-medium @(tx.Amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
+                                $@((tx.Amount/100.0).ToString("#0.00"))
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                            No transactions pending
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
 </div>
@@ -66,8 +117,15 @@
     [Parameter] public required List<AccountViewModel> Accounts {get; set;}
     [Parameter] public EventCallback OnAccountChanged { get; set; }
     private int currentID {get; set;}
+    private int Price {get; set;}
+    private int Points {get; set;}
     private string currentPointCategory {get; set;} = string.Empty;
     private Modal? MyModal;
+    private AccountViewModel CurrentAccount => Accounts.First(async => async.ID == currentID);
+
+    private List<SingleTransactionModel> PendingTransactions => CurrentAccount.Transactions.TransactionList
+            .Where(t => t.Status == ApprovalStatus.Pending)
+            .ToList();
 
     protected override void OnInitialized()
     {
@@ -81,6 +139,97 @@
             .PointList
             .First()
             .Category;
+        
+        Price = CurrentAccount
+            .Allowances
+            .PointList
+            .First(a => a.Category == currentPointCategory)
+            .Price;
+
+        Points = CurrentAccount
+            .Allowances
+            .PointList
+            .First(a => a.Category == currentPointCategory)
+            .Points;
+    }
+
+    private async Task ApproveTransaction(int transactionID) 
+    {
+        var response = await AccountApi.ApproveTransaction(currentID, transactionID);
+        if (response is null) {return;}
+        UpdateAfterTransaction(response, transactionID);
+    }
+
+    @* Balance didn't update upon approval *@
+
+    private async Task DeclineTransaction(int transactionID)
+    {
+        var response = await AccountApi.DeclineTransaction(currentID, transactionID);
+        if (response is null) {return;}
+        UpdateAfterTransaction(response, transactionID);
+    }
+
+    private void UpdateAfterTransaction(AccountViewModel response, int transactionID)
+    {
+        CurrentAccount.Balance = response.Balance;
+
+        var index = CurrentAccount
+            .Transactions.TransactionList
+            .FindIndex(t => t.TransactionID == transactionID);
+
+        var transaction = response
+            .Transactions.TransactionList
+            .First(t => t.TransactionID == transactionID);
+
+        CurrentAccount.Transactions.TransactionList[index] = transaction;
+    }
+
+    private void SelectorsChanged()
+    {        
+        Price = CurrentAccount
+            .Allowances
+            .PointList
+            .First(a => a.Category == currentPointCategory)
+            .Price;
+
+        Points = CurrentAccount
+            .Allowances
+            .PointList
+            .First(a => a.Category == currentPointCategory)
+            .Points;
+    }
+
+    private async Task SubmitPointChanges()
+    {
+        AccountViewModel? acct = null;
+        if (Price != CurrentAccount.Allowances.GetPrice(currentPointCategory))
+        {
+            acct = await AccountApi.SetPrice(currentID, currentPointCategory, Price);
+        }
+        if (Points != CurrentAccount.Allowances.GetPoints(currentPointCategory))
+        {
+            acct = await AccountApi.SetPoints(currentID, currentPointCategory, Points);
+        }        
+    }
+
+
+
+    private void UpdateAfterCategorySet(AccountViewModel response)
+    {
+        CurrentAccount.Balance = response.Balance;
+
+        var index = CurrentAccount
+            .Allowances.PointList
+            .FindIndex(a => a.Category == currentPointCategory);
+
+        var transaction = response
+            .Allowances.PointList
+            .First(a => a.Category == currentPointCategory);
+
+        CurrentAccount.Allowances.PointList[index] = transaction;
+
+        Points = transaction.Points;
+        Price = transaction.Price;
     }
 }
 

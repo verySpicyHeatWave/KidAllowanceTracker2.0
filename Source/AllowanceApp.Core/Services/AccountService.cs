@@ -30,8 +30,14 @@ namespace AllowanceApp.Core.Services
         public async Task<Account> PayAllowanceAsync(int id) =>
             await _actor.PayAllowanceAsync(id);
 
-        public async Task<Account> ApplyTransactionAsync(int id, int amount, TransactionType action, string? description) =>
-            await _actor.ApplyTransactionAsync(id, amount, action, description);
+        public async Task<Account> RequestTransactionAsync(int id, int amount, TransactionType action, string? description) =>
+            await _actor.RequestTransactionAsync(id, amount, action, description);
+
+        public async Task<Account> ApproveTransactionAsync(int id, int transaction_id) =>
+            await _actor.ApproveTransactionAsync(id, transaction_id);
+
+        public async Task<Account> DeclineTransactionAsync(int id, int transaction_id) =>
+            await _actor.DeclineTransactionAsync(id, transaction_id);
 
         public async Task<string> DeleteAccountAsync(int id) =>
             await _actor.DeleteAccountAsync(id);

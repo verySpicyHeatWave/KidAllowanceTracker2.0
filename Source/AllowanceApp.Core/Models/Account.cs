@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.VisualBasic;
 
 namespace AllowanceApp.Core.Models
 {
@@ -29,16 +30,12 @@ namespace AllowanceApp.Core.Models
             int Total = AllowanceBalance;
             ResetPoints();
             string Description = $"Allowance payout for {DateOnly.FromDateTime(DateTime.Today).ToShortDateString()}";
-            ApplyTransaction(Total, TransactionType.Deposit, Description);
+            RequestTransaction(Total, TransactionType.Deposit, Description);
         }
 
-        public void ApplyTransaction(int amount, TransactionType action, string? description)
+        public void RequestTransaction(int amount, TransactionType action, string? description)
         {
             if (InvalidWithdrawal(action, amount)) { return; }
-            var xferAmount = amount * (int)action;
-            var oldBalance = Balance;
-            Balance += xferAmount;
-            amount = PreventOverdraft(amount, oldBalance);
 
             Transaction transaction = new()
             {
@@ -51,10 +48,35 @@ namespace AllowanceApp.Core.Models
             Transactions.Add(transaction);
         }
 
-        private int PreventOverdraft(int amount, int oldbalance)
+        public void ApproveTransaction(int transactionID)
         {
-            var resp = Balance < 0 ? oldbalance : amount;
-            if (resp == oldbalance) { Balance = 0; }
+            var transaction = Transactions.First(t => t.TransactionID == transactionID);
+            if (transaction is null) { return; }
+            transaction.Status = ApprovalStatus.Approved;
+            Console.WriteLine($"================== Nah bruh! ==================");
+
+            var oldBalance = Balance;
+            Balance += transaction.Amount;
+
+            if (transaction.Amount < 0)
+            {
+                transaction.Amount = PreventOverdraft(transaction.Amount, oldBalance);
+            }
+
+        }
+
+        public void DeclineTransaction(int transactionID)
+        {
+            var transaction = Transactions.First(t => t.TransactionID == transactionID);
+            if (transaction is null) { return; }
+            transaction.Status = ApprovalStatus.Declined;
+        }
+
+        private int PreventOverdraft(int amount, int oldBalance)
+        {
+            var resp = Balance < 0 ? oldBalance : amount;
+            if (resp == oldBalance) { Balance = 0; }
+            if (amount < 0) { resp *= -1; } // This means it's a withdrawal
             return resp;
         }
 

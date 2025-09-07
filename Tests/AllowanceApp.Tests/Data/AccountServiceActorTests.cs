@@ -266,12 +266,12 @@ namespace AllowanceApp.Tests.Data
             int oldBalance = value;
             string description = Guid.NewGuid().ToString();
 
-            await actor.ApplyTransactionAsync(id, value, TransactionType.Deposit, description);
+            await actor.RequestTransactionAsync(id, value, TransactionType.Deposit, description);
 
             value = rng.Next(100, 500);
             description = Guid.NewGuid().ToString();
 
-            await actor.ApplyTransactionAsync(id, value, action, description);
+            await actor.RequestTransactionAsync(id, value, action, description);
             Account acct = await actor.GetAccountAsync(id);
             Assert.Equal(oldBalance + ((int)action * value), acct.Balance);
         }

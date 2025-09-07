@@ -170,7 +170,7 @@ namespace AllowanceApp.Api.Endpoints
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, request.Amount, TransactionType.Deposit, request.Description);
+                    var account = await accountService.RequestTransactionAsync(id, request.Amount, TransactionType.Deposit, request.Description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -191,7 +191,7 @@ namespace AllowanceApp.Api.Endpoints
                 }
                 var dbResult = await TryDatabaseInteraction<Account>(async () =>
                 {
-                    var account = await accountService.ApplyTransactionAsync(id, request.Amount, TransactionType.Withdraw, request.Description);
+                    var account = await accountService.RequestTransactionAsync(id, request.Amount, TransactionType.Withdraw, request.Description);
                     return account;
                 });
                 return dbResult.IsSuccess
@@ -199,6 +199,34 @@ namespace AllowanceApp.Api.Endpoints
                     : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
             })
             .WithName("WithdrawFromAccount")
+            .WithOpenApi();
+
+            app.MapPut("/accounts/update/{id}/transaction/approve", async (int id, TransactionStatusUpdateRequest request, AccountService accountService) =>
+            {
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
+                {
+                    var account = await accountService.ApproveTransactionAsync(id, request.TransactionID);
+                    return account;
+                });
+                return dbResult.IsSuccess
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+            })
+            .WithName("ApproveTransaction")
+            .WithOpenApi();
+
+            app.MapPut("/accounts/update/{id}/transaction/decline", async (int id, TransactionStatusUpdateRequest request, AccountService accountService) =>
+            {
+                var dbResult = await TryDatabaseInteraction<Account>(async () =>
+                {
+                    var account = await accountService.DeclineTransactionAsync(id, request.TransactionID);
+                    return account;
+                });
+                return dbResult.IsSuccess
+                    ? Microsoft.AspNetCore.Http.Results.Ok(new AccountDTO(dbResult.Response!))
+                    : Microsoft.AspNetCore.Http.Results.Problem(detail: dbResult.Message, statusCode: dbResult.StatusCode);
+            })
+            .WithName("DeclineTransaction")
             .WithOpenApi();
         }
 

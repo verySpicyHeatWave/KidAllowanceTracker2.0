@@ -1,4 +1,6 @@
+using System.Drawing;
 using System.Net;
+using AllowanceApp.Blazor.Components.Cards;
 using AllowanceApp.Blazor.Models;
 using AllowanceApp.Shared.DTO;
 
@@ -83,6 +85,58 @@ public class AccountApiService(HttpClient http)
     public async Task<AccountViewModel?> RequestTransaction(int id, string action, TransactionRequest transaction)
     {
         var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/{action}", transaction);
+        if (HttpStatusCode.OK != response.StatusCode) { return null; }
+
+        var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
+        if (dto is null) { return null; }
+
+        var model = new AccountViewModel(dto);
+        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model);
+        return model;
+    }
+
+    public async Task<AccountViewModel?> ApproveTransaction(int id, int transaction_id)
+    {
+        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/approve", new TransactionStatusUpdateRequest(transaction_id));
+        if (HttpStatusCode.OK != response.StatusCode) { return null; }
+
+        var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
+        if (dto is null) { return null; }
+
+        var model = new AccountViewModel(dto);
+        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model);
+        return model;
+    }
+
+    public async Task<AccountViewModel?> DeclineTransaction(int id, int transaction_id)
+    {
+        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/decline",  new TransactionStatusUpdateRequest(transaction_id));
+        if (HttpStatusCode.OK != response.StatusCode) { return null; }
+
+        var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
+        if (dto is null) { return null; }
+
+        var model = new AccountViewModel(dto);
+        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model);
+        return model;
+    }
+
+    public async Task<AccountViewModel?> SetPoints(int id, string category, int value)
+    {
+        var response = await _http.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setpoints",  new PointUpdateRequest(value));
+        if (HttpStatusCode.OK != response.StatusCode) { return null; }
+
+        var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
+        if (dto is null) { return null; }
+
+        var model = new AccountViewModel(dto);
+        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model);
+        return model;
+    }
+
+    public async Task<AccountViewModel?> SetPrice(int id, string category, int value)
+    {
+        var response = await _http.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice",  new TransactionRequest() {Amount = value});
         if (HttpStatusCode.OK != response.StatusCode) { return null; }
 
         var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();

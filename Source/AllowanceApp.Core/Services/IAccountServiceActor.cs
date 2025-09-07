@@ -12,7 +12,9 @@ namespace AllowanceApp.Core.Services
         Task<AllowancePoint> SetPointAsync(int id, string category, int value);
         Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount);
         Task<Account> PayAllowanceAsync(int id);
-        Task<Account> ApplyTransactionAsync(int id, int amount, TransactionType action, string? description);
+        Task<Account> RequestTransactionAsync(int id, int amount, TransactionType action, string? description);
+        Task<Account> ApproveTransactionAsync(int id, int transaction_id);
+        Task<Account> DeclineTransactionAsync(int id, int transaction_id);
         Task<string> DeleteAccountAsync(int id);
     }
 }

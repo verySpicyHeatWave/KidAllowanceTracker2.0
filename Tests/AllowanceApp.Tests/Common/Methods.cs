@@ -154,12 +154,12 @@ namespace AllowanceApp.Tests.Common
                 });
 
             mockActor
-                .Setup(a => a.ApplyTransactionAsync(It.Is<int>(id => id > 0), It.Is<int>(d => d > 0), It.IsAny<TransactionType>(), It.IsAny<string>()))
+                .Setup(a => a.RequestTransactionAsync(It.Is<int>(id => id > 0), It.Is<int>(d => d > 0), It.IsAny<TransactionType>(), It.IsAny<string>()))
                 .ReturnsAsync((int id, int amount, TransactionType action, string description) =>
                 {
                     var rng = GetRandomGenerator();
                     Account expected = new(Guid.NewGuid().ToString()) { AccountID = id };
-                    expected.ApplyTransaction(amount, action, description);
+                    expected.RequestTransaction(amount, action, description);
                     expected.Transactions[0].TransactionID = rng.Next();
                     return expected;
                 });

@@ -21,7 +21,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, action, description);
+            acct.RequestTransaction(amount, action, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
@@ -51,7 +51,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, TransactionType.Withdraw, description);
+            acct.RequestTransaction(amount, TransactionType.Withdraw, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
@@ -78,7 +78,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, TransactionType.Withdraw, description);
+            acct.RequestTransaction(amount, TransactionType.Withdraw, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
@@ -99,7 +99,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, TransactionType.Deposit, description);
+            acct.RequestTransaction(amount, TransactionType.Deposit, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
@@ -128,7 +128,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, action, description);
+            acct.RequestTransaction(amount, action, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
@@ -151,7 +151,7 @@ namespace AllowanceApp.Tests.Core
 
             // Apply transaction, then find that exact transaction item
             var description = Guid.NewGuid().ToString();
-            acct.ApplyTransaction(amount, action, description);
+            acct.RequestTransaction(amount, action, description);
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 

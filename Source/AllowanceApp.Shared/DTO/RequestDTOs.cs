@@ -9,4 +9,6 @@ namespace AllowanceApp.Shared.DTO
     };
 
     public record PointUpdateRequest(int Points);
+
+    public record TransactionStatusUpdateRequest(int TransactionID);
 }

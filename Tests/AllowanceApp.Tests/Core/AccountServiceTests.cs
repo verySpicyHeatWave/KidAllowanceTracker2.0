@@ -94,7 +94,7 @@ namespace AllowanceApp.Tests.Core
             string description = Guid.NewGuid().ToString();
             int amount = rng.Next();
             AccountService service = Methods.GetAccountServiceWithMock();
-            Account result = await service.ApplyTransactionAsync(id, amount, TransactionType.Deposit, description);
+            Account result = await service.RequestTransactionAsync(id, amount, TransactionType.Deposit, description);
             Assert.Equal(amount, result.Balance);
             Assert.Single(result.Transactions);
             Transaction transaction = result.Transactions[0];

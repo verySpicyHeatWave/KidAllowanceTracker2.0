@@ -19,6 +19,9 @@ namespace AllowanceApp.Blazor.Models
         public int GetPoints(string category) =>
             PointList.SingleOrDefault(a => a.Category == category)?.Points ?? -1;
 
+        public int GetPrice(string category) =>
+            PointList.SingleOrDefault(a => a.Category == category)?.Price ?? -1;
+
 
         private double CalculateTotal()
         {
