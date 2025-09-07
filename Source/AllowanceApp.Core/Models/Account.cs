@@ -74,9 +74,8 @@ namespace AllowanceApp.Core.Models
 
         private int PreventOverdraft(int amount, int oldBalance)
         {
-            var resp = Balance < 0 ? oldBalance : amount;
-            if (resp == oldBalance) { Balance = 0; }
-            if (amount < 0) { resp *= -1; } // This means it's a withdrawal
+            var resp = Balance < 0 ? -oldBalance : amount;
+            Balance = Math.Max(0, Balance);
             return resp;
         }
 

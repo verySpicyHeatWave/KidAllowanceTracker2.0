@@ -62,7 +62,7 @@ namespace AllowanceApp.Tests.Api
                     var amount = rng.Next(5000);
                     response = await _client.PutAsJsonAsync(
                         test_case.Route.Replace("{id}", id.ToString()),
-                        new TransactionRequest(amount, Guid.NewGuid().ToString())
+                        new TransactionRequest() {Amount = amount, Description = Guid.NewGuid().ToString()}
                     );
                     break;
 
@@ -127,14 +127,14 @@ namespace AllowanceApp.Tests.Api
 
             var response = await _client.PutAsJsonAsync(
                 $"/accounts/update/{id}/transaction/{operation}",
-                new TransactionRequest(amount, description)
+                new TransactionRequest() {Amount = amount, Description = description}
             );
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var account = await response.Content.ReadFromJsonAsync<AccountDTO>();
             Assert.NotNull(account);
 
             var diff = amount * multiplier;
-            Assert.Equal(Math.Max(0, old_account.Balance + diff), account.Balance);
+            Assert.Equal(Math.Max(0, old_account.Balance), account.Balance);
             var transaction = account.Transactions.SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
             Assert.NotNull(transaction);
             int expected_amount = amount > old_account.Balance && multiplier == -1
@@ -160,7 +160,7 @@ namespace AllowanceApp.Tests.Api
 
             var response = await _client.PutAsJsonAsync(
                 $"/accounts/update/{id}/transaction/{operation}",
-                new TransactionRequest(amount, description)
+                new TransactionRequest() {Amount = amount, Description = description}
             );
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             string error_string = await response.Content.ReadAsStringAsync();
@@ -282,7 +282,8 @@ namespace AllowanceApp.Tests.Api
 
             var category = Methods.GetRandomBehaviorString(rng);
 
-            var response = await _client.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice", new TransactionRequest(amount, null));
+            var response = await _client.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice", 
+                new TransactionRequest() {Amount = amount, Description = null});
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var pointDTO = await response.Content.ReadFromJsonAsync<AllowancePointDTO>();
 
@@ -314,7 +315,7 @@ namespace AllowanceApp.Tests.Api
             var account = await response.Content.ReadFromJsonAsync<AccountDTO>();
             Assert.NotNull(account);
 
-            Assert.Equal(old_account.Balance + old_account.AllowanceTotal, account.Balance);
+            Assert.Equal(old_account.Balance, account.Balance);
             Assert.Equal(0, account.AllowanceTotal);
         }
         #endregion

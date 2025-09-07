@@ -5,11 +5,11 @@ namespace AllowanceApp.Tests.Core
 {
     public class TransactionUtilityTests
     {
-        #region ApplyTransaction
+        #region RequestTransaction
         [Theory]
         [InlineData(TransactionType.Deposit)]
         [InlineData(TransactionType.Withdraw)]
-        public void ApplyTransaction_OperatesCorrectly(TransactionType action)
+        public void RequestTransaction_OperatesCorrectly(TransactionType action)
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -33,13 +33,56 @@ namespace AllowanceApp.Tests.Core
             // Transaction amount should equal the amount requested
             Assert.Equal(amount * (int)action, transaction.Amount);
 
-            //The balance should 1000 +/- whatever the requested amount was
+            // Transaction should stil be pending
+            Assert.Equal(ApprovalStatus.Pending, transaction.Status);
+
+            //The balance should not have changed
+            Assert.Equal(oldBalance, acct.Balance);
+        }
+
+        [Theory]
+        [InlineData(TransactionType.Deposit)]
+        [InlineData(TransactionType.Withdraw)]
+        public void ApproveTransaction_OperatesCorrectly(TransactionType action)
+        {
+            var rng = Methods.GetRandomGenerator();
+            Account acct = Methods.GenericAccount();
+
+            // Withdraw amount should be less than the account balance
+            var amount = rng.Next(1, 500);
+            acct.Balance = 1000;
+            var oldBalance = acct.Balance;
+
+            // Apply transaction, then find that exact transaction item
+            var description = Guid.NewGuid().ToString();
+            acct.RequestTransaction(amount, action, description);
+            var transaction = acct.Transactions
+                .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
+
+            int newBalance = oldBalance + (amount * (int)action);
+
+            // Transaction shouldn't be null--then we will use the transaction ID to approve
+            Assert.NotNull(transaction);
+            Assert.Equal(amount * (int)action, transaction.Amount);
+            acct.ApproveTransaction(transaction.TransactionID);
+
+            // Reacquire the updated transaction object
+            transaction = acct.Transactions
+                .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
+
+            // Transaction shouldn't be null
+            Assert.NotNull(transaction);
+
+            // Transaction amount should equal the amount requested
+            Assert.Equal(amount * (int)action, transaction.Amount);
+
+            //The balance should have changed
             Assert.Equal(newBalance, acct.Balance);
         }
 
 
         [Fact]
-        public void ApplyTransaction_OverdraftWithdrawsEntireBalance()
+        public void ApproveTransaction_OverdraftWithdrawsEntireBalance()
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -55,6 +98,13 @@ namespace AllowanceApp.Tests.Core
             var transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
+            // Transaction shouldn't be null--then we will use the transaction ID to approve
+            Assert.NotNull(transaction);
+            acct.ApproveTransaction(transaction.TransactionID);
+
+            transaction = acct.Transactions
+                .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
+
             // Transaction shouldn't be null
             Assert.NotNull(transaction);
 
@@ -67,7 +117,7 @@ namespace AllowanceApp.Tests.Core
 
 
         [Fact]
-        public void ApplyTransaction_CantWithdrawFromEmptyBalance()
+        public void RequestTransaction_CantWithdrawFromEmptyBalance()
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -88,7 +138,7 @@ namespace AllowanceApp.Tests.Core
 
 
         [Fact]
-        public void ApplyTransaction_CanDepositToEmptyBalance()
+        public void ApproveTransaction_CanDepositToEmptyBalance()
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -101,6 +151,13 @@ namespace AllowanceApp.Tests.Core
             var description = Guid.NewGuid().ToString();
             acct.RequestTransaction(amount, TransactionType.Deposit, description);
             var transaction = acct.Transactions
+                .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
+
+            // Transaction shouldn't be null--then we will use the transaction ID to approve
+            Assert.NotNull(transaction);
+            acct.ApproveTransaction(transaction.TransactionID);
+
+            transaction = acct.Transactions
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
             // Transaction shouldn't be null
@@ -117,7 +174,7 @@ namespace AllowanceApp.Tests.Core
         [Theory]
         [InlineData(TransactionType.Deposit)]
         [InlineData(TransactionType.Withdraw)]
-        public void ApplyTransaction_CantTransactNothing(TransactionType action)
+        public void RequestTransaction_CantTransactNothing(TransactionType action)
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -140,7 +197,7 @@ namespace AllowanceApp.Tests.Core
         [Theory]
         [InlineData(TransactionType.Deposit)]
         [InlineData(TransactionType.Withdraw)]
-        public void ApplyTransaction_CantTransactNegative(TransactionType action)
+        public void RequestTransaction_CantTransactNegative(TransactionType action)
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -162,7 +219,7 @@ namespace AllowanceApp.Tests.Core
 
         #region PayAllowanceToAccount
         [Fact]
-        public void PayAllowanceToAccount_PaysOut()
+        public void PayAllowanceToAccount_RequestsTransaction()
         {
             var rng = Methods.GetRandomGenerator();
             Account acct = Methods.GenericAccount();
@@ -178,7 +235,8 @@ namespace AllowanceApp.Tests.Core
                 .SingleOrDefault(t => string.Equals(t.Description, description, StringComparison.OrdinalIgnoreCase));
 
             Assert.NotNull(transaction);
-            Assert.Equal(allowance + oldBalance, acct.Balance);
+            Assert.Equal(ApprovalStatus.Pending, transaction.Status);
+            Assert.Equal(allowance, transaction.Amount);
             Assert.NotEqual(oldPoints, acct.PointsBalance);
         }
         #endregion

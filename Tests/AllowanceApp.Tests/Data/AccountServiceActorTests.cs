@@ -250,11 +250,11 @@ namespace AllowanceApp.Tests.Data
         #endregion
 
 
-        #region "ApplyTransactionAsync"
+        #region "RequestTransactionAsync"
         [Theory]
         [InlineData(TransactionType.Deposit)]
         [InlineData(TransactionType.Withdraw)]
-        public async Task ApplyTransactionAsync_OperatesCorrectlyAsync(TransactionType action)
+        public async Task RequestTransactionAsync_OperatesCorrectlyAsync(TransactionType action)
         {
             var rng = Methods.GetRandomGenerator();
             using var context = Methods.GetTestContext();
@@ -273,7 +273,7 @@ namespace AllowanceApp.Tests.Data
 
             await actor.RequestTransactionAsync(id, value, action, description);
             Account acct = await actor.GetAccountAsync(id);
-            Assert.Equal(oldBalance + ((int)action * value), acct.Balance);
+            Assert.Equal(0, acct.Balance);
         }
         #endregion
 

@@ -87,7 +87,7 @@ namespace AllowanceApp.Tests.Core
         }
 
         [Fact]
-        public static async Task ApplyTransactionAsyncTest()
+        public static async Task RequestTransactionAsyncTest()
         {
             Random rng = Methods.GetRandomGenerator();
             int id = rng.Next();
@@ -95,7 +95,6 @@ namespace AllowanceApp.Tests.Core
             int amount = rng.Next();
             AccountService service = Methods.GetAccountServiceWithMock();
             Account result = await service.RequestTransactionAsync(id, amount, TransactionType.Deposit, description);
-            Assert.Equal(amount, result.Balance);
             Assert.Single(result.Transactions);
             Transaction transaction = result.Transactions[0];
             Assert.Equal(id, transaction.AccountID);
