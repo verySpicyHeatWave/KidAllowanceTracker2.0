@@ -58,6 +58,8 @@ namespace AllowanceApp.Tests.Core
             Assert.Equal(1, result.Points);
         }
 
+        //BCOBB: SetPointAsyncTest goes here (Set up the mock!)
+
         [Fact]
         public static async Task UpdateAllowancePriceAsyncTest()
         {
@@ -101,6 +103,11 @@ namespace AllowanceApp.Tests.Core
             Assert.Equal(amount, transaction.Amount);
             Assert.True(string.Equals(description, transaction.Description, StringComparison.OrdinalIgnoreCase));
         }
+
+        //BCOBB: ApproveTransactionAsyncTest goes here (Set up the mock!)
+
+
+        //BCOBB: DeclineTransactionAsyncTest goes here (Set up the mock!)
 
         [Fact]
         public static async Task DeleteAccountAsyncTest()

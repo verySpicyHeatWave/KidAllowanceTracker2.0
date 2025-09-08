@@ -50,7 +50,7 @@ namespace AllowanceApp.Core.Models
 
         public void ApproveTransaction(int transactionID)
         {
-            var transaction = Transactions.First(t => t.TransactionID == transactionID);
+            var transaction = Transactions.SingleOrDefault(t => t.TransactionID == transactionID);
             if (transaction is null) { return; }
             transaction.Status = ApprovalStatus.Approved;
             Console.WriteLine($"================== Nah bruh! ==================");
@@ -67,7 +67,7 @@ namespace AllowanceApp.Core.Models
 
         public void DeclineTransaction(int transactionID)
         {
-            var transaction = Transactions.First(t => t.TransactionID == transactionID);
+            var transaction = Transactions.SingleOrDefault(t => t.TransactionID == transactionID);
             if (transaction is null) { return; }
             transaction.Status = ApprovalStatus.Declined;
         }
