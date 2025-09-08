@@ -18,7 +18,7 @@
 
 
 @code {
-    [Parameter] public TransactionRequest Value { get; set; } = new();
+    [Parameter] public TransactionRequest Value { get; set; } = new(1);
     [Parameter] public EventCallback<TransactionRequest> ValueChanged { get; set; }
     [Parameter] public EventCallback<TransactionRequest> CountChanged{get; set;}
     private string InputMedium {get; set;} = string.Empty;

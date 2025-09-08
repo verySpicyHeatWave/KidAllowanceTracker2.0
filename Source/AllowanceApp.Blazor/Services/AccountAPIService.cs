@@ -97,7 +97,7 @@ public class AccountApiService(HttpClient http)
 
     public async Task<AccountViewModel?> ApproveTransaction(int id, int transaction_id)
     {
-        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/approve", new TransactionStatusUpdateRequest(transaction_id));
+        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/approve", new TransactionStatusUpdateRequest() { TransactionID = transaction_id });
         if (HttpStatusCode.OK != response.StatusCode) { return null; }
 
         var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
@@ -110,7 +110,7 @@ public class AccountApiService(HttpClient http)
 
     public async Task<AccountViewModel?> DeclineTransaction(int id, int transaction_id)
     {
-        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/decline",  new TransactionStatusUpdateRequest(transaction_id));
+        var response = await _http.PutAsJsonAsync($"accounts/update/{id}/transaction/decline",  new TransactionStatusUpdateRequest() { TransactionID = transaction_id });
         if (HttpStatusCode.OK != response.StatusCode) { return null; }
 
         var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
@@ -136,7 +136,7 @@ public class AccountApiService(HttpClient http)
 
     public async Task<AccountViewModel?> SetPrice(int id, string category, int value)
     {
-        var response = await _http.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice",  new TransactionRequest() {Amount = value});
+        var response = await _http.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice",  new TransactionRequest(value));
         if (HttpStatusCode.OK != response.StatusCode) { return null; }
 
         var dto = await response.Content.ReadFromJsonAsync<AccountDTO>();
