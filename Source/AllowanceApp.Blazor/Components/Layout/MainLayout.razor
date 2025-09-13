@@ -4,8 +4,8 @@
 @inherits LayoutComponentBase
 @inject AccountApiService AccountApi
 
-<div class="page">
-    <div class="sidebar">
+<div class="page bg-gradient-to-b from-blue-400 to-cyan-200">
+    <div class="bg-gray-900">
         @if (AccountViews is not null)
         {
             <NavMenu Accounts="NavBarModels"/>
@@ -14,10 +14,9 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="bg-blue-400">
+            <p class="nav-title"></p>
         </div>
-
         <article class="content px-4">
             @Body
         </article>

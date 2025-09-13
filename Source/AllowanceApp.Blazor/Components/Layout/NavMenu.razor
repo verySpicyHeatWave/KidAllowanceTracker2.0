@@ -1,21 +1,20 @@
 ﻿@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Components.Widgets
 @using AllowanceApp.Blazor.Services
 @using Microsoft.AspNetCore.Components.Routing;
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Kid Allowance Tracker 2.0</a>
-    </div>
+<div class="bg-gray-800">
+    <p class="nav-title">Kid Allowance App 2.0!</p>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex flex-col justify-between h-full">
+<div class="nav-scrollable bg-gradient-to-t from-gray-900 to-gray-800 pb-4" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex flex-col justify-between h-full ">
         <div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <NavLink href="" Match="NavLinkMatch.All" class="nav-option">
+                    <NavIcon Path="home.svg" CssClass="h-10 w-10 pr-2 pt-1 fill-current text-gray-300 hover:text-white"/> Home
                 </NavLink>
             </div>
             @if (Accounts is not null && Accounts.Count > 0)
@@ -23,8 +22,8 @@
                 @foreach (var account in Accounts)
                 {
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="@($"/account-details/{account.ID}")">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> @account.Name
+                        <NavLink href="@($"/account-details/{account.ID}")" class="nav-option">
+                            <NavIcon Path="child.svg" CssClass="h-10 w-10 pr-2 pt-1 fill-current text-gray-300 hover:text-white"/> @account.Name
                         </NavLink>
                     </div>
                 }
@@ -32,19 +31,19 @@
         </div>
 
         <div>
-            <div class="nav-item px-3 mt-4">
-                <NavLink class="nav-link" href="/Weather">
-                    <span class="bi bi-stars" aria-hidden="true"></span> How to earn points
+            <div class="nav-item px-3">
+                <NavLink href="/Error" class="nav-option">
+                            <NavIcon Path="help7.svg"  CssClass="h-10 w-10 pr-2 pt-1 fill-current text-gray-300 hover:text-white"/> How to earn points
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="/parent">
-                    <span class="bi bi-gear-fill" aria-hidden="true"></span> Settings
+                <NavLink href="/parent" class="nav-option">
+                            <NavIcon Path="settings.svg"  CssClass="h-10 w-10 pr-2 pt-1 fill-current text-gray-300 hover:text-white"/> Settings
                 </NavLink>
             </div>
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="/Error">
-                    <span class="bi bi-info-circle-fill" aria-hidden="true"></span> About
+                <NavLink href="/Error" class="nav-option">
+                            <NavIcon Path="about.svg"  CssClass="h-10 w-10 pr-2 pt-1 fill-current text-gray-300 hover:text-white"/> About
                 </NavLink>
             </div>
         </div>
@@ -54,3 +53,4 @@
 @code {
     [Parameter] public List<NavBarModel> Accounts {get; set;} = [];
 }
+

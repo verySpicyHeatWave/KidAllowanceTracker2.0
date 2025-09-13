@@ -52,11 +52,56 @@ h1:focus {
     border-color: #929292;
 }
 
+.nav-title {
+  @apply
+    text-xl
+    font-bold
+    text-gray-100
+    py-5
+    px-3;
+}
+
+.nav-option {
+  @apply
+    border-0
+    rounded
+    h-12
+    flex
+    items-center
+    leading-[3rem]
+    w-full
+    gap-2
+    px-4
+    py-2
+    rounded-lg
+    text-gray-300
+    text-lg
+    font-bold
+    bg-transparent
+    hover:bg-gray-700
+    hover:text-white
+    no-underline
+}
+
 .card-lg {
   @apply
     p-5
-    bg-white
-    dark:bg-gray-800
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
+.card-mgmt {
+  @apply
+    min-w-50
+    max-w-300
+    p-5
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
     rounded-2xl
     shadow-lg
     space-y-6;
@@ -66,8 +111,9 @@ h1:focus {
   @apply
     max-w-md
     p-5
-    bg-white
-    dark:bg-gray-800
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
     rounded-2xl
     shadow-lg
     space-y-6;
@@ -77,8 +123,9 @@ h1:focus {
   @apply
     max-w-xs
     p-5
-    bg-white
-    dark:bg-gray-800
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
     rounded-2xl
     shadow-lg
     space-y-6; 

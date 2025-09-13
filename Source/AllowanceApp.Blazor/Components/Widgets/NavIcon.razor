@@ -1,0 +1,17 @@
+@using Microsoft.AspNetCore.Components
+@inject IWebHostEnvironment Env
+
+@code {
+    [Parameter] public string Path { get; set; } = default!;
+    [Parameter] public string CssClass { get; set; } = "h-5 w-5 fill-current";
+    private MarkupString _svgContent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var filePath = System.IO.Path.Combine(Env.WebRootPath, "images", Path);
+        var svgText = await System.IO.File.ReadAllTextAsync(filePath);
+        _svgContent = new MarkupString(svgText);
+    }
+}
+
+<span class="@CssClass">@_svgContent</span>

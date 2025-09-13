@@ -6,7 +6,7 @@
 @using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
 
-<div class="card-lg">
+<div class="card-mgmt">
     <div class="text-center">
         <h2 class="card-title">Account Management</h2>
     </div>
@@ -60,13 +60,13 @@
     </div>
 
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div>
+        <table class="table-fixed w-100 border border-gray-200 dark:border-gray-700 rounded-lg">
             <thead class="bg-gray-100 dark:bg-gray-800">
                 <tr>
-                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Approve/Deny</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300 w-25">Approve/Deny</th>
                     <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Date</th>
-                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Description</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300 w-50">Description</th>
                     <th class="px-4 py-2 text-right text-lg font-medium text-gray-700 dark:text-gray-300">Amount</th>
                 </tr>
             </thead>
