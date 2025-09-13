@@ -1,58 +1,72 @@
 @page "/parent"
+
 @using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
 @using AllowanceApp.Blazor.Components.Cards
+@using AllowanceApp.Blazor.Components.Widgets
 @inject AccountApiService AccountApi
+@inject AuthenticationService Auth
 @rendermode InteractiveServer
 
 <PageTitle>Settings</PageTitle>
 
 <h1>Application Settings</h1>
 
-@if (!LoggedIn)
+@if (!Auth.IsAuthenticated)
 {
+    <p>Not authorized to access app settings.</p>
     <Modal @ref="MyModal"
         Title="Enter your password"
         OnConfirm="HandleConfirm"
         OnCancel="HandleCancel"
         SizeLarge=false>
         <div>
-            <ParentLogin/>
+            <input type="password" class="numbox" @bind="Password" />
         </div>
     </Modal>
 } 
-else if (accounts.Count == 0)
+else 
 {
+    if (accounts.Count == 0)
     {
-        <p><em>No accounts found.</em></p>
+        {
+            <p><em>No accounts found.</em></p>
+        }
     }
+    else
+    {
+        <AccountManagementCard Accounts="accounts"></AccountManagementCard>
+    }
+
+    <button class="btn-new-acct">
+        <span class="payout-text">Add new account</span>
+    </button>
 }
-else
-{
-    <AccountManagementCard Accounts="accounts"></AccountManagementCard>
-}
+
+@* Need to add a way to add accounts right here *@
 
 
 
 @code {
-    private bool LoggedIn = true;
     private Modal? MyModal;
     private List<AccountViewModel> accounts = [];
+    private string Password {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
         accounts = await AccountApi.GetAllAccountsAsync();
+        if (!Auth.IsAuthenticated)
+        {
+            MyModal?.Show();
+        }
     }
-
 
     private async Task HandleConfirm()
     {
         await Task.Delay(10);
+        Auth.Login(Password);
     }
     
-    private void HandleCancel()
-    {
-        return;
-    }
+    private void HandleCancel() { }
 }

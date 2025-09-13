@@ -3,6 +3,8 @@
 @using AllowanceApp.Shared.DTO
 @inherits LayoutComponentBase
 @inject AccountApiService AccountApi
+@inject NavigationManager Nav
+@inject AuthenticationService Auth
 
 <div class="page bg-gradient-to-b from-blue-400 to-cyan-200">
     <div class="bg-gray-900">
@@ -38,9 +40,14 @@
     protected override async Task OnInitializedAsync()
     {
         AccountViews = await AccountApi.GetAllAccountsAsync();
+        Nav.LocationChanged += HandleLocationChanged;
         foreach (var view in AccountViews)
         {
             NavBarModels.Add(new NavBarModel(view));
         }
     }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e) => Auth.Logout();
+
+    public void Dispose() => Nav.LocationChanged -= HandleLocationChanged;
 }

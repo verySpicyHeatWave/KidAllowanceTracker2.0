@@ -191,6 +191,27 @@ h1:focus {
     text-center;
 }
 
+.btn-new-acct {
+  @apply
+    w-25
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    bg-gradient-to-br
+    from-purple-300
+    to-blue-400
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
 .btn-payout {
   @apply
     w-full

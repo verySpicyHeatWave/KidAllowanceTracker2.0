@@ -12,6 +12,8 @@ builder.Services.AddHttpClient<AccountApiService>(client =>
     client.BaseAddress = new Uri("http://localhost:5257");
 });
 
+builder.Services.AddSingleton<AuthenticationService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
