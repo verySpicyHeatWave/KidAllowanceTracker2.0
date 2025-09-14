@@ -52,13 +52,12 @@ namespace AllowanceApp.Tests.Data
         }
 
         [Fact]
-        public async Task GetAllAccountsAsync_ThrowsIfDatabaseIsEmpty()
+        public async Task GetAllAccountsAsync_ReturnsEmptyDatabase()
         {
             using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
-            var ex = await Assert.ThrowsAsync<DataNotFoundException>(actor.GetAllAccountsAsync);
-
-            Assert.True(string.Equals(ex.Message, "No accounts found in database.", StringComparison.OrdinalIgnoreCase));
+            var accounts = await actor.GetAllAccountsAsync();
+            Assert.Empty(accounts);
         }
         #endregion
 
