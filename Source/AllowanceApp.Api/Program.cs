@@ -7,15 +7,38 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
+string? dbPath = builder.Configuration["Database:Path"];
+
+if (string.IsNullOrEmpty(dbPath))
+{
+    var folder = Environment.SpecialFolder.LocalApplicationData;
+    var localPath = Environment.GetFolderPath(folder);
+    dbPath = Path.Combine(localPath, "accounts.db");
+}
+
+// Ensure directory exists
+var dbDir = Path.GetDirectoryName(dbPath);
+if (dbDir is not null && !Directory.Exists(dbDir))
+{
+    Directory.CreateDirectory(dbDir);
+}
+
+Console.WriteLine($"Using database at: {dbPath}");
+var connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<AccountContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
 builder.Services.AddHostedService<WeeklyAllowanceService>();
-
 builder.Services.AddScoped<IAccountServiceActor, AccountServiceActor>();
 builder.Services.AddScoped<AccountService>();
 
@@ -35,3 +58,6 @@ app.SetAccountUpdateEndpoints();
 app.SetAccountDeleteEndpoints();
 
 app.Run();
+
+public partial class Program { }
+

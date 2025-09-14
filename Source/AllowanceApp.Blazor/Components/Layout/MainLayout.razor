@@ -1,15 +1,24 @@
-﻿@inherits LayoutComponentBase
+﻿@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inherits LayoutComponentBase
+@inject AccountApiService AccountApi
+@inject NavigationManager Nav
+@inject AuthenticationService Auth
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="page bg-gradient-to-b from-blue-400 to-cyan-200">
+    <div class="bg-gray-900">
+        @if (AccountViews is not null)
+        {
+            <NavMenu Accounts="NavBarModels"/>
+        }
+        
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="bg-blue-400">
+            <p class="nav-title"></p>
         </div>
-
         <article class="content px-4">
             @Body
         </article>
@@ -21,3 +30,24 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+
+
+@code {
+    public List<AccountViewModel> AccountViews {get; set;} = [];
+    public List<NavBarModel> NavBarModels {get; set;} = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        AccountViews = await AccountApi.GetAllAccountsAsync();
+        Nav.LocationChanged += HandleLocationChanged;
+        foreach (var view in AccountViews)
+        {
+            NavBarModels.Add(new NavBarModel(view));
+        }
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e) => Auth.Logout();
+
+    public void Dispose() => Nav.LocationChanged -= HandleLocationChanged;
+}

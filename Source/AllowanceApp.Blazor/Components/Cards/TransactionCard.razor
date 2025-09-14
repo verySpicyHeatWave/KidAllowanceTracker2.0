@@ -1,0 +1,104 @@
+@page "/transactions"
+
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Blazor.Styling
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+<div class="card-lg w-full">
+    <!-- Card header -->
+    <div class="relative mb-4">
+        <div class="text-center items-center">
+            <h2 class="card-title">Recent Transactions</h2>
+            <p class="card-subtitle">@CardSubtitleText</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="absolute top-0 right-0 flex space-x-2 gap-4">
+            <!-- Number of transactions -->
+            <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
+                    @bind="PageSize">
+                <option value="5">Last 5</option>
+                <option value="10">Last 10</option>
+                <option value="25">Last 25</option>
+                <option value="0">All</option>
+            </select>
+
+            <!-- Status filter -->
+            <select class="px-2 py-1 rounded border text-sm dark:bg-gray-800 dark:text-gray-200"
+                    @bind="SelectedStatus">
+                <option value="All">All</option>
+                <option value="Approved">Approved</option>
+                <option value="Declined">Declined</option>
+                <option value="Pending">Pending</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="table-fixed min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+            <thead class="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Transaction ID</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Date</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300">Status</th>
+                    <th class="px-4 py-2 text-left text-lg font-medium text-gray-700 dark:text-gray-300 w-50">Description</th>
+                    <th class="px-4 py-2 text-right text-lg font-medium text-gray-700 dark:text-gray-300">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                @if (Transactions is not null && Transactions.TransactionList.Count > 0)
+                {
+                    @foreach (var tx in TransactionObjects)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.TransactionID</td>
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Date.ToShortDateString()</td>
+                            <td class="px-4 py-2 text-md @(Styling.ApprovalTextColorCSS.GetValueOrDefault(tx.Status))">@tx.Status</td>
+                            <td class="px-4 py-2 text-md text-gray-800 dark:text-gray-200">@tx.Description</td>
+                            <td class="px-4 py-2 text-md font-medium @(tx.Amount >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400")">
+                                $@((tx.Amount/100.0).ToString("#0.00"))
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                            No transactions available
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required TransactionsViewModel Transactions {get; set;}
+    private int PageSize { get; set; } = 10;
+    private string SelectedStatus { get; set; } = "All";
+    private string CardSubtitleText => MakeCardSubtitle();
+    public List<SingleTransactionModel> TransactionObjects => 
+        Transactions.TransactionList
+            .Where(t => SelectedStatus == "All" || t.Status.ToString() == SelectedStatus)
+            .OrderByDescending(t => t.TransactionID)
+            .Take(PageSize == 0 ? int.MaxValue : PageSize)
+            .ToList();    
+
+    private string MakeCardSubtitle()
+    {
+        string value = PageSize == 0
+            ? "All account activities"
+            : $"Last {PageSize} account activities";
+
+        value += SelectedStatus == "All"
+            ? ""
+            : $" ({SelectedStatus})";
+        return value;
+    }
+}

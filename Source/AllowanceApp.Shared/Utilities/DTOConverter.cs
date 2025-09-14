@@ -1,7 +1,7 @@
 using AllowanceApp.Core.Models;
-using AllowanceApp.Api.DTO;
+using AllowanceApp.Shared.DTO;
 
-namespace AllowanceApp.Api.Utilities
+namespace AllowanceApp.Shared.Utilities
 {
     public static class DTOUtility
     {

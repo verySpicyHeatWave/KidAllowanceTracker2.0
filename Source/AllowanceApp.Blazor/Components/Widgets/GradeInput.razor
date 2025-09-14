@@ -1,0 +1,38 @@
+
+<div class="grid grid-cols-2">
+    <p class="point-balance">@Grade: </p>
+    <input 
+        type="number"
+        class="numbox"
+        min="0"
+        value="@Value"
+        @oninput="OnCountChanged" />
+    @if (!IsValid)
+    {
+        <p class="text-red-500 text-sm">Grade must be A–F</p>
+    }
+</div>
+
+
+@code {
+    [Parameter] public string Grade {get; set;} = string.Empty;
+    [Parameter] public EventCallback<int> CountChanged{get; set;}
+
+    [Parameter] public int Value { get; set; } = 0;
+    private int Points { get; set; }
+    [Parameter] public EventCallback<int> ValueChanged { get; set; }
+
+    private bool IsValid => !string.IsNullOrEmpty(Grade) && "ABCDF".Contains(Grade.ToUpper());
+
+
+    private async Task OnCountChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var val))
+        {
+            Points = val;
+            Value = val;
+            await ValueChanged.InvokeAsync(Value);
+            await CountChanged.InvokeAsync(Value);
+        }
+    }
+}

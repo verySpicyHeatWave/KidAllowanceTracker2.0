@@ -1,3 +1,4 @@
+using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
 
 namespace AllowanceApp.Api.Services
@@ -11,25 +12,29 @@ namespace AllowanceApp.Api.Services
             while (!CancelToken.IsCancellationRequested)
             {
                 var RightNow = DateTime.Now;
-                var NextSunday = RightNow.Date.AddDays(((int)DayOfWeek.Sunday - (int)RightNow.DayOfWeek + 7) % 7);
-                if (NextSunday <= RightNow)
-                    NextSunday = NextSunday.AddDays(7);
+                var NextSunday = CalculateNextSunday(RightNow);
 
                 var Delay = NextSunday - RightNow;
                 await Task.Delay(Delay, CancelToken);
 
-                await IncrementBaseAllowances(CancelToken);
+                await IncrementBaseAllowances();
             }
         }
 
-        private async Task IncrementBaseAllowances(CancellationToken CancelToken)
+        internal static DateTime CalculateNextSunday(DateTime now)
+        {
+            var next = now.Date.AddDays(((int)DayOfWeek.Sunday - (int)now.DayOfWeek + 7) % 7);
+            return next <= now ? next.AddDays(7) : next;
+        }
+
+        internal async Task IncrementBaseAllowances()
         {
             using var scope = _services.CreateScope();
-            var accountService = scope.ServiceProvider.GetRequiredService<AccountService>();
-            var accounts = await accountService.GetAllAccountsAsync();
+            var accountActor = scope.ServiceProvider.GetRequiredService<IAccountServiceActor>();
+            var accounts = await accountActor.GetAllAccountsAsync();
             foreach (var account in accounts)
             {
-                await accountService.IncOrDecPointAsync(account.AccountID, "BaseAllowance", true);
+                await accountActor.SinglePointAdjustAsync(account.AccountID, "BaseAllowance", PointOperation.Increment);
             }
         }
     }

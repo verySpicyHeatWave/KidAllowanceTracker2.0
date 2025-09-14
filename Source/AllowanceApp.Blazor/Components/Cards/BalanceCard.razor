@@ -1,0 +1,88 @@
+@page "/balance"
+
+@using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Components.Widgets
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@inject AccountApiService AccountApi
+
+<div class="card-sm">
+    <div class="text-center">
+        <h2 class="card-title">Bank Account</h2>
+        <p class="card-subtitle">Balance: <span class="balance-allowance">$@Account.BalanceDisplay</span></p>
+        
+        <div class="grid grid-cols-3 gap-4">
+            <p></p>
+            <div>
+                <button class="btn-allowance" @onclick="@(() => OpenModal("deposit"))">
+                    <img src="/images/deposit.png" alt="Deposit icon" class="justify-center mx-auto">
+                </button>
+                <p class="point-balance">Deposit</p>
+            </div>
+            <p></p>
+            
+            <p></p>
+            <div>
+                <button class="btn-allowance" @onclick="@(() => OpenModal("withdrawal"))">
+                    <img src="/images/withdraw.png" alt="Withdrawal icon" class="justify-center mx-auto">
+                </button>
+                <p class="point-balance">Withdraw</p>
+            </div>
+            <p></p>
+        </div>
+    </div>
+</div>
+
+<Modal @ref="MyModal" Title="@RequestTitle" OnConfirm="HandleConfirm" OnCancel="HandleCancel" SizeLarge=true>
+    <TransactionInput @bind-Value="Request" />    
+</Modal>
+
+
+
+
+@code {
+    [Parameter] public required AccountViewModel Account {get; set;}
+    [Parameter] public EventCallback OnAccountChanged { get; set; }
+    private Modal? MyModal;
+    private string RequestTitle = string.Empty;
+    private string QueryString = string.Empty;
+    private TransactionRequest Request = new(1);
+
+
+
+    
+    private void OpenModal(string action)
+    {
+        @* WorkingGrades = new Dictionary<char, int>(Grades); *@
+        if (action == "deposit")
+        {
+            RequestTitle = $"Request a Deposit";            
+        }
+        else
+        {
+            RequestTitle = $"Request a Withdrawal";
+        }
+        QueryString = action;
+        MyModal?.Show();
+    }
+
+    private async Task HandleConfirm()
+    {
+        Console.WriteLine(Request);
+        var resp = await AccountApi.RequestTransaction(Account.ID, QueryString, Request);
+        if (resp is not null)
+        {
+            Account.Balance = resp.Balance;
+            Account.Transactions = resp.Transactions;
+            await OnAccountChanged.InvokeAsync();
+        }
+    }
+    
+    private void HandleCancel()
+    {
+        Console.WriteLine("Nevermind!");
+    }
+
+
+}

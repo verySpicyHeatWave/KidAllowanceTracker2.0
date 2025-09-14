@@ -1,7 +1,43 @@
 ﻿@page "/"
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Cards
+@inject AccountApiService AccountApi
 
 <PageTitle>Home</PageTitle>
+@if (accounts is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
 
-<h1>Hello, world!</h1>
+    @if (accounts.Count == 0)
+    {
+        <p><em>No accounts found.</em></p>
+    }
+    else
+    {
+        <div class="grid grid-cols-3">
+            @foreach (var account in accounts)
+            {
+                <AccountCard Account="@account" OnAccountChanged="RefreshAccount"></AccountCard>
+            }
+        </div>
+    }
+}
 
-Welcome to your new app.
+
+@code {
+    private List<AccountViewModel> accounts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await AccountApi.GetAllAccountsAsync();
+    }
+    private void RefreshAccount()
+    {
+        StateHasChanged();
+    }
+}

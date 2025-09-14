@@ -3,29 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AllowanceApp.Data.Contexts
 {
-    public class AccountContext : DbContext
+    public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AllowancePoint> AllowancePoints { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public string DbPath { get; }
-        public AccountContext(DbContextOptions<AccountContext> options)
-            : base(options)
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = System.IO.Path.Join(path, "accounts.db");
-        }
-
-        public AccountContext()
-        {
-            var folder = Environment.SpecialFolder.LocalApplicationData;
-            var path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "accounts.db");
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+        public string DbPath { get; private set; } = "";
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,9 +22,13 @@ namespace AllowanceApp.Data.Contexts
             modelBuilder.Entity<Account>()
                 .HasIndex(e => e.Name)
                 .IsUnique();
+            modelBuilder.Entity<Account>()
+                .Property(e => e.Name)
+                .IsRequired()
+                .UseCollation("NOCASE");
 
             modelBuilder.Entity<AllowancePoint>()
-                .HasKey(a => new {a.AccountID, a.Category});
+                .HasKey(a => new { a.AccountID, a.Category });
             modelBuilder.Entity<AllowancePoint>()
                 .HasOne<Account>()
                 .WithMany(a => a.Allowances)

@@ -1,6 +1,5 @@
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
-using AllowanceApp.Core.Utilities;
 using AllowanceApp.Data.Contexts;
 using AllowanceApp.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -13,18 +12,21 @@ namespace AllowanceApp.Data.Actors
 
         public async Task<Account> AddAccountAsync(string name)
         {
-            var account = new Account(name) { Name = name };
+            var account = new Account(name);
             await _context.AddAsync(account);
             await _context.SaveChangesAsync();
             return account;
         }
 
-        public async Task<List<Account>> GetAllAccountsAsync() =>
-            await _context.Accounts
+        public async Task<List<Account>> GetAllAccountsAsync()
+        {
+            var accounts = await _context.Accounts
                 .Include(a => a.Allowances)
                 .Include(t => t.Transactions)
-                .ToListAsync()
-                ?? throw new DataNotFoundException("No accounts found in database.");
+                .ToListAsync();
+            if (accounts.Count == 0) { throw new DataNotFoundException("No accounts found in database."); }
+            return accounts;
+        }
 
         public async Task<Account> GetAccountAsync(int id) =>
             await _context.Accounts
@@ -47,44 +49,65 @@ namespace AllowanceApp.Data.Actors
             return allowancePoint;
         }
 
-        public async Task<AllowancePoint> IncOrDecPointAsync(int id, string category, bool incrementing)
+        public async Task<AllowancePoint> SinglePointAdjustAsync(int id, string category, PointOperation operation)
         {
             var allowancePoint = await GetAllowancePointAsync(id, category);
-            allowancePoint.Points += incrementing ? 1 : -1;
-            if (allowancePoint.Points < 0) { allowancePoint.Points = 0; }
+            allowancePoint.IncOrDecPoint(operation);
             await _context.SaveChangesAsync();
-            return allowancePoint;            
+            return allowancePoint;
         }
 
-        public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, double amount)
+        public async Task<AllowancePoint> SetPointAsync(int id, string category, int value)
+        {
+            var allowancePoint = await GetAllowancePointAsync(id, category);
+            allowancePoint.Points = value;
+            await _context.SaveChangesAsync();
+            return allowancePoint;
+        }
+
+        public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount)
         {
             var allowancePoint = await GetAllowancePointAsync(id, category);
             allowancePoint.Price = amount;
             await _context.SaveChangesAsync();
             return allowancePoint;
         }
-        
+
         public async Task<Account> PayAllowanceAsync(int id)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
-            if (TransactionUtility.CalculateTotalAllowance(account) == 0) { return account; }
-            TransactionUtility.PayAllowanceToAccount(account);
+            var account = await GetAccountAsync(id);
+            account.PayAllowanceToAccount();
             await _context.SaveChangesAsync();
             return account;
         }
 
-        public async Task<Account> ApplyTransactionAsync(int id, double amount, bool isWithdrawal, string? description)
+        public async Task<Account> RequestTransactionAsync(int id, int amount, TransactionType action, string? description)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
-            if (amount <= 0) { return account; }
-            TransactionUtility.ApplyTransaction(account, amount, isWithdrawal, description);
+            var account = await GetAccountAsync(id);
+            account.RequestTransaction(amount, action, description);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
+        public async Task<Account> ApproveTransactionAsync(int id, int transaction_id)
+        {
+            var account = await GetAccountAsync(id);
+            account.ApproveTransaction(transaction_id);
+            await _context.SaveChangesAsync();
+            return account;
+        }
+
+        public async Task<Account> DeclineTransactionAsync(int id, int transaction_id)
+        {
+            var account = await GetAccountAsync(id);
+            account.DeclineTransaction(transaction_id);
             await _context.SaveChangesAsync();
             return account;
         }
 
         public async Task<string> DeleteAccountAsync(int id)
         {
-            var account = await GetAccountAsync(id) ?? throw new DataNotFoundException($"No account found with ID number {id}");
+            var account = await GetAccountAsync(id);
             _context.Remove(account);
             await _context.SaveChangesAsync();
             return account.Name;

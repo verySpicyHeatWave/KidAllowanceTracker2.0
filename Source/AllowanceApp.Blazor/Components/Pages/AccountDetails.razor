@@ -1,0 +1,47 @@
+@page "/account-details/{id:int}"
+@using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Models
+@using AllowanceApp.Blazor.Services
+@using AllowanceApp.Shared.DTO
+@using AllowanceApp.Blazor.Components.Cards
+@inject AccountApiService AccountApi
+
+@if (account is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <PageTitle>@account.Name</PageTitle>
+    <div class="grid grid-cols-2 gap-4 w-full max-w-6xl items-start justify-start justify-items-start">
+        <div class="h-full justify-self-stretch w-full">
+            <AccountCard Account="@account" OnAccountChanged="@RefreshAccount"></AccountCard>
+        </div>
+        <div class="h-full justify-self-stretch w-full">
+            <BalanceCard Account="@account" OnAccountChanged="@RefreshAccount"></BalanceCard>
+        </div>
+        <div class="col-span-2 justify-self-stretch w-full">
+            <TransactionCard Transactions="@account.Transactions"></TransactionCard>
+        </div>
+    </div>
+}
+
+
+@code {
+    private AccountViewModel? account;
+    [Parameter] public int id {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        account = await AccountApi.GetAccountAsync(id);
+    }
+    
+        protected override async Task OnParametersSetAsync()
+    {
+        account = await AccountApi.GetAccountAsync(id);
+    }
+    private void RefreshAccount()
+    {
+        StateHasChanged();
+    }
+}

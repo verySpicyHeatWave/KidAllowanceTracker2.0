@@ -1,0 +1,29 @@
+using System.Text.Json.Serialization;
+using AllowanceApp.Core.Models;
+
+namespace AllowanceApp.Shared.DTO
+{
+    public record TransactionDTO
+    {
+        public int TransactionID { get; init; }
+        public int AccountID { get; init; }
+        public int Amount { get; init; }
+        public int Status { get; init; } = 0;
+        public DateOnly Date { get; init; } = DateOnly.FromDateTime(DateTime.Today);
+        public string? Description { get; init; } = null;
+
+        [JsonConstructor]
+        public TransactionDTO() { }
+
+        public TransactionDTO(Transaction transaction) =>
+        (TransactionID, AccountID, Amount, Status, Date, Description) =
+        (
+            transaction.TransactionID,
+            transaction.AccountID,
+            transaction.Amount,
+            (int)transaction.Status,
+            transaction.Date,
+            transaction.Description
+        );
+    }
+}

@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -49,3 +51,264 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.nav-title {
+  @apply
+    text-xl
+    font-bold
+    text-gray-100
+    py-5
+    px-3;
+}
+
+.nav-option {
+  @apply
+    border-0
+    rounded
+    h-12
+    flex
+    items-center
+    leading-[3rem]
+    w-full
+    gap-2
+    px-4
+    py-2
+    rounded-lg
+    text-gray-300
+    text-lg
+    font-bold
+    bg-transparent
+    hover:bg-gray-700
+    hover:text-white
+    no-underline
+}
+
+.card-lg {
+  @apply
+    p-5
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
+.card-mgmt {
+  @apply
+    min-w-50
+    max-w-300
+    p-5
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
+.card {
+  @apply
+    max-w-md
+    p-5
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6;
+}
+
+.card-sm {
+  @apply
+    max-w-xs
+    p-5
+    bg-gradient-to-t
+    from-gray-900
+    to-gray-800
+    rounded-2xl
+    shadow-lg
+    space-y-6; 
+}
+
+.card-title {
+  @apply
+    text-2xl
+    font-bold
+    text-gray-800
+    dark:text-gray-100;
+}
+
+.card-subtitle {
+  @apply
+    text-gray-500
+    dark:text-gray-400;
+}
+
+.point-balance {
+  @apply
+    text-gray-500
+    dark:text-gray-400
+    text-center
+    text-sm
+    pt-2;
+}
+
+.balance-allowance {
+  @apply
+    text-xl
+    font-semibold
+    text-green-600
+    dark:text-green-400;
+}
+
+.balance-bank {
+  @apply
+    text-2xl
+    font-semibold
+    text-green-600
+    dark:text-green-400;
+}
+
+.btn-allowance {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    bg-gradient-to-br
+    from-purple-300
+    to-blue-400
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
+.btn-new-acct {
+  @apply
+    mt-5
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    bg-gradient-to-br
+    from-yellow-200
+    to-pink-300
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
+.new-acct-text {
+  @apply
+    bg-clip-text
+    text-transparent
+    bg-pink-600
+}
+
+.btn-payout {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-bold
+    shadow
+    text-purple-900
+    bg-gradient-to-br
+    from-purple-300
+    to-blue-400
+    hover:bg-gradient-to-bl
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    text-center;
+}
+
+.payout-text {
+  @apply
+    bg-clip-text
+    text-transparent
+    bg-gradient-to-br
+    from-purple-500
+    to-purple-900
+}
+
+.btn-secondary {
+  @apply
+    w-full
+    px-4
+    py-3
+    rounded-xl
+    font-medium
+    shadow
+    text-gray-800
+    dark:text-gray-100
+    bg-gray-200
+    dark:bg-gray-700
+    hover:bg-gray-300
+    dark:hover:bg-gray-600
+    focus:ring-4
+    focus:outline-none
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800
+    font-medium
+    text-center;
+}
+
+.numbox {
+  @apply
+    w-full
+    px-4
+    py-2
+    rounded-xl
+    shadow
+    border
+    border-gray-300
+    dark:border-gray-600
+    text-gray-800
+    dark:text-gray-100
+    bg-white
+    dark:bg-gray-800
+    focus:outline-none
+    focus:ring-2
+    focus:ring-cyan-300
+    dark:focus:ring-cyan-800;
+}
+
+.selector {
+  @apply
+    px-2
+    py-1
+    rounded
+    border
+    text-sm
+    dark:bg-gray-800
+    dark:text-gray-200
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
