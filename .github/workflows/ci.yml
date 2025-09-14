@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [ dev* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.*'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --no-restore
+
+      - name: Test project
+        run: dotnet test --settings Tests/AllowanceApp.Tests/Settings/Test.runsettings --no-build --collect:"XPlat Code Coverage"
+

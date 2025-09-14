@@ -193,7 +193,7 @@ h1:focus {
 
 .btn-new-acct {
   @apply
-    w-25
+    mt-5
     px-4
     py-3
     rounded-xl
@@ -201,8 +201,8 @@ h1:focus {
     shadow
     text-gray-800
     bg-gradient-to-br
-    from-purple-300
-    to-blue-400
+    from-yellow-200
+    to-pink-300
     hover:bg-gradient-to-bl
     focus:ring-4
     focus:outline-none
@@ -210,6 +210,13 @@ h1:focus {
     dark:focus:ring-cyan-800
     font-medium
     text-center;
+}
+
+.new-acct-text {
+  @apply
+    bg-clip-text
+    text-transparent
+    bg-pink-600
 }
 
 .btn-payout {
