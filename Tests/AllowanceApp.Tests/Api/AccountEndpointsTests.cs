@@ -282,7 +282,7 @@ namespace AllowanceApp.Tests.Api
 
             var category = Methods.GetRandomBehaviorString(rng);
 
-            var response = await _client.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice", 
+            var response = await _client.PutAsJsonAsync($"/accounts/update/{id}/points/{category}/setprice",
                 new TransactionRequest(amount, null));
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var pointDTO = await response.Content.ReadFromJsonAsync<AllowancePointDTO>();

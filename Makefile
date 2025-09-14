@@ -6,7 +6,10 @@ DB_FILE=~/.local/share/accounts.db
 MY_CSS=./Source/AllowanceApp.Blazor/wwwroot/app.css
 OUT_CSS=./Source/AllowanceApp.Blazor/wwwroot/dist.css
 
-.PHONY: build test coverage run_api run_blazor run clean wiped spotless dbclean refresh-css watch-css
+.PHONY: build test coverage run_api run_blazor run clean wiped spotless dbclean refresh-css watch-css docker_api ci
+
+ci:
+	@dotnet format --verify-no-changes --severity warn
 
 build:
 	@dotnet build
@@ -68,3 +71,6 @@ refresh-css:
 
 watch-css:
 	@npx @tailwindcss/cli -i $(MY_CSS) -o $(OUT_CSS) --watch
+
+docker-api: 
+	@docker run -d --name allowance-api -p 8080:8080 -e DOTNET_ENVIRONMENT=Release -v ~/.local/share:/app/database allowance-api

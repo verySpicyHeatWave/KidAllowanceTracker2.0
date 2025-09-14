@@ -21,9 +21,13 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Lint Checks
+        run: dotnet format --verify-no-changes --severity warn
+
       - name: Build project
         run: dotnet build --no-restore
 
       - name: Test project
-        run: dotnet test --settings Tests/AllowanceApp.Tests/Settings/Test.runsettings --no-build --collect:"XPlat Code Coverage"
+        run: dotnet test --settings Tests/AllowanceApp.Tests/Settings/Test.runsettings --no-build --configuration Release --collect:"XPlat Code Coverage"
+
 

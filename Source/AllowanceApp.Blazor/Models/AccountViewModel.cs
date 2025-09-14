@@ -9,9 +9,9 @@ namespace AllowanceApp.Blazor.Models
         public int Balance { get; set; }
         public AllowancesViewModel Allowances { get; set; }
         public TransactionsViewModel Transactions { get; set; }
-        private int _allowanceTotal => Math.Max(0,Allowances.PointList.Sum(a => a.Total));
-        public string AllowanceDisplay => (_allowanceTotal/100.0).ToString("#0.00");
-        public string BalanceDisplay => (Balance/100.0).ToString("#0.00");
+        private int _allowanceTotal => Math.Max(0, Allowances.PointList.Sum(a => a.Total));
+        public string AllowanceDisplay => (_allowanceTotal / 100.0).ToString("#0.00");
+        public string BalanceDisplay => (Balance / 100.0).ToString("#0.00");
 
         public AccountViewModel(AccountDTO dto)
         {

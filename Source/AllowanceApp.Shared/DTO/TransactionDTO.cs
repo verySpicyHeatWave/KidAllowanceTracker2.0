@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using AllowanceApp.Core.Models;
 
 namespace AllowanceApp.Shared.DTO
-{    
+{
     public record TransactionDTO
     {
         public int TransactionID { get; init; }

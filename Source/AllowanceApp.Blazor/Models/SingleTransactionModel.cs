@@ -10,7 +10,7 @@ namespace AllowanceApp.Blazor.Models
         Approved,
         Declined
     }
-    
+
     public class SingleTransactionModel(TransactionDTO dto)
     {
         public int TransactionID { get; init; } = dto.TransactionID;

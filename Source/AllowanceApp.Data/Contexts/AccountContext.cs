@@ -28,7 +28,7 @@ namespace AllowanceApp.Data.Contexts
                 .UseCollation("NOCASE");
 
             modelBuilder.Entity<AllowancePoint>()
-                .HasKey(a => new {a.AccountID, a.Category});
+                .HasKey(a => new { a.AccountID, a.Category });
             modelBuilder.Entity<AllowancePoint>()
                 .HasOne<Account>()
                 .WithMany(a => a.Allowances)

@@ -5,7 +5,7 @@ namespace AllowanceApp.Shared.DTO
     public record CreateAccountRequest
     {
         [Required]
-        public string Name { get; set; }        
+        public string Name { get; set; }
         public CreateAccountRequest(string name) { Name = name; }
     };
 

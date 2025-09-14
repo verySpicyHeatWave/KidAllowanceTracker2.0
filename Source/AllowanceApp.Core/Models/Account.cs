@@ -15,7 +15,7 @@ namespace AllowanceApp.Core.Models
 
         protected Account() { }
 
-        [SetsRequiredMembers] 
+        [SetsRequiredMembers]
         public Account(string name)
         {
             Name = name;
@@ -53,7 +53,6 @@ namespace AllowanceApp.Core.Models
             var transaction = Transactions.SingleOrDefault(t => t.TransactionID == transactionID);
             if (transaction is null) { return; }
             transaction.Status = ApprovalStatus.Approved;
-            Console.WriteLine($"================== Nah bruh! ==================");
 
             var oldBalance = Balance;
             Balance += transaction.Amount;

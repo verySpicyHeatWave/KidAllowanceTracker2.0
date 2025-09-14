@@ -12,7 +12,7 @@ namespace AllowanceApp.Shared.DTO
         public int Total { get; init; }
 
         [JsonConstructor]
-        public AllowancePointDTO() {}
+        public AllowancePointDTO() { }
 
         public AllowancePointDTO(AllowancePoint APoint) =>
         (AccountID, Category, Price, Points, Total) =

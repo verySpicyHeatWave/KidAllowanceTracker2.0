@@ -31,7 +31,7 @@ namespace AllowanceApp.Tests.Data
             var actor = new AccountServiceActor(context);
             string name = Guid.NewGuid().ToString();
             await actor.AddAccountAsync(name);
-            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await actor.AddAccountAsync(name));         
+            var ex = await Assert.ThrowsAsync<DbUpdateException>(async () => await actor.AddAccountAsync(name));
         }
         #endregion
 
@@ -111,7 +111,7 @@ namespace AllowanceApp.Tests.Data
         {
             var rng = Methods.GetRandomGenerator();
 
-            
+
             using var context = Methods.GetTestContext();
             var actor = new AccountServiceActor(context);
             var test_accounts = await Methods.StuffDatabaseWithRandomAccounts(actor);
@@ -296,7 +296,7 @@ namespace AllowanceApp.Tests.Data
 
             Assert.True(string.Equals(ex.Message, $"No account found with ID number {id}", StringComparison.OrdinalIgnoreCase));
         }
-        
+
         #endregion
     }
 }

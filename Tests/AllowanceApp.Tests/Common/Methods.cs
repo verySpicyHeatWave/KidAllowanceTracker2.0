@@ -85,7 +85,7 @@ namespace AllowanceApp.Tests.Common
         public static List<string> GetDefaultBehaviorStrings()
         {
             return
-            [   "BaseAllowance",
+            ["BaseAllowance",
                 "GoodBehavior",
                 "Homework",
                 "Chores",

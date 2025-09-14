@@ -122,7 +122,6 @@
     private int Price {get; set;}
     private int Points {get; set;}
     private string currentPointCategory {get; set;} = string.Empty;
-    private Modal? MyModal;
     private AccountViewModel CurrentAccount => Accounts.First(async => async.ID == currentID);
 
     private List<SingleTransactionModel> PendingTransactions => CurrentAccount.Transactions.TransactionList

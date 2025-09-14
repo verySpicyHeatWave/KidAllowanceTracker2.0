@@ -54,7 +54,7 @@ namespace AllowanceApp.Data.Actors
             var allowancePoint = await GetAllowancePointAsync(id, category);
             allowancePoint.IncOrDecPoint(operation);
             await _context.SaveChangesAsync();
-            return allowancePoint;            
+            return allowancePoint;
         }
 
         public async Task<AllowancePoint> SetPointAsync(int id, string category, int value)
@@ -62,7 +62,7 @@ namespace AllowanceApp.Data.Actors
             var allowancePoint = await GetAllowancePointAsync(id, category);
             allowancePoint.Points = value;
             await _context.SaveChangesAsync();
-            return allowancePoint;        
+            return allowancePoint;
         }
 
         public async Task<AllowancePoint> UpdateAllowancePriceAsync(int id, string category, int amount)
@@ -72,7 +72,7 @@ namespace AllowanceApp.Data.Actors
             await _context.SaveChangesAsync();
             return allowancePoint;
         }
-        
+
         public async Task<Account> PayAllowanceAsync(int id)
         {
             var account = await GetAccountAsync(id);

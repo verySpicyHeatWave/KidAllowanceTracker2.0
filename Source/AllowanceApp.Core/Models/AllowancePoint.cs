@@ -20,6 +20,6 @@ namespace AllowanceApp.Core.Models
         }
     }
 
-    
-    
+
+
 }
