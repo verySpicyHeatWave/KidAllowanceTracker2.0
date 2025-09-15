@@ -33,7 +33,6 @@ if (dbDir is not null && !Directory.Exists(dbDir))
     Directory.CreateDirectory(dbDir);
 }
 
-Console.WriteLine($"Using database at: {dbPath}");
 var connectionString = $"Data Source={dbPath}";
 builder.Services.AddDbContext<AccountContext>(options =>
     options.UseSqlite(connectionString));
@@ -49,6 +48,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+if (!app.Environment.IsEnvironment("Test"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AccountContext>();
+    db.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

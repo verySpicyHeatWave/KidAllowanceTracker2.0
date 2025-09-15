@@ -24,7 +24,6 @@ namespace AllowanceApp.Data.Actors
                 .Include(a => a.Allowances)
                 .Include(t => t.Transactions)
                 .ToListAsync();
-            if (accounts.Count == 0) { throw new DataNotFoundException("No accounts found in database."); }
             return accounts;
         }
 

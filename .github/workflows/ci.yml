@@ -48,15 +48,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: API - Build Docker image
         run: |
           IMAGE_NAME=ghcr.io/veryspicyheatwave/allowanceapp/api-container
           IMAGE_TAG=${GITHUB_SHA::7}
           docker build -f Source/AllowanceApp.Api/Dockerfile -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .
 
-      - name: Publish Docker image
+      - name: API - Publish Docker image
         run: |
           IMAGE_NAME=ghcr.io/veryspicyheatwave/allowanceapp/api-container
+          IMAGE_TAG=${GITHUB_SHA::7}
+          docker push $IMAGE_NAME:$IMAGE_TAG
+          docker push $IMAGE_NAME:latest
+
+      - name: Blazor - Build Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/veryspicyheatwave/allowanceapp/blazor-container
+          IMAGE_TAG=${GITHUB_SHA::7}
+          docker build -f Source/AllowanceApp.Blazor/Dockerfile -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .
+
+      - name: Blazor - Publish Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/veryspicyheatwave/allowanceapp/blazor-container
           IMAGE_TAG=${GITHUB_SHA::7}
           docker push $IMAGE_NAME:$IMAGE_TAG
           docker push $IMAGE_NAME:latest
