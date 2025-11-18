@@ -73,10 +73,16 @@ watch-css:
 	@npx @tailwindcss/cli -i $(MY_CSS) -o $(OUT_CSS) --watch
 
 docker-api: 
-	@docker run -d --name allowance-api --network allowance-net -p 8080:8080 -e DOTNET_ENVIRONMENT=Release -v ~/.local/share:/app/database allowance-api
+	@docker run -d \
+		--name allowance-api \
+		--network allowance-net \
+		-p 8080:8080 \
+		-e DOTNET_ENVIRONMENT=Release \
+		-v ~/.local/share:/app/database \
+		allowance-api
 
 docker-blazor: 
-	@docker run -d \
+	docker run -d \
 		--name allowance-blazor \
 		--network allowance-net \
 		-p 5000:5000 \
@@ -84,3 +90,12 @@ docker-blazor:
 		-e DOTNET_URLS=http://0.0.0.0:5000 \
 		-e ParentAuth__PasswordHash="AQAAAAIAAYagAAAAEKVERRNet6qnUvwWLaWVervZXOlo4gTeyC0fXRTH+uxRAJAG0Hvi8Kl6WMhf/f1FRg==" \
 		allowance-blazor
+
+docker-api: 
+	docker run -d \
+		--name allowance-api \
+		--network allowance-net \
+		-p 8080:8080 \
+		-e DOTNET_ENVIRONMENT=Release \
+		-v /srv/allowance-app:/app/database \
+		allowance-api
