@@ -135,20 +135,17 @@ h1:focus {
   @apply
     text-2xl
     font-bold
-    text-gray-800
-    dark:text-gray-100;
+    text-gray-100;
 }
 
 .card-subtitle {
   @apply
-    text-gray-500
-    dark:text-gray-400;
+    text-gray-400;
 }
 
 .point-balance {
   @apply
-    text-gray-500
-    dark:text-gray-400
+    text-gray-400
     text-center
     text-sm
     pt-2;
@@ -158,16 +155,14 @@ h1:focus {
   @apply
     text-xl
     font-semibold
-    text-green-600
-    dark:text-green-400;
+    text-green-400;
 }
 
 .balance-bank {
   @apply
     text-2xl
     font-semibold
-    text-green-600
-    dark:text-green-400;
+    text-green-400;
 }
 
 .btn-allowance {
@@ -185,8 +180,7 @@ h1:focus {
     hover:bg-gradient-to-bl
     focus:ring-4
     focus:outline-none
-    focus:ring-cyan-300
-    dark:focus:ring-cyan-800
+    focus:ring-cyan-800
     font-medium
     text-center;
 }
@@ -206,8 +200,7 @@ h1:focus {
     hover:bg-gradient-to-bl
     focus:ring-4
     focus:outline-none
-    focus:ring-cyan-300
-    dark:focus:ring-cyan-800
+    focus:ring-cyan-800
     font-medium
     text-center;
 }
@@ -234,8 +227,7 @@ h1:focus {
     hover:bg-gradient-to-bl
     focus:ring-4
     focus:outline-none
-    focus:ring-cyan-300
-    dark:focus:ring-cyan-800
+    focus:ring-cyan-800
     text-center;
 }
 
@@ -256,16 +248,12 @@ h1:focus {
     rounded-xl
     font-medium
     shadow
-    text-gray-800
-    dark:text-gray-100
-    bg-gray-200
-    dark:bg-gray-700
-    hover:bg-gray-300
-    dark:hover:bg-gray-600
+    text-gray-100
+    bg-gray-700
+    hover:bg-gray-600
     focus:ring-4
     focus:outline-none
-    focus:ring-cyan-300
-    dark:focus:ring-cyan-800
+    focus:ring-cyan-800
     font-medium
     text-center;
 }
@@ -278,16 +266,12 @@ h1:focus {
     rounded-xl
     shadow
     border
-    border-gray-300
-    dark:border-gray-600
-    text-gray-800
-    dark:text-gray-100
-    bg-white
-    dark:bg-gray-800
+    border-gray-600
+    text-gray-100
+    bg-gray-800
     focus:outline-none
     focus:ring-2
-    focus:ring-cyan-300
-    dark:focus:ring-cyan-800;
+    focus:ring-cyan-800;
 }
 
 .selector {
@@ -297,8 +281,8 @@ h1:focus {
     rounded
     border
     text-sm
-    dark:bg-gray-800
-    dark:text-gray-200
+    bg-gray-800
+    text-gray-200
 }
 
 @layer utilities {
