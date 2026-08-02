@@ -16,13 +16,18 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Allowance:" FontSize="20" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Column="1" Text="{Binding AllowanceDisplay}" FontSize="20" FontWeight="Bold" Foreground="{Binding AllowanceColor}" HorizontalAlignment="Right"/>
+            <TextBlock Grid.Column="1" Text="{Binding AllowanceDisplay}" FontSize="20" FontWeight="Bold" 
+                       Foreground="{Binding AllowanceColor}" HorizontalAlignment="Right"/>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Good Behavior"/>
-            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Bad Behavior"/>
-            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Chores"/>
-            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Homework"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Good Behavior Point" 
+                    Command="{Binding AddGoodPointsCommand}"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Bad Behavior Point" 
+                    Command="{Binding AddBadPointsCommand}"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Chore Point" 
+                    Command="{Binding AddChorePointsCommand}"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Homework Point" 
+                    Command="{Binding AddHomeworkPointsCommand}"/>
         </StackPanel>
         
         <Grid HorizontalAlignment="Center">
@@ -60,24 +65,31 @@
             <TextBlock Grid.Column="0" Grid.Row="4" Text="Homework Points:" HorizontalAlignment="Left"/>
             <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HomeworkPoints}" HorizontalAlignment="Right"/>
 
-            <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding ReportCardBtnText}" Width="135" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch"/>
+            <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding ReportCardBtnText}" Width="135" 
+                    HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding AddReportCardCommand}"/>
             
             <TextBlock Grid.Column="0" Grid.Row="6" Text="A's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-            <TextBlock Grid.Column="1" Grid.Row="6" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding GradeAPoints}" HorizontalAlignment="Right" 
+                       IsVisible="{Binding HasReportCard}"/>
             
             <TextBlock Grid.Column="0" Grid.Row="7" Text="B's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-            <TextBlock Grid.Column="1" Grid.Row="7" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding GradeBPoints}" HorizontalAlignment="Right" 
+                       IsVisible="{Binding HasReportCard}"/>
             
             <TextBlock Grid.Column="0" Grid.Row="8" Text="C's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-            <TextBlock Grid.Column="1" Grid.Row="8" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding GradeCPoints}" HorizontalAlignment="Right" 
+                       IsVisible="{Binding HasReportCard}"/>
             
             <TextBlock Grid.Column="0" Grid.Row="9" Text="D's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-            <TextBlock Grid.Column="1" Grid.Row="9" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding GradeDPoints}" HorizontalAlignment="Right" 
+                       IsVisible="{Binding HasReportCard}"/>
             
             <TextBlock Grid.Column="0" Grid.Row="10" Text="F's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-            <TextBlock Grid.Column="1" Grid.Row="10" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding GradeFPoints}" HorizontalAlignment="Right" 
+                       IsVisible="{Binding HasReportCard}"/>
         </Grid>
 
-        <Button HorizontalAlignment="Center" Content="Pay Allowance to Bank" FontSize="18" FontWeight="Bold" Margin="20"/>
+        <Button HorizontalAlignment="Center" Content="Pay Allowance to Bank" FontSize="18" FontWeight="Bold" Margin="20"
+                Command="{Binding PayAllowanceCommand}"/>
     </StackPanel>
 </UserControl>

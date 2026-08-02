@@ -21,7 +21,7 @@ namespace AllowanceApp.Avalonia.ViewModels
             Name = acct.Name;
             ID = acct.ID;
             Balance = acct.Balance;
-            AllowanceViewModel = new AllowanceViewModel(acct.AllowancePoints);
+            AllowanceViewModel = new AllowanceViewModel(ID, acct.AllowancePoints);
             TransactionsViewModel = new TransactionsViewModel(acct.Transactions);
             BankViewModel = new BankViewModel();
         }

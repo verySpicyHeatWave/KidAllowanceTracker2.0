@@ -1,82 +1,150 @@
 using AllowanceApp.Avalonia.Models;
+using AllowanceApp.Avalonia.Service;
+using AllowanceApp.Shared.Utilities;
 using Avalonia.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace AllowanceApp.Avalonia.ViewModels
 {
     public partial class AllowanceViewModel : ViewModelBase
     {
+        private readonly int _accountId = 0;
         private int _totalAllowance = 0;
+        private static readonly AccountApiCaller _apiCaller = AccountApiCaller.Instance;
 
         public List<AllowancePoint> PointList { get; set; } = [];
 
-        [ObservableProperty]
-        public partial IImmutableSolidColorBrush AllowanceColor { get; set; }
+        public IImmutableSolidColorBrush AllowanceColor => _totalAllowance > 0 ? Brushes.LimeGreen : Brushes.Black;
 
-        [ObservableProperty]
-        public partial string AllowanceDisplay { get; set; }
+        public string AllowanceDisplay => $"${(_totalAllowance / 100.0):#0.00}";
 
-        [ObservableProperty]
-        public partial int AllowancePoints { get; set; }
+        public bool HasReportCard => ReportCardIsEntered();
 
-        [ObservableProperty]
-        public partial int GoodPoints { get; set; }
+        public string ReportCardBtnText => HasReportCard ? "Edit Report Card" : "Add Report Card";
 
-        [ObservableProperty]
-        public partial int BadPoints { get; set; }
+        public int AllowancePoints => GetPoints(CategoryKeys.BaseAllowance);
 
-        [ObservableProperty]
-        public partial int ChorePoints { get; set; }
+        public int GoodPoints => GetPoints(CategoryKeys.GoodPoints);
 
-        [ObservableProperty]
-        public partial int HomeworkPoints { get; set; }
+        public int BadPoints => GetPoints(CategoryKeys.BadPoints);
 
-        [ObservableProperty]
-        public partial int GradeAPoints { get; set; }
+        public int ChorePoints => GetPoints(CategoryKeys.ChorePoints);
 
-        [ObservableProperty]
-        public partial int GradeBPoints { get; set; }
+        public int HomeworkPoints => GetPoints(CategoryKeys.HomeworkPoints);
 
-        [ObservableProperty]
-        public partial int GradeCPoints { get; set; }
+        public int GradeAPoints => GetPoints(CategoryKeys.GradeAPoints);
 
-        [ObservableProperty]
-        public partial int GradeDPoints { get; set; }
+        public int GradeBPoints => GetPoints(CategoryKeys.GradeBPoints);
 
-        [ObservableProperty]
-        public partial int GradeFPoints { get; set; }
+        public int GradeCPoints => GetPoints(CategoryKeys.GradeCPoints);
 
-        [ObservableProperty]
-        public partial bool HasReportCard { get; set; }
+        public int GradeDPoints => GetPoints(CategoryKeys.GradeDPoints);
 
-        [ObservableProperty]
-        public partial string ReportCardBtnText { get; set; }
+        public int GradeFPoints => GetPoints(CategoryKeys.GradeFPoints);
 
-        public double TotalAllowance => CalculateTotal();
+        public ICommand AddGoodPointsCommand { get; private set; }
 
-        public AllowanceViewModel() : this([]) { }
+        public ICommand AddBadPointsCommand { get; private set; }
 
-        public AllowanceViewModel(List<AllowancePoint> points)
+        public ICommand AddChorePointsCommand { get; private set; }
+
+        public ICommand AddHomeworkPointsCommand { get; private set; }
+
+        public ICommand AddReportCardCommand { get; private set; }
+
+        public ICommand PayAllowanceCommand { get; private set; }
+
+        public AllowanceViewModel() : this(0, []) { }
+
+        public AllowanceViewModel(int accountId, List<AllowancePoint> points)
         {
+            _accountId = accountId;
             PointList = points;
-            AllowanceDisplay = $"${CalculateTotal():#0.00}";
-            AllowanceColor = _totalAllowance > 0 ? Brushes.LimeGreen : Brushes.Black;
 
-            HasReportCard = ReportCardIsEntered();
-            ReportCardBtnText = HasReportCard ? "Edit Report Card" : "Add Report Card";
+            AddGoodPointsCommand = new AsyncRelayCommand(OnAddGoodPointsCommand);
+            AddBadPointsCommand = new AsyncRelayCommand(OnAddBadPointsCommand);
+            AddChorePointsCommand = new AsyncRelayCommand(OnAddChorePointsCommand);
+            AddHomeworkPointsCommand = new AsyncRelayCommand(OnAddHomeworkPointsCommand);
+            AddReportCardCommand = new AsyncRelayCommand(OnAddReportCardCommand);
+            PayAllowanceCommand = new AsyncRelayCommand(OnPayAllowanceCommand);
 
-            AllowancePoints = GetPoints("BaseAllowance");
-            GoodPoints = GetPoints("GoodBehavior");
-            BadPoints = GetPoints("BadBehavior");
-            ChorePoints = GetPoints("Chores");
-            HomeworkPoints = GetPoints("Homework");
-            GradeAPoints = GetPoints("GradeA");
-            GradeBPoints = GetPoints("GradeB");
-            GradeCPoints = GetPoints("GradeC");
-            GradeDPoints = GetPoints("GradeD");
-            GradeFPoints = GetPoints("GradeF");
+            UpdateAllProperties();
+        }
+
+        private async Task OnPayAllowanceCommand()
+        {
+            var updatedAccount = await _apiCaller.PayoutAllowance(_accountId);
+            foreach (var point in PointList)
+            {
+                var newPoint = updatedAccount?.AllowancePoints.SingleOrDefault(a => a.Category == point.Category);
+                if (newPoint != null)
+                {
+                    point.Points = newPoint.Points;
+                    point.Price = newPoint.Price;
+                }
+            }
+            UpdateAllProperties();
+        }
+
+        private async Task OnAddReportCardCommand()
+        {
+            // Show the Report Card dialog populated with the current grade points and get the new points from the user
+            // Update EACH grade point via the API and update the PointList accordingly
+            // Update all of the grade properties
+            // Update the shared properties after all of that is done
+        }
+
+        // TODO: Wire in the fun stuff for all the commands, like sounds playing and colors flashing. Maybe some really cool confetti animations or something.
+        private async Task OnAddHomeworkPointsCommand()
+        {
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.HomeworkPoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.HomeworkPoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(HomeworkPoints));
+                UpdateSharedProperties();
+            }
+        }
+
+        private async Task OnAddChorePointsCommand()
+        {
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.ChorePoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.ChorePoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(ChorePoints));
+                UpdateSharedProperties();
+            }
+        }
+
+        private async Task OnAddBadPointsCommand()
+        {
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.BadPoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.BadPoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(BadPoints));
+                UpdateSharedProperties();
+            }
+        }
+
+        private async Task OnAddGoodPointsCommand()
+        {
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.GoodPoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.GoodPoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(GoodPoints));
+                UpdateSharedProperties();
+            }
         }
 
         public int GetPoints(string category) =>
@@ -85,11 +153,6 @@ namespace AllowanceApp.Avalonia.ViewModels
         public int GetPrice(string category) =>
             PointList.SingleOrDefault(a => a.Category == category)?.Price ?? -1;
 
-        private double CalculateTotal()
-        {
-            _totalAllowance = PointList.Sum(t => t.Total);
-            return _totalAllowance / 100.0;
-        }
 
         private bool ReportCardIsEntered()
         {
@@ -100,6 +163,30 @@ namespace AllowanceApp.Avalonia.ViewModels
                  || (a.Category == "GradeD" && a.Points > 0)
                  || (a.Category == "GradeF" && a.Points > 0)
             );
+        }
+
+        private void UpdateSharedProperties()
+        {
+            _totalAllowance = PointList.Sum(t => t.Total);
+            OnPropertyChanged(nameof(AllowanceDisplay));
+            OnPropertyChanged(nameof(AllowanceColor));
+            OnPropertyChanged(nameof(HasReportCard));
+            OnPropertyChanged(nameof(ReportCardBtnText));
+        }
+
+        private void UpdateAllProperties()
+        {
+            OnPropertyChanged(nameof(AllowancePoints));
+            OnPropertyChanged(nameof(GoodPoints));
+            OnPropertyChanged(nameof(BadPoints));
+            OnPropertyChanged(nameof(ChorePoints));
+            OnPropertyChanged(nameof(HomeworkPoints));
+            OnPropertyChanged(nameof(GradeAPoints));
+            OnPropertyChanged(nameof(GradeBPoints));
+            OnPropertyChanged(nameof(GradeCPoints));
+            OnPropertyChanged(nameof(GradeDPoints));
+            OnPropertyChanged(nameof(GradeFPoints));
+            UpdateSharedProperties();
         }
     }
 }

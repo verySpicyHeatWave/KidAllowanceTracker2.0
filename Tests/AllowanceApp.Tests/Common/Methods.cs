@@ -1,6 +1,7 @@
 using AllowanceApp.Core.Models;
 using AllowanceApp.Core.Services;
 using AllowanceApp.Data.Contexts;
+using AllowanceApp.Shared.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AllowanceApp.Tests.Common
@@ -85,16 +86,16 @@ namespace AllowanceApp.Tests.Common
         public static List<string> GetDefaultBehaviorStrings()
         {
             return
-            ["BaseAllowance",
-                "GoodBehavior",
-                "Homework",
-                "Chores",
-                "BadBehavior",
-                "GradeA",
-                "GradeB",
-                "GradeC",
-                "GradeD",
-                "GradeF"
+                [CategoryKeys.BaseAllowance,
+                CategoryKeys.GoodPoints,
+                CategoryKeys.HomeworkPoints,
+                CategoryKeys.ChorePoints,
+                CategoryKeys.BadPoints,
+                CategoryKeys.GradeAPoints,
+                CategoryKeys.GradeBPoints,
+                CategoryKeys.GradeCPoints,
+                CategoryKeys.GradeDPoints,
+                CategoryKeys.GradeFPoints
             ];
         }
 

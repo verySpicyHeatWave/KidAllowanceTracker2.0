@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.VisualBasic;
 
 namespace AllowanceApp.Core.Models
 {

@@ -1,8 +1,9 @@
 @using AllowanceApp.Blazor.Components.Pages
+@using AllowanceApp.Blazor.Components.Widgets
 @using AllowanceApp.Blazor.Models
 @using AllowanceApp.Blazor.Services
 @using AllowanceApp.Shared.DTO
-@using AllowanceApp.Blazor.Components.Widgets
+@using AllowanceApp.Shared.Utilities
 @inject AccountApiService AccountApi
 
 <div class="card">
@@ -75,17 +76,17 @@
     [Parameter] public EventCallback OnAccountChanged { get; set; }
     private Random rng = new((int)DateTime.Now.ToOADate());
     private Modal? MyModal;
-    private int ChoresPoints => GetPoints("Chores");
-    private int HomeworkPoints => GetPoints("Homework");
-    private int GoodBehaviorPoints => GetPoints("GoodBehavior");
-    private int BadBehaviorPoints => GetPoints("BadBehavior");
+    private int ChoresPoints => GetPoints(CategoryKeys.ChorePoints);
+    private int HomeworkPoints => GetPoints(CategoryKeys.HomeworkPoints);
+    private int GoodBehaviorPoints => GetPoints(CategoryKeys.GoodPoints);
+    private int BadBehaviorPoints => GetPoints(CategoryKeys.BadPoints);
     public Dictionary<char, int> Grades => new()
         {
-            ['A'] = GetPoints("GradeA"),
-            ['B'] = GetPoints("GradeB"),
-            ['C'] = GetPoints("GradeC"),
-            ['D'] = GetPoints("GradeD"),
-            ['F'] = GetPoints("GradeF")
+            ['A'] = GetPoints(CategoryKeys.GradeAPoints),
+            ['B'] = GetPoints(CategoryKeys.GradeBPoints),
+            ['C'] = GetPoints(CategoryKeys.GradeCPoints),
+            ['D'] = GetPoints(CategoryKeys.GradeDPoints),
+            ['F'] = GetPoints(CategoryKeys.GradeFPoints)
         };
 
     public Dictionary<char, int> WorkingGrades {get; set;}= new();
@@ -119,16 +120,16 @@ private int GetPoints(string category) =>
         switch (valueName)
         {
             case nameof(ChoresPoints):
-                category = "Chores";
+                category = CategoryKeys.ChorePoints;
                 break;
             case nameof(GoodBehaviorPoints):
-                category = "GoodBehavior";
+                category = CategoryKeys.GoodPoints;
                 break;
             case nameof(BadBehaviorPoints):
-                category = "BadBehavior";
+                category = CategoryKeys.BadPoints;
                 break;
             case nameof(HomeworkPoints):
-                category = "Homework";
+                category = CategoryKeys.HomeworkPoints;
                 break;
         }
 
