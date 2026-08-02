@@ -1,6 +1,4 @@
-using System.Drawing;
 using System.Net;
-using AllowanceApp.Blazor.Components.Cards;
 using AllowanceApp.Blazor.Models;
 using AllowanceApp.Shared.DTO;
 
@@ -66,7 +64,7 @@ public class AccountApiService(HttpClient http)
         var dto = await response.Content.ReadFromJsonAsync<AllowancePointDTO>();
         if (dto is null) { return null; }
         var model = new SinglePointModel(dto);
-        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model, id);
+        RefreshAccountsOnNextCall = !TryUpdateAccountCache(model, id);
         return model;
     }
 
@@ -78,7 +76,7 @@ public class AccountApiService(HttpClient http)
         var dto = await response.Content.ReadFromJsonAsync<AllowancePointDTO>();
         if (dto is null) { return null; }
         var model = new SinglePointModel(dto);
-        RefreshAccountsOnNextCall = UpdateAccountCacheFailed(model, id);
+        RefreshAccountsOnNextCall = !TryUpdateAccountCache(model, id);
         return model;
     }
 
@@ -162,16 +160,14 @@ public class AccountApiService(HttpClient http)
         return value;
     }
 
-    private bool UpdateAccountCacheFailed(SinglePointModel model, int id)
+    private bool TryUpdateAccountCache(SinglePointModel model, int id)
     {
-        bool value = true;
-        int a_index = _cachedAccounts.FindIndex(a => a.ID == id);
-        if (a_index < 0) { return value; }
-        var p_index = _cachedAccounts[a_index].Allowances.PointList.FindIndex(a => a.Category == model.Category);
-        if (p_index < 0) { return value; }
-        _cachedAccounts[a_index].Allowances.PointList[p_index] = model;
-        value = false;
+        int accountIndex = _cachedAccounts.FindIndex(a => a.ID == id);
+        if (accountIndex < 0) { return false; }
+        var pointIndex = _cachedAccounts[accountIndex].Allowances.PointList.FindIndex(a => a.Category == model.Category);
+        if (pointIndex < 0) { return false; }
+        _cachedAccounts[accountIndex].Allowances.PointList[pointIndex] = model;
 
-        return value;
+        return true;
     }
 }

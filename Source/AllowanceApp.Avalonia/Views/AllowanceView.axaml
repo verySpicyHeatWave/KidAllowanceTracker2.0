@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             x:DataType="vm:AllowanceViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.AllowanceView">
+    <Design.DataContext>
+        <vm:AllowanceViewModel />
+    </Design.DataContext>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0, 20">
+        <Grid HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Allowance:" FontSize="20" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="{Binding AllowanceDisplay}" FontSize="20" FontWeight="Bold" Foreground="{Binding AllowanceColor}" HorizontalAlignment="Right"/>
+        </Grid>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Good Behavior"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Bad Behavior"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Chores"/>
+            <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Homework"/>
+        </StackPanel>
+        
+        <Grid HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="Weekly Points:" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AllowancePoints}" HorizontalAlignment="Right"/>
+
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="Good Points:" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding GoodPoints}" HorizontalAlignment="Right"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="Bad Points:" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding BadPoints}" HorizontalAlignment="Right"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="Chore Points:" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ChorePoints}" HorizontalAlignment="Right"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="Homework Points:" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HomeworkPoints}" HorizontalAlignment="Right"/>
+
+            <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding ReportCardBtnText}" Width="135" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="6" Text="A's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="6" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="7" Text="B's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="7" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="8" Text="C's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="8" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="9" Text="D's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="9" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+            
+            <TextBlock Grid.Column="0" Grid.Row="10" Text="F's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+            <TextBlock Grid.Column="1" Grid.Row="10" Text="0" HorizontalAlignment="Right" IsVisible="{Binding HasReportCard}"/>
+        </Grid>
+
+        <Button HorizontalAlignment="Center" Content="Pay Allowance to Bank" FontSize="18" FontWeight="Bold" Margin="20"/>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             x:DataType="vm:UserSelectionViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.UserSelectionView">
+    
+    <Design.DataContext>
+        <vm:UserSelectionViewModel />
+    </Design.DataContext>
+
+    <StackPanel Orientation="Vertical"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+        <ComboBox ItemsSource="{Binding AccountList}"
+                  SelectedItem="{Binding SelectedAccount}"
+                  PlaceholderText="Who are you?"
+                  Width="200">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:AccountComboBoxSelectionViewModel">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Command="{Binding ButtonClick}" Content="Confirm" />
+    </StackPanel>
+
+</UserControl>

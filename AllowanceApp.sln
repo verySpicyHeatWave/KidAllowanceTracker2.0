@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.12021.73 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Api", "Source\AllowanceApp.Api\AllowanceApp.Api.csproj", "{210B3E13-8B3B-4C35-8A59-E73FEFB92353}"
 EndProject
@@ -17,13 +17,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Shared", "Sour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Blazor", "Source\AllowanceApp.Blazor\AllowanceApp.Blazor.csproj", "{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllowanceApp.Avalonia", "Source\AllowanceApp.Avalonia\AllowanceApp.Avalonia.csproj", "{B481BB94-6E63-4D3E-8614-749D5EC48793}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{210B3E13-8B3B-4C35-8A59-E73FEFB92353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +49,13 @@ Global
 		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA1C52F2-C77F-48DA-A3F9-1F9B0B164A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B481BB94-6E63-4D3E-8614-749D5EC48793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B481BB94-6E63-4D3E-8614-749D5EC48793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B481BB94-6E63-4D3E-8614-749D5EC48793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B481BB94-6E63-4D3E-8614-749D5EC48793}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{44232FE5-943F-4850-A590-41709658E460} = {8A209019-F970-4425-B5A8-C6DE5322ECE4}
