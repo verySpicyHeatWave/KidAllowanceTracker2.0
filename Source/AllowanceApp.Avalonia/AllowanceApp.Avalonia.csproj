@@ -26,4 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\AllowanceApp.Shared\AllowanceApp.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\ReportCardEntryView.axaml.cs">
+      <DependentUpon>ReportCardEntryView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

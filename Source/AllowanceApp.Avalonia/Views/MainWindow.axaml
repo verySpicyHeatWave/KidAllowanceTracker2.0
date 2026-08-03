@@ -8,7 +8,7 @@
         x:Class="AllowanceApp.Avalonia.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="AllowanceApp.Avalonia">
+        Title="Kid's Allowance Tracker 2.0">
 
     <Design.DataContext>
         <vm:MainViewModel />

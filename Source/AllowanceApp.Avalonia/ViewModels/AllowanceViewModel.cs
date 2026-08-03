@@ -1,5 +1,6 @@
 using AllowanceApp.Avalonia.Models;
 using AllowanceApp.Avalonia.Service;
+using AllowanceApp.Avalonia.Views;
 using AllowanceApp.Shared.Utilities;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
@@ -92,6 +93,17 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         private async Task OnAddReportCardCommand()
         {
+            var newPoints = await ReportCardEntryView.ShowDialogAsync(PointList);
+            foreach (var kvPair in newPoints)
+            {
+                var newPoint = await _apiCaller.SetGrade(_accountId, kvPair.Key, kvPair.Value);
+                if (newPoint != null)
+                {
+                    var oldPoint = PointList.SingleOrDefault(a => a.Category == kvPair.Key);
+                    oldPoint?.Points = newPoint.Points;
+                }
+            }
+            UpdateAllProperties();
             // Show the Report Card dialog populated with the current grade points and get the new points from the user
             // Update EACH grade point via the API and update the PointList accordingly
             // Update all of the grade properties

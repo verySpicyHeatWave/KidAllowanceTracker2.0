@@ -21,6 +21,9 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         public event EventHandler<Account>? AccountConfirmed;
 
+
+        public UserSelectionViewModel() : this([]) { }
+
         public UserSelectionViewModel(List<Account> accountList)
         {
             accounts = accountList;
