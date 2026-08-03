@@ -1,9 +1,11 @@
+using AllowanceApp.Avalonia.Messages;
 using AllowanceApp.Avalonia.Models;
 using AllowanceApp.Avalonia.Service;
 using AllowanceApp.Avalonia.Views;
 using AllowanceApp.Shared.Utilities;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,6 +95,8 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         private async Task OnAddReportCardCommand()
         {
+            const int TOTAL_GRADES = 5;
+            int validPoints = 0;
             var newPoints = await ReportCardEntryView.ShowDialogAsync(PointList);
             foreach (var kvPair in newPoints)
             {
@@ -101,38 +105,43 @@ namespace AllowanceApp.Avalonia.ViewModels
                 {
                     var oldPoint = PointList.SingleOrDefault(a => a.Category == kvPair.Key);
                     oldPoint?.Points = newPoint.Points;
+                    validPoints++;
                 }
-            }
+            }   
             UpdateAllProperties();
-            // Show the Report Card dialog populated with the current grade points and get the new points from the user
-            // Update EACH grade point via the API and update the PointList accordingly
-            // Update all of the grade properties
-            // Update the shared properties after all of that is done
+            if (validPoints == TOTAL_GRADES && HasReportCard)
+            {
+                WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            }
         }
 
         // TODO: Wire in the fun stuff for all the commands, like sounds playing and colors flashing. Maybe some really cool confetti animations or something.
         private async Task OnAddHomeworkPointsCommand()
         {
-            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.HomeworkPoints);
-            if (newPoint != null)
-            {
-                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.HomeworkPoints);
-                oldPoint?.Points = newPoint.Points;
-                OnPropertyChanged(nameof(HomeworkPoints));
-                UpdateSharedProperties();
-            }
+            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.HomeworkPoints);
+            //if (newPoint != null)
+            //{
+            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.HomeworkPoints);
+            //    oldPoint?.Points = newPoint.Points;
+            //    OnPropertyChanged(nameof(HomeworkPoints));
+            //    UpdateSharedProperties();
+            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //}
         }
 
         private async Task OnAddChorePointsCommand()
         {
-            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.ChorePoints);
-            if (newPoint != null)
-            {
-                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.ChorePoints);
-                oldPoint?.Points = newPoint.Points;
-                OnPropertyChanged(nameof(ChorePoints));
-                UpdateSharedProperties();
-            }
+            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.ChorePoints);
+            //if (newPoint != null)
+            //{
+            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.ChorePoints);
+            //    oldPoint?.Points = newPoint.Points;
+            //    OnPropertyChanged(nameof(ChorePoints));
+            //    UpdateSharedProperties();
+            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //}
         }
 
         private async Task OnAddBadPointsCommand()
@@ -149,14 +158,16 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         private async Task OnAddGoodPointsCommand()
         {
-            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.GoodPoints);
-            if (newPoint != null)
-            {
-                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.GoodPoints);
-                oldPoint?.Points = newPoint.Points;
-                OnPropertyChanged(nameof(GoodPoints));
-                UpdateSharedProperties();
-            }
+            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.GoodPoints);
+            //if (newPoint != null)
+            //{
+            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.GoodPoints);
+            //    oldPoint?.Points = newPoint.Points;
+            //    OnPropertyChanged(nameof(GoodPoints));
+            //    UpdateSharedProperties();
+            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            //}
         }
 
         public int GetPoints(string category) =>
