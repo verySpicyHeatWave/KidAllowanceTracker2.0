@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Messaging;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.Marshalling;
 using System.Threading.Tasks;
 
@@ -14,8 +15,8 @@ namespace AllowanceApp.Avalonia.Views
     public partial class AllowanceView : UserControl
     {
         private static readonly Random _rng = new();
-        private static readonly IBrush[] _confettiColors = new IBrush[]
-        {
+        private static readonly IBrush[] _confettiColors =
+        [
             Brushes.Red,
             Brushes.Green,
             Brushes.Yellow,
@@ -23,11 +24,12 @@ namespace AllowanceApp.Avalonia.Views
             Brushes.DeepSkyBlue,
             Brushes.MediumPurple,
             Brushes.HotPink
-        };
+        ];
 
         public AllowanceView()
         {
             InitializeComponent();
+
             WeakReferenceMessenger.Default.Register<DataRefreshSucessfulMessage>(this, async (r, m) =>
             {
                 var view = (AllowanceView)r;
@@ -35,15 +37,21 @@ namespace AllowanceApp.Avalonia.Views
                 // TODO: Get the button that was clicked here, feed it to the message as an arg
                 var origin = view.AllowanceGrid.TranslatePoint(
                     new Point(view.AllowanceGrid.Bounds.Width / 2, view.AllowanceGrid.Bounds.Height / 2), view.ConfettiCanvas) ?? new Point(200, 200);
-                for (int j = 0; j < 10; j++)
-                {
-                    for (int i = 0; i < 50; i++)
-                    {
-                        SpawnConfettiPiece(origin);
-                    }
-                    await Task.Delay(50);
-                }
+                await ConfettiAnimation(origin);
             });
+        }
+
+        private async Task ConfettiAnimation(Point origin)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    SpawnConfettiPiece(origin);
+                }
+                await Task.Delay(50);
+            }
+
         }
 
         private void SpawnConfettiPiece(Point origin)
@@ -62,7 +70,7 @@ namespace AllowanceApp.Avalonia.Views
             Canvas.SetTop(piece, origin.Y);
             ConfettiCanvas.Children.Add(piece);
 
-            double angle = (_rng.NextDouble() * Math.PI) - (Math.PI / 2);
+            double angle = (_rng.NextDouble() * Math.PI) - Math.PI;
             double speed = _rng.Next(150, 350);
             double vx = Math.Cos(angle) * speed;
             double vy = Math.Sin(angle) * speed;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AllowanceApp.Avalonia.ViewModels
 {
-    public class BankViewModel
+    public class BankViewModel : ViewModelBase
     {
     }
 }

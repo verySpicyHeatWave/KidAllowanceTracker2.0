@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace AllowanceApp.Avalonia.ViewModels
 {
-    public partial class AllowanceViewModel : ViewModelBase
+    public class AllowanceViewModel : ViewModelBase
     {
         private readonly int _accountId = 0;
         private int _totalAllowance = 0;
@@ -115,33 +115,30 @@ namespace AllowanceApp.Avalonia.ViewModels
             }
         }
 
-        // TODO: Wire in the fun stuff for all the commands, like sounds playing and colors flashing. Maybe some really cool confetti animations or something.
         private async Task OnAddHomeworkPointsCommand()
         {
-            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.HomeworkPoints);
-            //if (newPoint != null)
-            //{
-            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.HomeworkPoints);
-            //    oldPoint?.Points = newPoint.Points;
-            //    OnPropertyChanged(nameof(HomeworkPoints));
-            //    UpdateSharedProperties();
-            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //}
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.HomeworkPoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.HomeworkPoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(HomeworkPoints));
+                UpdateSharedProperties();
+                WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            }
         }
 
         private async Task OnAddChorePointsCommand()
         {
-            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.ChorePoints);
-            //if (newPoint != null)
-            //{
-            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.ChorePoints);
-            //    oldPoint?.Points = newPoint.Points;
-            //    OnPropertyChanged(nameof(ChorePoints));
-            //    UpdateSharedProperties();
-            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //}
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.ChorePoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.ChorePoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(ChorePoints));
+                UpdateSharedProperties();
+                WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            }
         }
 
         private async Task OnAddBadPointsCommand()
@@ -158,16 +155,15 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         private async Task OnAddGoodPointsCommand()
         {
-            WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.GoodPoints);
-            //if (newPoint != null)
-            //{
-            //    var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.GoodPoints);
-            //    oldPoint?.Points = newPoint.Points;
-            //    OnPropertyChanged(nameof(GoodPoints));
-            //    UpdateSharedProperties();
-            //    WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
-            //}
+            var newPoint = await _apiCaller.IncrementPoint(_accountId, CategoryKeys.GoodPoints);
+            if (newPoint != null)
+            {
+                var oldPoint = PointList.SingleOrDefault(a => a.Category == CategoryKeys.GoodPoints);
+                oldPoint?.Points = newPoint.Points;
+                OnPropertyChanged(nameof(GoodPoints));
+                UpdateSharedProperties();
+                WeakReferenceMessenger.Default.Send(new DataRefreshSucessfulMessage());
+            }
         }
 
         public int GetPoints(string category) =>

@@ -7,6 +7,7 @@ namespace AllowanceApp.Avalonia.ViewModels
     public class AccountViewModel : ViewModelBase
     {
         public string Name { get; init; } = "NoName";
+        public string NameString => $"{Name}'s Allowance";
         public int ID { get; init; }
         public int Balance { get; set; }
         public AllowanceViewModel AllowanceViewModel { get; set; }

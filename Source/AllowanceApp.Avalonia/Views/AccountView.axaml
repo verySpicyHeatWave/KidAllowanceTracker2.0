@@ -13,7 +13,7 @@
     <Grid>
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center">
-            <TextBlock Text="{Binding Name}"  FontSize="36" FontWeight="Bold" Margin="20" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding NameString}"  FontSize="36" FontWeight="Bold" Margin="20" HorizontalAlignment="Center"/>
             <TabControl>
                 <TabItem Header="Allowance">
                     <ContentControl Content="{Binding AllowanceViewModel}" />

@@ -1,8 +1,5 @@
 ﻿using AllowanceApp.Avalonia.Models;
-using AllowanceApp.Shared.DTO;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AllowanceApp.Avalonia.ViewModels
 {
