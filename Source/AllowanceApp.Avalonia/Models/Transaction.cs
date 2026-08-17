@@ -13,6 +13,8 @@ namespace AllowanceApp.Avalonia.Models
         public DateOnly Date { get; init; } = DateOnly.FromDateTime(DateTime.Today);
         public string? Description { get; init; } = null;
 
+        public string AmountString => $"${(((double)Amount) / 100.0):F2}";
+
         public Transaction(TransactionDTO dto) =>
         (TransactionID, AccountID, Amount, Status, Date, Description) =
         (

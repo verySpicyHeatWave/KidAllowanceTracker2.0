@@ -27,6 +27,8 @@ namespace AllowanceApp.Avalonia.Views
                 {
                     window.Width = vm.Width;
                     window.Height = vm.Height;
+                    tabControl.Width = vm.Width;
+                    tabControl.Height = vm.Height;
                 }
             }
         }

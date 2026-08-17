@@ -2,16 +2,52 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
-             Width="1200" Height="600"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             Width="1000" Height="600"
              xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             xmlns:converters="using:AllowanceApp.Avalonia.Converters"
              x:DataType="vm:TransactionsViewModel"
              x:Class="AllowanceApp.Avalonia.Views.TransactionsView">
     <Design.DataContext>
         <vm:TransactionsViewModel />
     </Design.DataContext>
-    
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0, 20">
+
+    <UserControl.Resources>
+        <!-- Declare the converter as a reusable resource -->
+        <converters:IntegerToTransactionStatus x:Key="IntegerToTransactionStatus"/>
+        <converters:IntegerToTransactionStatusForegroundColor x:Key="IntegerToTransactionStatusForegroundColor"/>
+        <converters:IntegerToTransactionStatusItalics x:Key="IntegerToTransactionStatusItalics"/>
         
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0, 0, 0, 20">
+            <TextBlock Text="Filter by Category:" VerticalAlignment="Center"/>
+            <ComboBox Margin="7,0,40,0" ItemsSource="{Binding CategoryFilterList}" SelectedItem="{Binding CategoryFilter}" 
+                      SelectionChanged="OnFilterChanged" DisplayMemberBinding="{Binding Text}" Width="120"/>
+            <TextBlock Text="Filter by History:" VerticalAlignment="Center"/>
+            <ComboBox Margin="7,0,25,0" ItemsSource="{Binding HistoryFilterList}" SelectedItem="{Binding HistoryFilter}" 
+                      SelectionChanged="OnFilterChanged" DisplayMemberBinding="{Binding Text}" Width="110"/>
+        </StackPanel>
+        <Grid>
+            <TableView ItemsSource="{Binding TransactionDisplayList}" Height="420">
+              <TableView.Columns>
+                <TableViewColumn Header="ID" Binding="{Binding TransactionID}" Width="75" CanUserResize="False"/>
+                <TableViewColumn Header="Date" Binding="{Binding Date}" Width="150" CanUserResize="False"/>
+                <TableViewColumn Header="Status" Width="150" CanUserResize="False">
+                    <TableViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status, Converter={StaticResource IntegerToTransactionStatus}}"
+                                       Foreground="{Binding Status, Converter={StaticResource IntegerToTransactionStatusForegroundColor}}"
+                                       FontFamily="{Binding Status, Converter={StaticResource IntegerToTransactionStatusItalics}}"
+                                       FontWeight="Bold"/>
+                        </DataTemplate>
+                    </TableViewColumn.CellTemplate>
+                </TableViewColumn>
+                <TableViewColumn Header="Description" Binding="{Binding Description}" CanUserResize="False"/>
+                <TableViewColumn Header="Amount" Binding="{Binding AmountString}" Width="150" CanUserResize="False"/>
+              </TableView.Columns>
+            </TableView>
+        </Grid>
     </StackPanel>
 </UserControl>

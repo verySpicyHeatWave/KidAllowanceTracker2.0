@@ -75,6 +75,9 @@ namespace AllowanceApp.Avalonia.ViewModels
             AddReportCardCommand = new AsyncRelayCommand(OnAddReportCardCommand);
             PayAllowanceCommand = new AsyncRelayCommand(OnPayAllowanceCommand);
 
+            Width = 400;
+            Height = 650;
+
             UpdateAllProperties();
         }
 
