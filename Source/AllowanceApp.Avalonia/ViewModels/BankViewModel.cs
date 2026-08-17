@@ -6,5 +6,10 @@ namespace AllowanceApp.Avalonia.ViewModels
 {
     public class BankViewModel : ViewModelBase
     {
+        public BankViewModel()
+        {
+            Width = 400;
+            Height = 650;
+        }
     }
 }

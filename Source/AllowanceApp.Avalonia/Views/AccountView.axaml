@@ -13,15 +13,15 @@
     <Grid>
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center">
-            <TextBlock Text="{Binding NameString}"  FontSize="36" FontWeight="Bold" Margin="20" HorizontalAlignment="Center"/>
-            <TabControl>
-                <TabItem Header="Allowance">
+            <TextBlock Text="{Binding NameString}" FontSize="36" FontWeight="Bold" Margin="20" HorizontalAlignment="Center"/>
+            <TabControl SelectionChanged="TabControl_SelectionChanged">
+                <TabItem x:Name="AllowanceTab" Header="Allowance">
                     <ContentControl Content="{Binding AllowanceViewModel}" />
                 </TabItem>
-                <TabItem Header="Bank">
+                <TabItem x:Name="BankTab" Header="Bank">
                     <ContentControl Content="{Binding BankViewModel}" />
                 </TabItem>
-                <TabItem Header="Transactions">
+                <TabItem x:Name="TransactionsTab" Header="Transactions">
                     <ContentControl Content="{Binding TransactionsViewModel}" />                
                 </TabItem>
             </TabControl>

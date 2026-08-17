@@ -25,6 +25,10 @@ namespace AllowanceApp.Avalonia.ViewModels
             AllowanceViewModel = new AllowanceViewModel(ID, acct.AllowancePoints);
             TransactionsViewModel = new TransactionsViewModel(acct.Transactions);
             BankViewModel = new BankViewModel();
+            Width = 400;
+            Height = 650;
         }
+
+        public AccountViewModel() : this(new Account()) { }
     }
 }

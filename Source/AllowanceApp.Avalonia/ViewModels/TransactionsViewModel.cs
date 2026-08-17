@@ -12,6 +12,8 @@ namespace AllowanceApp.Avalonia.ViewModels
         public TransactionsViewModel(List<Transaction> transactions)
         {
             TransactionList = transactions;
+            Width = 1000;
+            Height = 650;
         }
     }
 }

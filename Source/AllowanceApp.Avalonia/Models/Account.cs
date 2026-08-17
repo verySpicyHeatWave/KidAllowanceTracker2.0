@@ -24,5 +24,13 @@ namespace AllowanceApp.Avalonia.Models
                 .Select(a => new AllowancePoint(a))
                 .ToList();
         }
+
+        public Account()
+        {
+            ID = -1;
+            Balance = -1;
+            Transactions = [];
+            AllowancePoints = [];
+        }
     }
 }
