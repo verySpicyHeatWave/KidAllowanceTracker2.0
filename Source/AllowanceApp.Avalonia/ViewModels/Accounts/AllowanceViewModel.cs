@@ -1,7 +1,7 @@
 using AllowanceApp.Avalonia.Messages;
 using AllowanceApp.Avalonia.Models;
 using AllowanceApp.Avalonia.Service;
-using AllowanceApp.Avalonia.Views;
+using AllowanceApp.Avalonia.Views.Accounts;
 using AllowanceApp.Shared.Utilities;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Input;
@@ -11,9 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AllowanceApp.Avalonia.ViewModels
+namespace AllowanceApp.Avalonia.ViewModels.Accounts
 {
-    public class AllowanceViewModel : ViewModelBase
+    public class AllowanceViewModel : RefreshableViewModelBase
     {
         private readonly int _accountId = 0;
         private int _totalAllowance = 0;
@@ -21,9 +21,7 @@ namespace AllowanceApp.Avalonia.ViewModels
 
         public List<AllowancePoint> PointList { get; set; } = [];
 
-        public IImmutableSolidColorBrush AllowanceColor => _totalAllowance > 0 ? Brushes.LimeGreen : Brushes.Black;
-
-        public string AllowanceDisplay => $"${(_totalAllowance / 100.0):#0.00}";
+        public int Allowance => _totalAllowance;
 
         public bool HasReportCard => ReportCardIsEntered();
 
@@ -75,8 +73,8 @@ namespace AllowanceApp.Avalonia.ViewModels
             AddReportCardCommand = new AsyncRelayCommand(OnAddReportCardCommand);
             PayAllowanceCommand = new AsyncRelayCommand(OnPayAllowanceCommand);
 
-            Width = 400;
-            Height = 650;
+            Width = 450;
+            Height = 700;
 
             UpdateAllProperties();
         }
@@ -190,14 +188,14 @@ namespace AllowanceApp.Avalonia.ViewModels
         private void UpdateSharedProperties()
         {
             _totalAllowance = PointList.Sum(t => t.Total);
-            OnPropertyChanged(nameof(AllowanceDisplay));
-            OnPropertyChanged(nameof(AllowanceColor));
+            OnPropertyChanged(nameof(Allowance));
             OnPropertyChanged(nameof(HasReportCard));
             OnPropertyChanged(nameof(ReportCardBtnText));
         }
 
         private void UpdateAllProperties()
         {
+            _totalAllowance = PointList.Sum(t => t.Total);
             OnPropertyChanged(nameof(AllowancePoints));
             OnPropertyChanged(nameof(GoodPoints));
             OnPropertyChanged(nameof(BadPoints));
@@ -209,6 +207,12 @@ namespace AllowanceApp.Avalonia.ViewModels
             OnPropertyChanged(nameof(GradeDPoints));
             OnPropertyChanged(nameof(GradeFPoints));
             UpdateSharedProperties();
+        }
+
+        public override void Refresh(Account account)
+        {
+            PointList = account.AllowancePoints;
+            UpdateAllProperties();
         }
     }
 }

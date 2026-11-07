@@ -2,14 +2,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
-             Width="400" Height="600"
-             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="600"
+             Width="450" Height="600"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Accounts"
+             xmlns:converters="using:AllowanceApp.Avalonia.Converters"
              x:DataType="vm:AllowanceViewModel"
-             x:Class="AllowanceApp.Avalonia.Views.AllowanceView">
+             x:Class="AllowanceApp.Avalonia.Views.Accounts.AllowanceView">
     <Design.DataContext>
         <vm:AllowanceViewModel />
     </Design.DataContext>
+        <UserControl.Resources>
+        <converters:IntegerToDollarColor x:Key="IntegerToDollarColor"/>
+        <converters:IntegerToDollarString x:Key="IntegerToDollarString"/>        
+    </UserControl.Resources>
 
     <Grid>
         <Canvas x:Name="ConfettiCanvas" IsHitTestVisible="False"/>        
@@ -20,18 +25,30 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Allowance:" FontSize="20" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Text="{Binding AllowanceDisplay}" FontSize="20" FontWeight="Bold" 
-                           Foreground="{Binding AllowanceColor}" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Column="1" Text="{Binding Allowance, Converter={StaticResource IntegerToDollarString}}" FontSize="20" FontWeight="Bold" 
+                           Foreground="{Binding Allowance, Converter={StaticResource IntegerToDollarColor}}" HorizontalAlignment="Right"/>
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Good Behavior Point" 
-                        Command="{Binding AddGoodPointsCommand}"/>
-                <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Bad Behavior Point" 
-                        Command="{Binding AddBadPointsCommand}"/>
-                <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Chore Point" 
-                        Command="{Binding AddChorePointsCommand}"/>
-                <Button Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Homework Point" 
-                        Command="{Binding AddHomeworkPointsCommand}"/>
+                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Chore Point" 
+                        Command="{Binding AddChorePointsCommand}" Cursor="Hand">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/magic-broom.png" Width="55" Height="55"/>
+                </Button>
+                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Homework Point" 
+                        Command="{Binding AddHomeworkPointsCommand}">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/book.png" Width="55" Height="55"/>
+                </Button>
+                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add/Edit Report Card" 
+                        Command="{Binding AddReportCardCommand}">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/grade.png" Width="55" Height="55"/>
+                </Button>
+                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Good Behavior Point" 
+                        Command="{Binding AddGoodPointsCommand}">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/smile.png" Width="55" Height="55"/>
+                </Button>
+                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Bad Behavior Point" 
+                        Command="{Binding AddBadPointsCommand}">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/cry.png" Width="55" Height="55"/>
+                </Button>
             </StackPanel>
         
             <Grid HorizontalAlignment="Center">
@@ -92,12 +109,13 @@
                 <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding GradeFPoints}" HorizontalAlignment="Right" 
                            IsVisible="{Binding HasReportCard}"/>
             </Grid>
+                        
+                <Button Classes="ImageBtn" Height="120" Width="120" Margin="15" ToolTip.Tip ="Pay Allowance to Bank" 
+                        HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding PayAllowanceCommand}">
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/review.png" Width="110" Height="110"/>
+                
+                </Button>
 
-                <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Content="{Binding ReportCardBtnText}" Width="135" 
-                        HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding AddReportCardCommand}"/>
-
-            <Button HorizontalAlignment="Center" Content="Pay Allowance to Bank" FontSize="18" FontWeight="Bold" Margin="20"
-                    Command="{Binding PayAllowanceCommand}"/>
         </StackPanel>
     </Grid>
 </UserControl>

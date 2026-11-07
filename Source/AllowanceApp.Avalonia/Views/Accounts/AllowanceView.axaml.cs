@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.Marshalling;
 using System.Threading.Tasks;
 
-namespace AllowanceApp.Avalonia.Views
+namespace AllowanceApp.Avalonia.Views.Accounts
 {
     public partial class AllowanceView : UserControl
     {

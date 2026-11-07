@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace AllowanceApp.Avalonia.Views
+namespace AllowanceApp.Avalonia.Views.Accounts
 {
     public partial class BankView : UserControl
     {

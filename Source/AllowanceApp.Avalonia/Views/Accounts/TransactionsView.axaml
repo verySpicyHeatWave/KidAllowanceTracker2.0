@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
              Width="1000" Height="600"
-             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Accounts"
              xmlns:converters="using:AllowanceApp.Avalonia.Converters"
              x:DataType="vm:TransactionsViewModel"
-             x:Class="AllowanceApp.Avalonia.Views.TransactionsView">
+             x:Class="AllowanceApp.Avalonia.Views.Accounts.TransactionsView">
     <Design.DataContext>
         <vm:TransactionsViewModel />
     </Design.DataContext>
@@ -42,7 +42,7 @@
                                        FontFamily="{Binding Status, Converter={StaticResource IntegerToTransactionStatusItalics}}"
                                        FontWeight="Bold"/>
                         </DataTemplate>
-                    </TableViewColumn.CellTemplate>
+                    </TableViewColumn.CellTemplate>  
                 </TableViewColumn>
                 <TableViewColumn Header="Description" Binding="{Binding Description}" CanUserResize="False"/>
                 <TableViewColumn Header="Amount" Binding="{Binding AmountString}" Width="150" CanUserResize="False"/>

@@ -4,15 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
              Width="400" Height="600"
-             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
-             x:DataType="vm:BankViewModel"
-             x:Class="AllowanceApp.Avalonia.Views.BankView">
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Admin"
+             x:DataType="vm:AccountOverviewViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.Admin.AccountOverviewView">
     <Design.DataContext>
-        <vm:BankViewModel />
+        <vm:AccountOverviewViewModel />
     </Design.DataContext>
-    
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0, 20">
-        
-    </StackPanel>
 
 </UserControl>

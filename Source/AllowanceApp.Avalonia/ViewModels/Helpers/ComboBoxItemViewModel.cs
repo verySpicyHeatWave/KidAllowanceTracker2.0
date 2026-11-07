@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AllowanceApp.Avalonia.ViewModels
+﻿namespace AllowanceApp.Avalonia.ViewModels.Helpers
 {
     public class ComboBoxItemViewModel<T>(string text, T value)
     {

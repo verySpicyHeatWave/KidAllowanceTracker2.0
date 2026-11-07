@@ -1,10 +1,11 @@
 ﻿using AllowanceApp.Avalonia.Models;
 using AllowanceApp.Avalonia.Service;
+using AllowanceApp.Avalonia.Utilities;
+using AllowanceApp.Avalonia.ViewModels.Accounts;
+using AllowanceApp.Avalonia.ViewModels.Admin;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AllowanceApp.Avalonia.ViewModels;
 
@@ -18,6 +19,7 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel()
     {
+        ParentLicense? parentLicense = null;
         _configManager = new ConfigManager("Account.json");
 
         int accountNumber = _configManager.GetProperty("AccountNumber", -1);
@@ -29,20 +31,42 @@ public partial class MainViewModel : ViewModelBase
         var api = AccountApiCaller.Instance;
         var accounts = api.GetAllAccountsAsync().Result;
         bool accountExists = accounts.Exists(a => a.ID == accountNumber);
+        if (!accountExists)
+        {
+            accountExists = CryptoUtils.TryValidateSignature(out parentLicense);
+        }
 
 
         if (_askForAccount || !accountExists)
         {
             var vm = new UserSelectionViewModel(accounts);
             vm.AccountConfirmed += OnAccountConfirmed;
+            vm.ParentConfirmed += OnParentConfirmed;
             CurrentView = vm;
         }
-        else
+        else if (parentLicense is not null)
+        {
+            CurrentView = new AdminViewModel(parentLicense);
+        }
+        else // check if it's a parent account, validate the key
         {
             var account = accounts.First(acct => acct.ID == accountNumber);
             CurrentView = new AccountViewModel(account);
         }
 
+    }
+
+    private void OnParentConfirmed(object? sender, ParentLicense parentLicense)
+    {
+        if (CurrentView is UserSelectionViewModel vm)
+        {
+            vm.AccountConfirmed -= OnAccountConfirmed;
+            CurrentView = new AdminViewModel(parentLicense);
+            if (!_askForAccount)
+            {
+                _configManager.SetProperty("AccountNumber", parentLicense.Id, true);
+            }
+        }
     }
 
     private void OnAccountConfirmed(object? sender, Account e)

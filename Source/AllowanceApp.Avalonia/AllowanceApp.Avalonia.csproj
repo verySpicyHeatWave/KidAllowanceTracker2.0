@@ -21,6 +21,7 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="MessageBox.Avalonia" Version="12.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +29,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ReportCardEntryView.axaml.cs">
+    <Compile Update="Views\Accounts\ReportCardEntryView.axaml.cs">
       <DependentUpon>ReportCardEntryView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Admin\TransactionApprovalsView.axaml.cs">
+      <DependentUpon>TransactionApprovalsView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="public.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

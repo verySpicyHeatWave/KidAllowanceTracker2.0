@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="450"
+             Width="550" Height="450"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Admin"
+             x:DataType="vm:PointPricesViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.Admin.PointPricesView">
+    <Design.DataContext>
+        <vm:PointPricesViewModel />
+    </Design.DataContext>
+    <Grid ColumnDefinitions="*, 200, 200" RowDefinitions="25,*,*,*,*,*,*,*,*,*,*">
+        
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="Points" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Margin="0,5,0,0"/>
+        <TextBlock Grid.Column="2" Grid.Row="0" Text="Price" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Margin="0,5,0,0"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Good Behavior:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="1" Value="{Binding GoodBehaviorPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="1" Value="{Binding GoodBehaviorPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Bad Behavior:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding BadBehaviorPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="2" Value="{Binding BadBehaviorPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Homework:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="3" Value="{Binding HomeworkPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="3" Value="{Binding HomeworkPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Chores:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding ChoresPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="4" Value="{Binding ChoresPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="A Grades:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="5" Value="{Binding AGradesPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="5" Value="{Binding AGradesPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+        <TextBlock Grid.Column="0" Grid.Row="6" Text="B Grades:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="6" Value="{Binding BGradesPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="6" Value="{Binding BGradesPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="7" Text="C Grades:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="7" Value="{Binding CGradesPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="7" Value="{Binding CGradesPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="8" Text="D Grades:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="8" Value="{Binding DGradesPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="8" Value="{Binding DGradesPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="9" Text="F Grades:" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <NumericUpDown Grid.Column="1" Grid.Row="9" Value="{Binding FGradesPoints}" Margin="20" 
+                       Minimum="0" Increment="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <NumericUpDown Grid.Column="2" Grid.Row="9" Value="{Binding FGradesPrice}" Margin="20" 
+                       Minimum="-1" Maximum="10" Increment="0.25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+
+        <Button Grid.Column="0" Grid.Row="10" Grid.ColumnSpan="3" Content="Save Settings" Width="125" 
+                HorizontalAlignment="Center" Command="{Binding SavePrices}" HorizontalContentAlignment="Center" />
+
+    </Grid>
+
+</UserControl>

@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace AllowanceApp.Avalonia.Views
+namespace AllowanceApp.Avalonia.Views.Admin
 {
-    public partial class AdminView : UserControl
+    public partial class AccountOverviewView : UserControl
     {
-        public AdminView()
+        public AccountOverviewView()
         {
             InitializeComponent();
         }

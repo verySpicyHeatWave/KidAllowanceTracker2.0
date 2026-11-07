@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="700"
+             Width="450" Height="700"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Accounts"
+             xmlns:converters="using:AllowanceApp.Avalonia.Converters"
+             x:DataType="vm:BankViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.Accounts.BankView">
+    <Design.DataContext>
+        <vm:BankViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <converters:IntegerToDollarColor x:Key="IntegerToDollarColor"/>
+        <converters:IntegerToDollarString x:Key="IntegerToDollarString"/>
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0, 20">
+            <Grid HorizontalAlignment="Center" x:Name="BankGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="70"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Your Money:" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Text="{Binding Balance, Converter={StaticResource IntegerToDollarString}}" FontSize="32" 
+                           FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           Foreground="{Binding Balance, Converter={StaticResource IntegerToDollarColor}}"/>
+            </Grid>
+
+        <StackPanel Orientation="Horizontal" Margin="30">
+            <Button Classes="ImageBtn" Width="120" Height="120" HorizontalAlignment="Center" 
+                    Margin="20" Command="{Binding RequestDeposit}" ToolTip.Tip="Put money into bank">
+                <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/piggy-bank.png" Width="110" Height="110"/>
+            </Button>
+            <Button Classes="ImageBtn" Width="120" Height="120" HorizontalAlignment="Center" Margin="20" 
+                    Command="{Binding RequestWithdrawal}" ToolTip.Tip="Ask for some money">
+                <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/money.png" Width="110" Height="110"/>
+            </Button>
+            
+        </StackPanel>
+
+        <TextBox PlaceholderText="How much money?" Margin="10" Width="300" HorizontalContentAlignment="Center"
+                 HorizontalAlignment="Center" Text="{Binding AmountEntry}"/>
+        <TextBox PlaceholderText="What's it for?" Margin="10" Width="300" HorizontalContentAlignment="Center" 
+                 HorizontalAlignment="Center" Text="{Binding DescriptionEntry}"/>
+    </StackPanel>
+
+</UserControl>

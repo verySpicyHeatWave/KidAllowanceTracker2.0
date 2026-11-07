@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Admin"
+             xmlns:vmhlpr="using:AllowanceApp.Avalonia.ViewModels.Helpers"
+             x:DataType="vm:AdminViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.Admin.AdminView">
+    <Design.DataContext>
+        <vm:AdminViewModel />
+    </Design.DataContext>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+        <TextBlock Text="{Binding Greeting}" FontSize="36" FontWeight="Bold" Margin="20,20,20,10" HorizontalAlignment="Center"/>
+            <TextBlock Text="Select Child" FontSize="18" Margin="10,10,10,5" HorizontalAlignment="Center"/>
+
+            <ComboBox ItemsSource="{Binding Children}" SelectedItem="{Binding SelectedChild}" PlaceholderText="Name"
+                  Width="200" Margin="10,0,10,10" HorizontalAlignment="Center" FontSize="16">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="vmhlpr:AccountComboBoxSelectionViewModel">
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TabControl SelectionChanged="TabControl_SelectionChanged">
+            <TabItem x:Name="OverviewTab" Header="Overview">
+                <ContentControl Content="{Binding AccountOverviewViewModel}" />
+            </TabItem>
+            <TabItem x:Name="PointsTab" Header="Points">
+                <ContentControl Content="{Binding PointPricesViewModel}" VerticalAlignment="Top" />
+            </TabItem>
+            <TabItem x:Name="ApprovalsTab" Header="Approvals">
+                <ContentControl Content="{Binding TransactionApprovalsViewModel}" />                
+            </TabItem>
+        </TabControl>
+    </StackPanel>
+
+</UserControl>

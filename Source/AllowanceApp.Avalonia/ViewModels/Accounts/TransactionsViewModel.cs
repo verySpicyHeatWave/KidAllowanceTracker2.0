@@ -1,10 +1,11 @@
 ﻿using AllowanceApp.Avalonia.Models;
+using AllowanceApp.Avalonia.ViewModels.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace AllowanceApp.Avalonia.ViewModels
+namespace AllowanceApp.Avalonia.ViewModels.Accounts
 {
     public enum CategoryFilterEnum
     {
@@ -22,7 +23,7 @@ namespace AllowanceApp.Avalonia.ViewModels
         Days7
     }
 
-    public class TransactionsViewModel : ViewModelBase
+    public class TransactionsViewModel : RefreshableViewModelBase
     {
         public List<Transaction> TransactionList { get; set; } = [];
         public ObservableCollection<Transaction> TransactionDisplayList { get; set; } = [];
@@ -49,7 +50,7 @@ namespace AllowanceApp.Avalonia.ViewModels
         {
             TransactionList = transactions;
             Width = 1000;
-            Height = 650;
+            Height = 700;
             CategoryFilter = CategoryFilterList.First();
             HistoryFilter = HistoryFilterList.First();
             UpdateTransactionDisplayList();
@@ -86,6 +87,12 @@ namespace AllowanceApp.Avalonia.ViewModels
                 _ => true
             };
             return value;
+        }
+
+        public override void Refresh(Account account)
+        {
+            TransactionList = account.Transactions;
+            UpdateTransactionDisplayList();
         }
     }
 }

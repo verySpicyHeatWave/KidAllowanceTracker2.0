@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             Width="1000" Height="600"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Admin"
+             x:DataType="vm:TransactionApprovalsViewModel"
+             x:Class="AllowanceApp.Avalonia.Views.Admin.TransactionApprovalsView">
+    <Design.DataContext>
+        <vm:TransactionApprovalsViewModel />
+    </Design.DataContext>
+
+</UserControl>

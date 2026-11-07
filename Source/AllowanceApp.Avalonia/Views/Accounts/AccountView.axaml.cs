@@ -1,10 +1,8 @@
 using AllowanceApp.Avalonia.Utilities;
 using AllowanceApp.Avalonia.ViewModels;
 using Avalonia.Controls;
-using System;
-using System.Collections.Generic;
 
-namespace AllowanceApp.Avalonia.Views
+namespace AllowanceApp.Avalonia.Views.Accounts
 {
     public partial class AccountView : UserControl
     {
@@ -18,7 +16,7 @@ namespace AllowanceApp.Avalonia.Views
             if (sender is not TabControl tabControl || !IsLoaded)
             {
                 return;
-            };
+            }
 
             if (tabControl.SelectedItem is TabItem selectedTab && selectedTab.Content is ContentControl contentControl && contentControl.Content is ViewModelBase vm)
             {

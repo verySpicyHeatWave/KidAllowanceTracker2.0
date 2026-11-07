@@ -9,7 +9,64 @@
         <local:ViewLocator />
     </Application.DataTemplates>
 
+    <Application.Resources>
+        <FontFamily x:Key="Starbim">avares://AllowanceApp.Avalonia/Assets/Fonts#Starbim</FontFamily>
+        <FontFamily x:Key="Nunito">avares://AllowanceApp.Avalonia/Assets/Fonts#Nunito</FontFamily>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
+
+        <Style Selector=":is(TopLevel)">
+            <Setter Property="FontFamily" Value="{StaticResource Nunito}" />
+        </Style>
+
+        <Style Selector="Button.ImageBtn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.5" Easing="CubicEaseOut"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Opacity" Value="0.7"/>
+            <Setter Property="RenderTransform" Value="scale(1.08)" />
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:focus /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:focus-visible /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:focus-within /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:focus-within /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        
+        <Style Selector="Button.ImageBtn:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="TextBlock.HeaderTextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Starbim}"/>
+            <Setter Property="FontSize" Value="36"/>
+        </Style>
     </Application.Styles>
 </Application>

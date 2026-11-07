@@ -2,19 +2,31 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
-             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="700"
+             xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Accounts"
              x:DataType="vm:AccountViewModel"
-             x:Class="AllowanceApp.Avalonia.Views.AccountView">
+             x:Class="AllowanceApp.Avalonia.Views.Accounts.AccountView">
     <Design.DataContext>
         <vm:AccountViewModel />
     </Design.DataContext>
 
     <Grid>
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Refresh" Command="{Binding RefreshAll}" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center">
-            <TextBlock Text="{Binding NameString}" FontSize="36" FontWeight="Bold" Margin="20" HorizontalAlignment="Center"/>
-            <TabControl SelectionChanged="TabControl_SelectionChanged">
+            <TextBlock Classes="HeaderTextBlock" Text="{Binding NameString}" Margin="20" HorizontalAlignment="Center"/>
+            <TabControl SelectionChanged="TabControl_SelectionChanged" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                <TabControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </TabControl.ItemsPanel>
+
                 <TabItem x:Name="AllowanceTab" Header="Allowance">
                     <ContentControl Content="{Binding AllowanceViewModel}" />
                 </TabItem>
@@ -22,7 +34,7 @@
                     <ContentControl Content="{Binding BankViewModel}" />
                 </TabItem>
                 <TabItem x:Name="TransactionsTab" Header="Transactions">
-                    <ContentControl Content="{Binding TransactionsViewModel}" />                
+                    <ContentControl Content="{Binding TransactionsViewModel}" />
                 </TabItem>
             </TabControl>
         </StackPanel>

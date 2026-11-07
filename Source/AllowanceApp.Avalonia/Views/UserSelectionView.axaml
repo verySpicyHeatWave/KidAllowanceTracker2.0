@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
              xmlns:vm="using:AllowanceApp.Avalonia.ViewModels"
+             xmlns:vmhlpr="using:AllowanceApp.Avalonia.ViewModels.Helpers"
              x:DataType="vm:UserSelectionViewModel"
              x:Class="AllowanceApp.Avalonia.Views.UserSelectionView">
     
@@ -18,7 +19,7 @@
         <ComboBox ItemsSource="{Binding AccountList}" SelectedItem="{Binding SelectedAccount}" PlaceholderText="Name"
                   Width="200" Margin="0,10" HorizontalAlignment="Center" FontSize="16">
             <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:AccountComboBoxSelectionViewModel">
+                <DataTemplate x:DataType="vmhlpr:AccountComboBoxSelectionViewModel">
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
