@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="700"
              xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Admin"
              xmlns:vmhlpr="using:AllowanceApp.Avalonia.ViewModels.Helpers"
              x:DataType="vm:AdminViewModel"
@@ -12,7 +12,7 @@
     </Design.DataContext>
 
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-        <TextBlock Text="{Binding Greeting}" FontSize="36" FontWeight="Bold" Margin="20,20,20,10" HorizontalAlignment="Center"/>
+        <TextBlock Classes="HeaderTextBlock" Text="{Binding Greeting}" Margin="20,20,20,5" HorizontalAlignment="Center"/>
             <TextBlock Text="Select Child" FontSize="18" Margin="10,10,10,5" HorizontalAlignment="Center"/>
 
             <ComboBox ItemsSource="{Binding Children}" SelectedItem="{Binding SelectedChild}" PlaceholderText="Name"
@@ -23,7 +23,12 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
         </ComboBox>
-        <TabControl SelectionChanged="TabControl_SelectionChanged">
+        <TabControl SelectionChanged="TabControl_SelectionChanged" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+            <TabControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </TabControl.ItemsPanel>
             <TabItem x:Name="OverviewTab" Header="Overview">
                 <ContentControl Content="{Binding AccountOverviewViewModel}" />
             </TabItem>

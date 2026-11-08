@@ -1,13 +1,19 @@
 using AllowanceApp.Avalonia.Messages;
+using AllowanceApp.Avalonia.Utilities.AudioHelpers;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
-using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Messaging;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.Marshalling;
+using System.IO;
+using System.Media;
+using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AllowanceApp.Avalonia.Views.Accounts
@@ -15,6 +21,21 @@ namespace AllowanceApp.Avalonia.Views.Accounts
     public partial class AllowanceView : UserControl
     {
         private static readonly Random _rng = new();
+
+        private readonly List<Uri> _hats = new()
+        {
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/beanie.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/beret.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/bowler.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/bucket-hat.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/hat.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/party-hat-1.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/party-hat-2.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/pirate.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/straw-hat.png"),
+            new Uri("avares://AllowanceApp.Avalonia/Assets/Images/Hats/wizard-hat.png")
+        };
+
         private static readonly IBrush[] _confettiColors =
         [
             Brushes.Red,
@@ -30,28 +51,38 @@ namespace AllowanceApp.Avalonia.Views.Accounts
         {
             InitializeComponent();
 
-            WeakReferenceMessenger.Default.Register<DataRefreshSucessfulMessage>(this, async (r, m) =>
-            {
-                var view = (AllowanceView)r;
-
-                // TODO: Get the button that was clicked here, feed it to the message as an arg
-                var origin = view.AllowanceGrid.TranslatePoint(
-                    new Point(view.AllowanceGrid.Bounds.Width / 2, view.AllowanceGrid.Bounds.Height / 2), view.ConfettiCanvas) ?? new Point(200, 200);
-                await ConfettiAnimation(origin);
-            });
+            WeakReferenceMessenger.Default.Register<DataRefreshSucessfulMessage>(this, async (r, m) => await RandomAnimation((AllowanceView)r));
         }
 
-        private async Task ConfettiAnimation(Point origin)
+        private async Task RandomAnimation(AllowanceView view)
         {
-            for (int j = 0; j < 10; j++)
+            int dice = _rng.Next(0, 2);
+            switch (dice)
+            {
+                case 0:
+                    await HatAnimation(view);
+                    break;
+                case 1:
+                    await ConfettiAnimation(view);
+                    break;
+            }
+        }
+
+        private async Task ConfettiAnimation(AllowanceView view)
+        {
+            var origin = view.AllowanceGrid.TranslatePoint(
+                new Point(view.AllowanceGrid.Bounds.Width / 2, view.AllowanceGrid.Bounds.Height / 2), view.ConfettiCanvas) ?? new Point(200, 200);
+            using IAudioPlayer player = AudioPlayerFactory.GetAudioPlayerForOS();
+            player.PlaySound("avares://AllowanceApp.Avalonia/Assets/Sounds/oh-my-god.wav");
+            for (int j = 0; j < 25; j++)
             {
                 for (int i = 0; i < 50; i++)
                 {
                     SpawnConfettiPiece(origin);
                 }
-                await Task.Delay(50);
+                await Task.Delay(100);
             }
-
+            await player.FinishPlayback();
         }
 
         private void SpawnConfettiPiece(Point origin)
@@ -76,10 +107,49 @@ namespace AllowanceApp.Avalonia.Views.Accounts
             double vy = Math.Sin(angle) * speed;
             double rotationalSpeed = _rng.Next(-720, 720);
 
-            _ = AnimateParticle(piece, origin, vx, vy, rotationalSpeed);
+            _ = AnimateThing(piece, origin, vx, vy, rotationalSpeed);
         }
 
-        private async Task AnimateParticle(Rectangle piece, Point origin, double vx, double vy, double rotationalSpeed)
+        private async Task HatAnimation(AllowanceView view)
+        {
+            using IAudioPlayer player = AudioPlayerFactory.GetAudioPlayerForOS();
+            player.PlaySound("avares://AllowanceApp.Avalonia/Assets/Sounds/yeah-woah.wav");
+            for (int j = 0; j < 30; j++)
+            {
+                SpawnHat();
+                await Task.Delay(_rng.Next(200));
+            }
+            await player.FinishPlayback();
+        }
+
+        private void SpawnHat()
+        {
+            var nextX = _rng.Next(20, 400);
+            var origin = new Point(nextX, 550);
+            var next = _rng.Next(_hats.Count);
+            var hat = new Image
+            {
+                Width = 50,
+                Height = 50,
+                Source = new Bitmap(AssetLoader.Open(_hats[next])),
+                RenderTransform = new RotateTransform(),
+                RenderTransformOrigin = RelativePoint.Center
+            };
+
+            Canvas.SetLeft(hat, origin.X);
+            Canvas.SetTop(hat, origin.Y);
+            ConfettiCanvas.Children.Add(hat);
+
+            double angle = 270 * Math.PI / 180;
+            double speed = _rng.Next(250, 600);
+            double vx = Math.Cos(angle) * speed;
+            double vy = Math.Sin(angle) * speed;
+            double rotationalSpeed = _rng.Next(-720, 720);
+
+            _ = AnimateThing(hat, origin, vx, vy, rotationalSpeed);
+        }
+
+        private async Task AnimateThing(Control piece, Point origin, double vx, double vy, double rotationalSpeed)
         {
             const double gravity = 600;
             const double dt = 1.0 / 60.0;

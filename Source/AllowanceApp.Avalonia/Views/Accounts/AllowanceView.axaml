@@ -17,7 +17,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Canvas x:Name="ConfettiCanvas" IsHitTestVisible="False"/>        
+        <Canvas x:Name="ConfettiCanvas" IsHitTestVisible="False"/>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0, 20">
             <Grid HorizontalAlignment="Center" x:Name="AllowanceGrid">
                 <Grid.ColumnDefinitions>
@@ -28,26 +28,26 @@
                 <TextBlock Grid.Column="1" Text="{Binding Allowance, Converter={StaticResource IntegerToDollarString}}" FontSize="20" FontWeight="Bold" 
                            Foreground="{Binding Allowance, Converter={StaticResource IntegerToDollarColor}}" HorizontalAlignment="Right"/>
             </Grid>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Chore Point" 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="15,15,15,30" Spacing="15">
+                <Button Classes="ImageBtn" Height="60" Width="60" ToolTip.Tip ="Add Chore Point" 
                         Command="{Binding AddChorePointsCommand}" Cursor="Hand">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/magic-broom.png" Width="55" Height="55"/>
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/magic-broom.png" Width="55" Height="55"/>
                 </Button>
-                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Homework Point" 
+                <Button Classes="ImageBtn" Height="60" Width="60" ToolTip.Tip ="Add Homework Point" 
                         Command="{Binding AddHomeworkPointsCommand}">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/book.png" Width="55" Height="55"/>
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/book.png" Width="55" Height="55"/>
                 </Button>
-                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add/Edit Report Card" 
+                <Button Classes="ImageBtn" Height="60" Width="60" ToolTip.Tip ="Add/Edit Report Card" 
                         Command="{Binding AddReportCardCommand}">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/grade.png" Width="55" Height="55"/>
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/grade.png" Width="55" Height="55"/>
                 </Button>
-                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Good Behavior Point" 
+                <Button Classes="ImageBtn" Height="60" Width="60" ToolTip.Tip ="Add Good Behavior Point" 
                         Command="{Binding AddGoodPointsCommand}">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/smile.png" Width="55" Height="55"/>
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/smile.png" Width="55" Height="55"/>
                 </Button>
-                <Button Classes="ImageBtn" Height="60" Width="60" Margin="15" ToolTip.Tip ="Add Bad Behavior Point" 
+                <Button Classes="ImageBtn" Height="60" Width="60" ToolTip.Tip ="Add Bad Behavior Point" 
                         Command="{Binding AddBadPointsCommand}">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/cry.png" Width="55" Height="55"/>
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/cry.png" Width="55" Height="55"/>
                 </Button>
             </StackPanel>
         
@@ -112,9 +112,10 @@
                         
                 <Button Classes="ImageBtn" Height="120" Width="120" Margin="15" ToolTip.Tip ="Pay Allowance to Bank" 
                         HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding PayAllowanceCommand}">
-                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/review.png" Width="110" Height="110"/>
-                
+                    <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/review.png" Width="110" Height="110"/>                
                 </Button>
+            
+            <!-- TODO: Add another button where the kids can instead maybe trade their points for some other reward! -->
 
         </StackPanel>
     </Grid>
