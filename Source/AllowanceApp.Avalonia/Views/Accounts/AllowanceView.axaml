@@ -6,6 +6,8 @@
              Width="450" Height="600"
              xmlns:vm="using:AllowanceApp.Avalonia.ViewModels.Accounts"
              xmlns:converters="using:AllowanceApp.Avalonia.Converters"
+             xmlns:labs="using:Avalonia.Labs.Gif"
+             xmlns:anim="https://github.com/whistyun/AnimatedImage.Avalonia"
              x:DataType="vm:AllowanceViewModel"
              x:Class="AllowanceApp.Avalonia.Views.Accounts.AllowanceView">
     <Design.DataContext>
@@ -51,69 +53,79 @@
                 </Button>
             </StackPanel>
         
-            <Grid HorizontalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
-                    <ColumnDefinition Width="30"/>
-                </Grid.ColumnDefinitions>
+            <Grid RowDefinitions="Auto, *">
+                <Grid HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" Text="Weekly Points:" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AllowancePoints}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Weekly Points:" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding AllowancePoints}" HorizontalAlignment="Right"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="1" Text="Good Points:" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding GoodPoints}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Good Points:" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding GoodPoints}" HorizontalAlignment="Right"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="2" Text="Bad Points:" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding BadPoints}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="Bad Points:" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding BadPoints}" HorizontalAlignment="Right"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="3" Text="Chore Points:" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ChorePoints}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Grid.Row="3" Text="Chore Points:" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding ChorePoints}" HorizontalAlignment="Right"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="4" Text="Homework Points:" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HomeworkPoints}" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="0" Grid.Row="4" Text="Homework Points:" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding HomeworkPoints}" HorizontalAlignment="Right"/>
 
-                <TextBlock Grid.Column="0" Grid.Row="5" Text="  No Report Card Data  " Grid.ColumnSpan="2" Grid.RowSpan="5" 
-                           HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" Foreground="Gray"
-                           IsVisible="{Binding !HasReportCard}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="  No Report Card Data  " Grid.ColumnSpan="2" Grid.RowSpan="5" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center" FontStyle="Italic" Foreground="Gray"
+                               IsVisible="{Binding !HasReportCard}"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="5" Text="A's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-                <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding GradeAPoints}" HorizontalAlignment="Right" 
-                           IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="5" Text="A's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding GradeAPoints}" HorizontalAlignment="Right" 
+                               IsVisible="{Binding HasReportCard}"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="6" Text="B's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-                <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding GradeBPoints}" HorizontalAlignment="Right" 
-                           IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="6" Text="B's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding GradeBPoints}" HorizontalAlignment="Right" 
+                               IsVisible="{Binding HasReportCard}"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="7" Text="C's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-                <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding GradeCPoints}" HorizontalAlignment="Right" 
-                           IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="7" Text="C's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding GradeCPoints}" HorizontalAlignment="Right" 
+                               IsVisible="{Binding HasReportCard}"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="8" Text="D's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-                <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding GradeDPoints}" HorizontalAlignment="Right" 
-                           IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="8" Text="D's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding GradeDPoints}" HorizontalAlignment="Right" 
+                               IsVisible="{Binding HasReportCard}"/>
             
-                <TextBlock Grid.Column="0" Grid.Row="9" Text="F's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
-                <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding GradeFPoints}" HorizontalAlignment="Right" 
-                           IsVisible="{Binding HasReportCard}"/>
-            </Grid>
+                    <TextBlock Grid.Column="0" Grid.Row="9" Text="F's:" HorizontalAlignment="Left" IsVisible="{Binding HasReportCard}"/>
+                    <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding GradeFPoints}" HorizontalAlignment="Right" 
+                               IsVisible="{Binding HasReportCard}"/>
+                </Grid>
                         
-                <Button Classes="ImageBtn" Height="120" Width="120" Margin="15" ToolTip.Tip ="Pay Allowance to Bank" 
+                <Button Grid.Row="1" Classes="ImageBtn" Height="120" Width="120" Margin="15" ToolTip.Tip ="Pay Allowance to Bank" 
                         HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding PayAllowanceCommand}">
                     <Image Source="avares://AllowanceApp.Avalonia/Assets/Images/Buttons/review.png" Width="110" Height="110"/>                
-                </Button>
+                </Button>                
+
+                <!-- 
+                <Image x:Name="LickingDogImage" Grid.RowSpan="2" VerticalAlignment="Bottom"
+                       anim:ImageBehavior.AnimatedSource="avares://AllowanceApp.Avalonia/Assets/Images/Gifs/licking-dog.gif" 
+                       Width="400" IsVisible="False"/> 
+                -->
+                <labs:GifImage x:Name="LickingDogGif" Width="400" Height="400" Stretch="Fill" />
+            </Grid>
+
             
             <!-- TODO: Add another button where the kids can instead maybe trade their points for some other reward! -->
 
